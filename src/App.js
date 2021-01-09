@@ -10,7 +10,7 @@ import AddShares from "./components/AddShares";
 import AddSavings from "./components/AddSavings";
 import AddExpenses from "./components/AddExpenses";
 
-import './App.css';
+import './style/App.css';
 
 function App() {
 
