@@ -16,7 +16,7 @@ const AddShares = () => {
 
   return (
     <>
-      <form onSubmit={handleSubmit} >
+      <form className="sharesForm" onSubmit={handleSubmit} >
         <label>
           Share Name:
           <input type="text" value={shareName} onChange={e => setName(e.target.value) }/>
