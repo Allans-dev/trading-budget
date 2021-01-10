@@ -36,7 +36,7 @@ const AddShares = () => {
         <input type="submit" value="Submit" />
       </form>
 
-      {showTotal ? <span> Gross Profit = {(sellPrice - buyPrice) * numberOfShares} </span> : null }
+      {showTotal ? <span>Profit = {(sellPrice - buyPrice) * numberOfShares} </span> : null }
 
     </>
   );
