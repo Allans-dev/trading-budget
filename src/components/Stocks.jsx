@@ -24,6 +24,12 @@ const Stocks = () => {
     yearCheck ? setYearCheck(false) : setYearCheck(true);
   };
 
+  const addStocks = () => {
+    const stockSection = document.getElementById("stocksNode");
+    const clone = stockSection.cloneNode(true);
+    document.getElementById("nodeContainer").appendChild(clone);
+  };
+
   taxableIncome = yearCheck
     ? ((sellPrice - buyPrice) * numberOfShares) / 2 +
       Math.round(Number(annualIncome))
@@ -75,41 +81,52 @@ const Stocks = () => {
     <article style={styles.article}>
       <section style={styles.formSection}>
         <form style={styles.form} onSubmit={handleSubmit}>
-          <label style={styles.label}>
-            Share Name:
-            <input
-              type="text"
-              value={shareName}
-              onChange={(e) => setName(e.target.value)}
-            />
-          </label>
-          <label style={styles.label}>
-            Unit Price (Bought):
-            <input
-              type="number"
-              value={buyPrice}
-              onChange={(e) => setBuyPrice(e.target.value)}
-              required
-            />
-          </label>
-          <label style={styles.label}>
-            Unit Price (Sold):
-            <input
-              type="number"
-              value={sellPrice}
-              onChange={(e) => setSellPrice(e.target.value)}
-              required
-            />
-          </label>
-          <label style={styles.label}>
-            Number of Shares:
-            <input
-              type="number"
-              value={numberOfShares}
-              onChange={(e) => setNumberOfShares(e.target.value)}
-              required
-            />
-          </label>
+          <div id="nodeContainer">
+            <div id="stocksNode">
+              <label style={styles.label}>
+                Share Name:
+                <input
+                  type="text"
+                  value={shareName}
+                  onChange={(e) => setName(e.target.value)}
+                />
+              </label>
+              <label style={styles.label}>
+                Unit Price (Bought):
+                <input
+                  type="number"
+                  value={buyPrice}
+                  onChange={(e) => setBuyPrice(e.target.value)}
+                  required
+                />
+              </label>
+              <label style={styles.label}>
+                Unit Price (Sold):
+                <input
+                  type="number"
+                  value={sellPrice}
+                  onChange={(e) => setSellPrice(e.target.value)}
+                  required
+                />
+              </label>
+              <label style={styles.label}>
+                Number of Shares:
+                <input
+                  type="number"
+                  value={numberOfShares}
+                  onChange={(e) => setNumberOfShares(e.target.value)}
+                  required
+                />
+              </label>
+              <label style={styles.left}>
+                Held more than 1 year?{" "}
+                <input type="checkbox" onClick={oneYearCheck} />
+              </label>
+            </div>
+          </div>
+
+          <button onClick={addStocks}>+</button>
+
           <label style={styles.label}>
             Annual Income:
             <input
@@ -118,10 +135,6 @@ const Stocks = () => {
               onChange={(e) => setAnnualIncome(e.target.value)}
               required
             />
-          </label>
-          <label style={styles.left}>
-            Held more than 1 year?{" "}
-            <input type="checkbox" onClick={oneYearCheck} />
           </label>
 
           <input type="submit" value="Submit" />
