@@ -57,9 +57,9 @@ const Stocks = () => {
   const deleteListItem = (id) => {
     if (stocksList.length > 0) {
       setStocksList(
-        stocksList.filter((item) => {
+        stocksList.filter((item, index) => {
           console.log(item.stockName + item.buyPrice * item.sellPrice);
-          return item.stockName + item.buyPrice * item.sellPrice !== id;
+          return index + item.stockName !== id;
         })
       );
     }
@@ -174,12 +174,11 @@ const Stocks = () => {
 
       {stocksList.length > 0 ? (
         <ul>
-          {stocksList.map((item) => {
+          {stocksList.map((item, index) => {
             if (item[0]) {
               return (
                 <StocksListItem
-                  // key={item[0].id}
-                  item
+                  index={index}
                   stockName={item[0].stockName}
                   buyPrice={item[0].buyPrice}
                   sellPrice={item[0].sellPrice}
@@ -191,8 +190,7 @@ const Stocks = () => {
             } else {
               return (
                 <StocksListItem
-                  // key={item.id}
-                  item
+                  index={index}
                   stockName={item.stockName}
                   buyPrice={item.buyPrice}
                   sellPrice={item.sellPrice}

@@ -1,16 +1,15 @@
 import React from "react";
 
 const StocksListItem = ({
-  item,
+  index,
   stockName,
   buyPrice,
   sellPrice,
   volume,
   yearCheck,
   deleteListItem,
-  key,
 }) => {
-  let id = stockName + buyPrice * sellPrice;
+  let id = index + stockName;
   return (
     <li style={styles.listItem} key={id}>
       <div>{stockName}</div>
