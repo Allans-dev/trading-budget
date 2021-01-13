@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 
+import StocksListItem from "./StocksListItem";
+
 const Stocks = () => {
-  const [shareName, setName] = useState("");
+  const [stockName, setStockName] = useState("");
   const [buyPrice, setBuyPrice] = useState(0);
   const [sellPrice, setSellPrice] = useState(0);
-  const [numberOfShares, setNumberOfShares] = useState(0);
+  const [volume, setvolume] = useState(0);
   const [showTotal, setShowTotal] = useState(false);
   const [yearCheck, setYearCheck] = useState(false);
-  // const [taxBracket, setTaxBracket] = useState(0);
   const [annualIncome, setAnnualIncome] = useState(0);
+  const [stocksList, setStocksList] = useState([]);
 
   let taxableIncome;
   let taxOwed;
@@ -24,16 +26,37 @@ const Stocks = () => {
     yearCheck ? setYearCheck(false) : setYearCheck(true);
   };
 
-  const addStocks = () => {
-    const stockSection = document.getElementById("stocksNode");
-    const clone = stockSection.cloneNode(true);
-    document.getElementById("nodeContainer").appendChild(clone);
+  const addStocks = (e) => {
+    e.preventDefault();
+    setStocksList([
+      ...stocksList,
+      {
+        stockName,
+        buyPrice,
+        sellPrice,
+        volume,
+        yearCheck,
+        taxableIncome,
+        taxOwed,
+        netProfit,
+      },
+    ]);
+    setStockName("");
+    setBuyPrice(0);
+    setSellPrice(0);
+    setvolume(0);
+    setYearCheck(false);
+    document.getElementById("yearCheckBox").checked = false;
+    taxableIncome = 0;
+    taxOwed = 0;
+    netProfit = 0;
   };
 
+  console.log(stocksList);
+
   taxableIncome = yearCheck
-    ? ((sellPrice - buyPrice) * numberOfShares) / 2 +
-      Math.round(Number(annualIncome))
-    : (sellPrice - buyPrice) * Number(numberOfShares) +
+    ? ((sellPrice - buyPrice) * volume) / 2 + Math.round(Number(annualIncome))
+    : (sellPrice - buyPrice) * Number(volume) +
       Math.round(Number(annualIncome));
 
   if (taxableIncome <= 18200) {
@@ -87,8 +110,9 @@ const Stocks = () => {
                 Share Name:
                 <input
                   type="text"
-                  value={shareName}
-                  onChange={(e) => setName(e.target.value)}
+                  value={stockName}
+                  onChange={(e) => setStockName(e.target.value)}
+                  required
                 />
               </label>
               <label style={styles.label}>
@@ -113,14 +137,18 @@ const Stocks = () => {
                 Number of Shares:
                 <input
                   type="number"
-                  value={numberOfShares}
-                  onChange={(e) => setNumberOfShares(e.target.value)}
+                  value={volume}
+                  onChange={(e) => setvolume(e.target.value)}
                   required
                 />
               </label>
               <label style={styles.left}>
                 Held more than 1 year?{" "}
-                <input type="checkbox" onClick={oneYearCheck} />
+                <input
+                  type="checkbox"
+                  id="yearCheckBox"
+                  onClick={oneYearCheck}
+                />
               </label>
             </div>
           </div>
@@ -140,6 +168,21 @@ const Stocks = () => {
           <input type="submit" value="Submit" />
         </form>
       </section>
+
+      {stocksList.length > 0 ? (
+        <ul>
+          {stocksList.map((item) => (
+            <StocksListItem
+              stockName={item.stockName}
+              buyPrice={item.buyPrice}
+              sellPrice={item.sellPrice}
+              volume={item.volume}
+              yearCheck={item.yearCheck}
+            />
+          ))}
+        </ul>
+      ) : null}
+
       {showTotal ? (
         <div style={styles.profit}>
           <div>
