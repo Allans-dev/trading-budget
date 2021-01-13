@@ -17,6 +17,8 @@ const Stocks = () => {
   let netProfit;
   let taxBracket;
 
+  console.log(stocksList);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     setShowTotal(true);
@@ -52,7 +54,16 @@ const Stocks = () => {
     netProfit = 0;
   };
 
-  console.log(stocksList);
+  const deleteListItem = (id) => {
+    if (stocksList.length > 0) {
+      setStocksList(
+        stocksList.filter((item) => {
+          console.log(item.stockName + item.buyPrice * item.sellPrice);
+          return item.stockName + item.buyPrice * item.sellPrice !== id;
+        })
+      );
+    }
+  };
 
   taxableIncome = yearCheck
     ? ((sellPrice - buyPrice) * volume) / 2 + Math.round(Number(annualIncome))
@@ -104,54 +115,46 @@ const Stocks = () => {
     <article style={styles.article}>
       <section style={styles.formSection}>
         <form style={styles.form} onSubmit={handleSubmit}>
-          <div id="nodeContainer">
-            <div id="stocksNode">
-              <label style={styles.label}>
-                Share Name:
-                <input
-                  type="text"
-                  value={stockName}
-                  onChange={(e) => setStockName(e.target.value)}
-                  required
-                />
-              </label>
-              <label style={styles.label}>
-                Unit Price (Bought):
-                <input
-                  type="number"
-                  value={buyPrice}
-                  onChange={(e) => setBuyPrice(e.target.value)}
-                  required
-                />
-              </label>
-              <label style={styles.label}>
-                Unit Price (Sold):
-                <input
-                  type="number"
-                  value={sellPrice}
-                  onChange={(e) => setSellPrice(e.target.value)}
-                  required
-                />
-              </label>
-              <label style={styles.label}>
-                Number of Shares:
-                <input
-                  type="number"
-                  value={volume}
-                  onChange={(e) => setvolume(e.target.value)}
-                  required
-                />
-              </label>
-              <label style={styles.left}>
-                Held more than 1 year?{" "}
-                <input
-                  type="checkbox"
-                  id="yearCheckBox"
-                  onClick={oneYearCheck}
-                />
-              </label>
-            </div>
-          </div>
+          <label style={styles.label}>
+            Share Name:
+            <input
+              type="text"
+              value={stockName}
+              onChange={(e) => setStockName(e.target.value)}
+              required
+            />
+          </label>
+          <label style={styles.label}>
+            Unit Price (Bought):
+            <input
+              type="number"
+              value={buyPrice}
+              onChange={(e) => setBuyPrice(e.target.value)}
+              required
+            />
+          </label>
+          <label style={styles.label}>
+            Unit Price (Sold):
+            <input
+              type="number"
+              value={sellPrice}
+              onChange={(e) => setSellPrice(e.target.value)}
+              required
+            />
+          </label>
+          <label style={styles.label}>
+            Number of Shares:
+            <input
+              type="number"
+              value={volume}
+              onChange={(e) => setvolume(e.target.value)}
+              required
+            />
+          </label>
+          <label style={styles.left}>
+            Held more than 1 year?{" "}
+            <input type="checkbox" id="yearCheckBox" onClick={oneYearCheck} />
+          </label>
 
           <button onClick={addStocks}>+</button>
 
@@ -171,18 +174,37 @@ const Stocks = () => {
 
       {stocksList.length > 0 ? (
         <ul>
-          {stocksList.map((item) => (
-            <StocksListItem
-              stockName={item.stockName}
-              buyPrice={item.buyPrice}
-              sellPrice={item.sellPrice}
-              volume={item.volume}
-              yearCheck={item.yearCheck}
-            />
-          ))}
+          {stocksList.map((item) => {
+            if (item[0]) {
+              return (
+                <StocksListItem
+                  // key={item[0].id}
+                  item
+                  stockName={item[0].stockName}
+                  buyPrice={item[0].buyPrice}
+                  sellPrice={item[0].sellPrice}
+                  volume={item[0].volume}
+                  yearCheck={item[0].yearCheck}
+                  deleteListItem={deleteListItem}
+                />
+              );
+            } else {
+              return (
+                <StocksListItem
+                  // key={item.id}
+                  item
+                  stockName={item.stockName}
+                  buyPrice={item.buyPrice}
+                  sellPrice={item.sellPrice}
+                  volume={item.volume}
+                  yearCheck={item.yearCheck}
+                  deleteListItem={deleteListItem}
+                />
+              );
+            }
+          })}
         </ul>
       ) : null}
-
       {showTotal ? (
         <div style={styles.profit}>
           <div>
