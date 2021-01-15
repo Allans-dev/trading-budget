@@ -6,17 +6,21 @@ const Stocks = () => {
   const [stockName, setStockName] = useState("");
   const [buyPrice, setBuyPrice] = useState(0);
   const [sellPrice, setSellPrice] = useState(0);
-  const [volume, setvolume] = useState(0);
+  const [volume, setVolume] = useState(0);
   const [showTotal, setShowTotal] = useState(false);
   const [yearCheck, setYearCheck] = useState(false);
   const [annualIncome, setAnnualIncome] = useState(0);
   const [stocksList, setStocksList] = useState([]);
 
+  let stockIncome;
   let taxableIncome;
   let taxOwed;
   let netProfit;
   let taxBracket;
 
+  console.log("====================================");
+
+  console.log("stocksList = ");
   console.log(stocksList);
 
   const handleSubmit = (e) => {
@@ -28,6 +32,66 @@ const Stocks = () => {
     yearCheck ? setYearCheck(false) : setYearCheck(true);
   };
 
+  const deleteListItem = (id) => {
+    if (stocksList.length > 0) {
+      setStocksList(
+        stocksList.filter((item, index) => {
+          return index + item.stockName !== id;
+        })
+      );
+    }
+  };
+
+  if (yearCheck) {
+    // if (((sellPrice - buyPrice) * Number(volume)) / 2 >= 18200) {
+    stockIncome = ((sellPrice - buyPrice) * Number(volume)) / 2;
+    // }
+    // stockIncome = 0;
+  } else {
+    stockIncome = (sellPrice - buyPrice) * Number(volume);
+  }
+
+  if (stocksList.length > 0) {
+    let stockIncomeArray = stocksList.map((item) => {
+      console.log("stockIncome");
+      console.log(item.stockIncome);
+      return item.stockIncome;
+    });
+    taxableIncome =
+      stockIncomeArray.reduce((a, b) => a + b) +
+      Math.round(Number(annualIncome));
+    console.log("taxable Income = " + taxableIncome);
+  } else {
+    taxableIncome = 0;
+  }
+
+  if (taxableIncome <= 18200) {
+    taxOwed = 0;
+  }
+  if (taxableIncome > 18200 && taxableIncome < 45001) {
+    taxBracket = 0.19;
+    taxOwed = (taxableIncome - 18201) * taxBracket;
+  }
+  if (taxableIncome > 45000 && taxableIncome < 120001) {
+    taxBracket = 0.325;
+    taxOwed = 5092 + (taxableIncome - 45000) * taxBracket;
+  }
+  if (taxableIncome > 120000 && taxableIncome <= 180000) {
+    taxBracket = 0.37;
+    taxOwed = 29467 + (taxableIncome - 120000) * taxBracket;
+  }
+  if (taxableIncome > 180001) {
+    taxBracket = 0.45;
+    taxOwed = 51667 + (taxableIncome - 180000) * taxBracket;
+  }
+
+  console.log("total taxable Income");
+  console.log(taxableIncome);
+  console.log("tax owed");
+  console.log(taxOwed);
+
+  netProfit = taxableIncome - taxOwed;
+
   const addStocks = (e) => {
     e.preventDefault();
     setStocksList([
@@ -38,78 +102,17 @@ const Stocks = () => {
         sellPrice,
         volume,
         yearCheck,
+        stockIncome,
         taxableIncome,
-        taxOwed,
-        netProfit,
       },
     ]);
     setStockName("");
     setBuyPrice(0);
     setSellPrice(0);
-    setvolume(0);
+    setVolume(0);
     setYearCheck(false);
     document.getElementById("yearCheckBox").checked = false;
-    taxableIncome = 0;
-    taxOwed = 0;
-    netProfit = 0;
   };
-
-  const deleteListItem = (id) => {
-    if (stocksList.length > 0) {
-      setStocksList(
-        stocksList.filter((item, index) => {
-          console.log(item.stockName + item.buyPrice * item.sellPrice);
-          return index + item.stockName !== id;
-        })
-      );
-    }
-  };
-
-  taxableIncome = yearCheck
-    ? ((sellPrice - buyPrice) * volume) / 2 + Math.round(Number(annualIncome))
-    : (sellPrice - buyPrice) * Number(volume) +
-      Math.round(Number(annualIncome));
-
-  if (taxableIncome <= 18200) {
-    taxBracket = 0;
-  }
-  if (taxableIncome > 18201 && taxableIncome <= 45000) {
-    taxBracket = 0.19;
-  }
-  if (taxableIncome > 45001 && taxableIncome <= 120000) {
-    taxBracket = 0.325;
-  }
-  if (taxableIncome > 120001 && taxableIncome <= 180000) {
-    taxBracket = 0.37;
-  }
-  if (taxableIncome > 180001) {
-    taxBracket = 0.45;
-  }
-
-  switch (taxBracket) {
-    case 0:
-      taxOwed = 0;
-      netProfit = taxableIncome;
-      break;
-    case 0.19:
-      taxOwed = (taxableIncome - 18201) * taxBracket;
-      netProfit = taxableIncome - taxOwed;
-      break;
-    case 0.325:
-      taxOwed = 5092 + (taxableIncome - 45000) * taxBracket;
-      netProfit = taxableIncome - taxOwed;
-      break;
-    case 0.37:
-      taxOwed = 29467 + (taxableIncome - 120000) * taxBracket;
-      netProfit = taxableIncome - taxOwed;
-      break;
-    case 0.45:
-      taxOwed = 51667 + (taxableIncome - 180000) * taxBracket;
-      netProfit = taxableIncome - taxOwed;
-      break;
-    default:
-      break;
-  }
 
   return (
     <article style={styles.article}>
@@ -121,7 +124,6 @@ const Stocks = () => {
               type="text"
               value={stockName}
               onChange={(e) => setStockName(e.target.value)}
-              required
             />
           </label>
           <label style={styles.label}>
@@ -130,7 +132,6 @@ const Stocks = () => {
               type="number"
               value={buyPrice}
               onChange={(e) => setBuyPrice(e.target.value)}
-              required
             />
           </label>
           <label style={styles.label}>
@@ -139,7 +140,6 @@ const Stocks = () => {
               type="number"
               value={sellPrice}
               onChange={(e) => setSellPrice(e.target.value)}
-              required
             />
           </label>
           <label style={styles.label}>
@@ -147,8 +147,7 @@ const Stocks = () => {
             <input
               type="number"
               value={volume}
-              onChange={(e) => setvolume(e.target.value)}
-              required
+              onChange={(e) => setVolume(e.target.value)}
             />
           </label>
           <label style={styles.left}>
@@ -164,7 +163,6 @@ const Stocks = () => {
               type="number"
               value={annualIncome}
               onChange={(e) => setAnnualIncome(e.target.value)}
-              required
             />
           </label>
 
@@ -178,6 +176,7 @@ const Stocks = () => {
             if (item[0]) {
               return (
                 <StocksListItem
+                  key={index}
                   index={index}
                   stockName={item[0].stockName}
                   buyPrice={item[0].buyPrice}
