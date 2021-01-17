@@ -4,9 +4,9 @@ import StocksListItem from "./StocksListItem";
 
 const Stocks = () => {
   const [stockName, setStockName] = useState("");
-  const [buyPrice, setBuyPrice] = useState(0);
-  const [sellPrice, setSellPrice] = useState(0);
-  const [volume, setVolume] = useState(0);
+  const [buyPrice, setBuyPrice] = useState("");
+  const [sellPrice, setSellPrice] = useState("");
+  const [volume, setVolume] = useState("");
   const [showTotal, setShowTotal] = useState(false);
   const [yearCheck, setYearCheck] = useState(false);
   const [annualIncome, setAnnualIncome] = useState(0);
@@ -23,9 +23,9 @@ const Stocks = () => {
   console.log("stocksList = ");
   console.log(stocksList);
 
-  const handleSubmit = (e) => {
+  const calculateProfit = (e) => {
     e.preventDefault();
-    setShowTotal(true);
+    showTotal ? setShowTotal(false) : setShowTotal(true);
   };
 
   const oneYearCheck = () => {
@@ -43,10 +43,7 @@ const Stocks = () => {
   };
 
   if (yearCheck) {
-    // if (((sellPrice - buyPrice) * Number(volume)) / 2 >= 18200) {
     stockIncome = ((sellPrice - buyPrice) * Number(volume)) / 2;
-    // }
-    // stockIncome = 0;
   } else {
     stockIncome = (sellPrice - buyPrice) * Number(volume);
   }
@@ -117,13 +114,14 @@ const Stocks = () => {
   return (
     <article style={styles.article}>
       <section style={styles.formSection}>
-        <form style={styles.form} onSubmit={handleSubmit}>
+        <form style={styles.form} onSubmit={addStocks}>
           <label style={styles.label}>
             Share Name:
             <input
               type="text"
               value={stockName}
               onChange={(e) => setStockName(e.target.value)}
+              required
             />
           </label>
           <label style={styles.label}>
@@ -132,6 +130,7 @@ const Stocks = () => {
               type="number"
               value={buyPrice}
               onChange={(e) => setBuyPrice(e.target.value)}
+              required
             />
           </label>
           <label style={styles.label}>
@@ -140,6 +139,7 @@ const Stocks = () => {
               type="number"
               value={sellPrice}
               onChange={(e) => setSellPrice(e.target.value)}
+              required
             />
           </label>
           <label style={styles.label}>
@@ -148,6 +148,7 @@ const Stocks = () => {
               type="number"
               value={volume}
               onChange={(e) => setVolume(e.target.value)}
+              required
             />
           </label>
           <label style={styles.left}>
@@ -155,7 +156,7 @@ const Stocks = () => {
             <input type="checkbox" id="yearCheckBox" onClick={oneYearCheck} />
           </label>
 
-          <button onClick={addStocks}>+</button>
+          <input type="submit" value="+" />
 
           <label style={styles.label}>
             Annual Income:
@@ -166,39 +167,25 @@ const Stocks = () => {
             />
           </label>
 
-          <input type="submit" value="Submit" />
+          <button onClick={calculateProfit}>Calculate Profit</button>
         </form>
       </section>
 
       {stocksList.length > 0 ? (
-        <ul>
+        <ul style={styles.ul}>
           {stocksList.map((item, index) => {
-            if (item[0]) {
-              return (
-                <StocksListItem
-                  key={index}
-                  index={index}
-                  stockName={item[0].stockName}
-                  buyPrice={item[0].buyPrice}
-                  sellPrice={item[0].sellPrice}
-                  volume={item[0].volume}
-                  yearCheck={item[0].yearCheck}
-                  deleteListItem={deleteListItem}
-                />
-              );
-            } else {
-              return (
-                <StocksListItem
-                  index={index}
-                  stockName={item.stockName}
-                  buyPrice={item.buyPrice}
-                  sellPrice={item.sellPrice}
-                  volume={item.volume}
-                  yearCheck={item.yearCheck}
-                  deleteListItem={deleteListItem}
-                />
-              );
-            }
+            return (
+              <StocksListItem
+                key={index}
+                index={index}
+                stockName={item.stockName}
+                buyPrice={item.buyPrice}
+                sellPrice={item.sellPrice}
+                volume={item.volume}
+                yearCheck={item.yearCheck}
+                deleteListItem={deleteListItem}
+              />
+            );
           })}
         </ul>
       ) : null}
@@ -247,6 +234,10 @@ const styles = {
   label: {
     display: "flex",
     justifyContent: "space-between",
+  },
+  ul: {
+    backgroundColor: "bisque",
+    padding: 0,
   },
   profit: {
     display: "block",
