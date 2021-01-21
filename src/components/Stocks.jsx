@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+
+import { store } from "./store";
 
 import StocksListItem from "./StocksListItem";
 
-const Stocks = () => {
+const Stocks = (props) => {
   const [stockName, setStockName] = useState("");
   const [buyPrice, setBuyPrice] = useState("");
   const [sellPrice, setSellPrice] = useState("");
@@ -11,6 +13,8 @@ const Stocks = () => {
   const [yearCheck, setYearCheck] = useState(false);
   const [annualIncome, setAnnualIncome] = useState(0);
   const [stocksList, setStocksList] = useState([]);
+
+  const globalState = useContext(store);
 
   let stockIncome;
   let taxableIncome;
@@ -25,6 +29,10 @@ const Stocks = () => {
 
   const calculateProfit = (e) => {
     e.preventDefault();
+
+    globalState.dispatch({ type: "newTotal", payload: netProfit });
+    console.log(globalState);
+
     showTotal ? setShowTotal(false) : setShowTotal(true);
   };
 
