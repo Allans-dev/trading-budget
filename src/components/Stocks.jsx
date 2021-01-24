@@ -5,13 +5,13 @@ import { store } from "./store";
 import StocksListItem from "./StocksListItem";
 
 const Stocks = (props) => {
-  const [stockName, setStockName] = useState("");
-  const [buyPrice, setBuyPrice] = useState("");
-  const [sellPrice, setSellPrice] = useState("");
-  const [volume, setVolume] = useState("");
+  const [stockName, setStockName] = useState("ESH");
+  const [buyPrice, setBuyPrice] = useState(10);
+  const [sellPrice, setSellPrice] = useState(20);
+  const [volume, setVolume] = useState(100);
   const [showTotal, setShowTotal] = useState(false);
   const [yearCheck, setYearCheck] = useState(false);
-  const [annualIncome, setAnnualIncome] = useState(0);
+  const [annualIncome, setAnnualIncome] = useState(45000);
   const [stocksList, setStocksList] = useState([]);
 
   const globalState = useContext(store);

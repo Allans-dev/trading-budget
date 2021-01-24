@@ -5,14 +5,25 @@ import { store } from "./store";
 import ExpenseItem from "./ExpenseItem";
 
 const Budget = () => {
-  const [timeframe, setTimeframe] = useState("month");
+  const [timeframe, setTimeframe] = useState("year");
   const [savingsRate, setSavingsRate] = useState(50);
-  const [description, setDescription] = useState("");
-  const [cost, setCost] = useState("");
+  const [description, setDescription] = useState("groceries");
+  const [cost, setCost] = useState(40.0);
   const [expenseArray, setExpenseArray] = useState([]);
+  const [displayResults, setDisplayResults] = useState(false);
 
   const globalState = useContext(store);
-  const NPAT = globalState.state;
+  let profit;
+
+  if (isNaN(globalState.state.profit)) {
+    profit = 0;
+  } else {
+    profit = globalState.state.profit;
+  }
+
+  let budget;
+  let totalExpense;
+  let totalSavings;
 
   const addExpense = (e) => {
     e.preventDefault();
@@ -23,8 +34,8 @@ const Budget = () => {
         cost,
       },
     ]);
-    if (globalState.state.NPAT) {
-      console.log("globalStateNPAT:" + NPAT);
+    if (globalState.state.profit) {
+      console.log("globalStateprofit:" + profit);
     }
   };
 
@@ -38,20 +49,39 @@ const Budget = () => {
     }
   };
 
+  expenseArray.length > 0
+    ? (totalExpense = expenseArray
+        .map((item) => item.cost)
+        .reduce((a, b) => a + b))
+    : (totalExpense = 0);
+
+  switch (timeframe) {
+    case "day":
+      budget = ((profit - totalExpense) * (1 - savingsRate / 100)) / 365;
+      totalSavings = ((profit - totalExpense) * savingsRate) / 100 / 365;
+      break;
+    case "week":
+      budget = ((profit - totalExpense) * (1 - savingsRate / 100)) / 52;
+      totalSavings = ((profit - totalExpense) * savingsRate) / 100 / 52;
+      break;
+    case "month":
+      budget = ((profit - totalExpense) * (1 - savingsRate / 100)) / 12;
+      totalSavings = ((profit - totalExpense) * savingsRate) / 100 / 12;
+      break;
+    case "year":
+      budget = (profit - totalExpense) * (1 - savingsRate / 100);
+      totalSavings = ((profit - totalExpense) * savingsRate) / 100;
+      break;
+    default:
+      break;
+  }
+
   const calcBudget = (e) => {
     e.preventDefault();
-    switch (timeframe) {
-      case "day":
-        break;
-      case "week":
-        break;
-      case "month":
-        break;
-      case "total":
-        break;
-      default:
-        break;
-    }
+    globalState.dispatch({ type: "addNPAT", payload: budget });
+    globalState.dispatch({ type: "addSavings", payload: totalSavings });
+    globalState.dispatch({ type: "addExpenses", payload: totalExpense });
+    displayResults ? setDisplayResults(false) : setDisplayResults(true);
   };
 
   return (
@@ -62,13 +92,18 @@ const Budget = () => {
             Description:{" "}
             <input
               type="text"
+              value={description}
               onChange={(e) => setDescription(e.target.value)}
             />
           </label>
           <br />
           <label style={styles.label}>
             Cost:{" "}
-            <input type="number" onChange={(e) => setCost(e.target.value)} />
+            <input
+              type="number"
+              value={cost}
+              onChange={(e) => setCost(e.target.value)}
+            />
           </label>
         </section>
         <button style={styles.btnExpense} onClick={addExpense}>
@@ -79,16 +114,16 @@ const Budget = () => {
           <select
             id="timeframe"
             style={styles.timeframe}
+            value={timeframe}
             onChange={(e) => {
               setTimeframe(e.target.value);
             }}
-            defaultValue="total"
           >
             <option value="day">day</option>
             <option value="week">week</option>
             <option value="fortnight">fortnight</option>
             <option value="month">month</option>
-            <option value="total">total</option>
+            <option value="year">year</option>
           </select>
         </label>
         <section style={styles.savings}>
@@ -105,15 +140,10 @@ const Budget = () => {
             ></input>
             <div>{savingsRate}%</div>
           </label>
-          {/* <button style={styles.btnSavings} onClick={handleSavings}>
-            +
-          </button> */}
         </section>
 
         <input style={styles.submit} type="submit" value="Calculate Budget" />
       </form>
-
-      {/* <div>{total}</div> */}
 
       {expenseArray.length > 0 ? (
         <ul style={styles.ul}>
@@ -122,13 +152,25 @@ const Budget = () => {
               <ExpenseItem
                 key={index}
                 index={index}
-                description={description}
-                cost={cost}
+                description={item.description}
+                cost={item.cost}
                 deleteListItem={deleteListItem}
               />
             );
           })}
         </ul>
+      ) : null}
+
+      {displayResults && budget > 0 ? (
+        <div>NPAT: {budget}</div>
+      ) : displayResults && totalExpense > 0 ? (
+        <div>Total Expenses: {totalExpense}</div>
+      ) : null}
+
+      {displayResults && totalSavings > 0 ? (
+        <div>
+          Your total savings is {totalSavings} per {timeframe}
+        </div>
       ) : null}
     </article>
   );

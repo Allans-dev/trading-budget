@@ -10,7 +10,13 @@ const StateProvider = ({ children }) => {
     switch (type) {
       case "newTotal":
         console.log(type, payload);
+        return { ...state, profit: payload };
+      case "addNPAT":
         return { ...state, NPAT: payload };
+      case "addSavings":
+        return { ...state, savings: payload };
+      case "addExpenses":
+        return { ...state, expenses: payload };
       default:
         throw new Error();
     }
