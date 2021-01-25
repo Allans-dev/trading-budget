@@ -1,6 +1,6 @@
 import { createContext, useReducer } from "react";
 
-const initialState = {};
+const initialState = { authStatus: false };
 const store = createContext(initialState);
 const { Provider } = store;
 
@@ -17,6 +17,10 @@ const StateProvider = ({ children }) => {
         return { ...state, savings: payload };
       case "addExpenses":
         return { ...state, expenses: payload };
+      case "login":
+        return { ...state, authStatus: true };
+      case "logout":
+        return { ...state, authStatus: false };
       default:
         throw new Error();
     }

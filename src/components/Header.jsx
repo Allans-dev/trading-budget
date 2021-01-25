@@ -1,5 +1,24 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
+
+import firebase from "firebase/app";
+
+import { store } from "./store";
+
+const signout = () =>
+  firebase
+    .auth()
+    .signOut()
+    .then(
+      function () {
+        const globalState = useContext(store);
+        globalState.dispatch({ type: "logout" });
+        console.log("Signed Out");
+      },
+      function (error) {
+        console.error("Sign Out Error", error);
+      }
+    );
 
 const Header = () => {
   return (
@@ -28,6 +47,7 @@ const Header = () => {
           </li>
         </ul>
       </nav>
+      <button onClick={signout}>Signout</button>
     </div>
   );
 };
