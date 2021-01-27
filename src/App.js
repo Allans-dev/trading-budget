@@ -14,6 +14,8 @@ import { StateProvider } from "./components/store";
 import "./App.css";
 
 import firebase from "firebase/app";
+import "firebase/firestore";
+
 import * as firebaseui from "firebaseui";
 import "firebaseui/dist/firebaseui.css";
 
@@ -33,13 +35,14 @@ if (!firebase.apps.length) {
   firebase.app(); // if already initialized, use that one
 }
 
+const db = firebase.firestore();
+
 const App = () => {
   const [loggedIn, setLoggedIn] = useState(false);
 
   const ui =
     firebaseui.auth.AuthUI.getInstance() ||
     new firebaseui.auth.AuthUI(firebase.auth());
-  const user = firebase.auth().currentUser;
 
   const uiConfig = {
     callbacks: {
@@ -47,9 +50,6 @@ const App = () => {
         // User successfully signed in.
         // Return type determines whether we continue the redirect automatically
         // or whether we leave that to developer to handle.
-        console.log("==================================");
-        console.log(authResult.credential.accessToken);
-        console.log(authResult.user);
         return true;
       },
       uiShown: function () {
@@ -64,20 +64,20 @@ const App = () => {
     signInOptions: [
       // Leave the lines as is for the providers you want to offer your users.
       firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-      firebase.auth.FacebookAuthProvider.PROVIDER_ID,
-      {
-        provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
-        signInMethod: firebase.auth.EmailAuthProvider.EMAIL_LINK_SIGN_IN_METHOD,
-      },
-      {
-        provider: firebase.auth.PhoneAuthProvider.PROVIDER_ID,
-        recaptchaParameters: {
-          type: "image", // 'audio'
-          size: "normal", // 'invisible' or 'compact'
-          badge: "bottomleft", //' bottomright' or 'inline' applies to invisible.
-        },
-        defaultCountry: "AU",
-      },
+      // firebase.auth.FacebookAuthProvider.PROVIDER_ID,
+      // {
+      //   provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
+      //   signInMethod: firebase.auth.EmailAuthProvider.EMAIL_LINK_SIGN_IN_METHOD,
+      // },
+      // {
+      //   provider: firebase.auth.PhoneAuthProvider.PROVIDER_ID,
+      //   recaptchaParameters: {
+      //     type: "image", // 'audio'
+      //     size: "normal", // 'invisible' or 'compact'
+      //     badge: "bottomleft", //' bottomright' or 'inline' applies to invisible.
+      //   },
+      //   defaultCountry: "AU",
+      // },
     ],
     // Terms of service url.
     tosUrl: "<your-tos-url>",
@@ -85,18 +85,24 @@ const App = () => {
     privacyPolicyUrl: "<your-privacy-policy-url>",
   };
 
-  firebase.auth().onAuthStateChanged((user) => {
+  firebase.auth().onAuthStateChanged(async (user) => {
     if (user) {
       // User is signed in.
-      setLoggedIn(true);
       console.log(user);
+      const docRef = db.collection("users").doc(user.uid);
+      await docRef.set(
+        {
+          displayName: user.displayName,
+          email: user.email,
+        },
+        { merge: true }
+      );
+      setLoggedIn(true);
     } else {
       setLoggedIn(false);
       ui.start("#firebaseui-auth-container", uiConfig);
     }
   });
-
-  console.log(loggedIn);
 
   return loggedIn ? (
     <StateProvider>

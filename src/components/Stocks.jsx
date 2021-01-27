@@ -1,5 +1,8 @@
 import React, { useState, useContext } from "react";
 
+import firebase from "firebase/app";
+import "firebase/firestore";
+
 import { store } from "./store";
 
 import StocksListItem from "./StocksListItem";
@@ -27,14 +30,8 @@ const Stocks = (props) => {
   console.log("stocksList = ");
   console.log(stocksList);
 
-  const calculateProfit = (e) => {
-    e.preventDefault();
-
-    globalState.dispatch({ type: "newTotal", payload: netProfit });
-    console.log(globalState);
-
-    showTotal ? setShowTotal(false) : setShowTotal(true);
-  };
+  const db = firebase.firestore();
+  const user = firebase.auth().currentUser;
 
   const oneYearCheck = () => {
     yearCheck ? setYearCheck(false) : setYearCheck(true);
@@ -48,12 +45,13 @@ const Stocks = (props) => {
         })
       );
     }
+    setShowTotal(false);
   };
 
   if (yearCheck) {
-    stockIncome = ((sellPrice - buyPrice) * Number(volume)) / 2;
+    stockIncome = ((Number(sellPrice) - Number(buyPrice)) * Number(volume)) / 2;
   } else {
-    stockIncome = (sellPrice - buyPrice) * Number(volume);
+    stockIncome = (Number(sellPrice) - Number(buyPrice)) * Number(volume);
   }
 
   if (stocksList.length > 0) {
@@ -67,7 +65,7 @@ const Stocks = (props) => {
       Math.round(Number(annualIncome));
     console.log("taxable Income = " + taxableIncome);
   } else {
-    taxableIncome = 0;
+    console.log(taxableIncome);
   }
 
   if (taxableIncome <= 18200) {
@@ -97,7 +95,7 @@ const Stocks = (props) => {
 
   netProfit = taxableIncome - taxOwed;
 
-  const addStocks = (e) => {
+  const addStocks = async (e) => {
     e.preventDefault();
     setStocksList([
       ...stocksList,
@@ -108,7 +106,6 @@ const Stocks = (props) => {
         volume,
         yearCheck,
         stockIncome,
-        taxableIncome,
       },
     ]);
     setStockName("");
@@ -117,6 +114,28 @@ const Stocks = (props) => {
     setVolume(0);
     setYearCheck(false);
     document.getElementById("yearCheckBox").checked = false;
+    setShowTotal(false);
+  };
+
+  const calculateProfit = async (e) => {
+    e.preventDefault();
+
+    globalState.dispatch({ type: "newTotal", payload: netProfit });
+    console.log(globalState);
+
+    const totalsDocRef = db.collection("users").doc(user.uid);
+    await totalsDocRef.set(
+      {
+        taxOwed: taxOwed,
+        netProfit: netProfit,
+        stocksList: stocksList,
+        taxableIncome: taxableIncome,
+        taxBracket: taxBracket || 0,
+        annualIncome: annualIncome || 0,
+      },
+      { merge: true }
+    );
+    showTotal ? setShowTotal(false) : setShowTotal(true);
   };
 
   return (

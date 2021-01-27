@@ -1,4 +1,6 @@
 import React, { useState, useContext } from "react";
+import firebase from "firebase/app";
+import "firebase/firestore";
 
 import { store } from "./store";
 
@@ -14,6 +16,9 @@ const Budget = () => {
 
   const globalState = useContext(store);
   let profit;
+
+  const db = firebase.firestore();
+  const user = firebase.auth().currentUser;
 
   if (isNaN(globalState.state.profit)) {
     profit = 0;
@@ -37,6 +42,7 @@ const Budget = () => {
     if (globalState.state.profit) {
       console.log("globalStateprofit:" + profit);
     }
+    setDisplayResults(false);
   };
 
   const deleteListItem = (id) => {
@@ -47,6 +53,7 @@ const Budget = () => {
         })
       );
     }
+    setDisplayResults(false);
   };
 
   expenseArray.length > 0
@@ -76,12 +83,22 @@ const Budget = () => {
       break;
   }
 
-  const calcBudget = (e) => {
+  const calcBudget = async (e) => {
     e.preventDefault();
     globalState.dispatch({ type: "addNPAT", payload: budget });
     globalState.dispatch({ type: "addSavings", payload: totalSavings });
     globalState.dispatch({ type: "addExpenses", payload: totalExpense });
     displayResults ? setDisplayResults(false) : setDisplayResults(true);
+    const budgetDocRef = db.collection("users").doc(user.uid);
+    await budgetDocRef.set(
+      {
+        budget: budget,
+        totalExpense: totalExpense,
+        totalSavings: totalSavings,
+        expenseArray: expenseArray,
+      },
+      { merge: true }
+    );
   };
 
   return (
