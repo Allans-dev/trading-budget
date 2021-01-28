@@ -88,7 +88,6 @@ const App = () => {
   firebase.auth().onAuthStateChanged(async (user) => {
     if (user) {
       // User is signed in.
-      console.log(user);
       const docRef = db.collection("users").doc(user.uid);
       await docRef.set(
         {

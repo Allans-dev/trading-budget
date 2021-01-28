@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 
 import firebase from "firebase/app";
 import "firebase/firestore";
@@ -7,17 +7,21 @@ import { store } from "./store";
 
 import StocksListItem from "./StocksListItem";
 
+// save to database after switching tabs or logout, read from reducer to enable faster loading
+
 const Stocks = (props) => {
-  const [stockName, setStockName] = useState("ESH");
+  const [stockName, setStockName] = useState("VUL");
   const [buyPrice, setBuyPrice] = useState(10);
   const [sellPrice, setSellPrice] = useState(20);
   const [volume, setVolume] = useState(100);
   const [showTotal, setShowTotal] = useState(false);
   const [yearCheck, setYearCheck] = useState(false);
   const [annualIncome, setAnnualIncome] = useState(45000);
-  const [stocksList, setStocksList] = useState([]);
 
   const globalState = useContext(store);
+
+  const { stocksList } = globalState.state;
+  console.log(globalState);
 
   let stockIncome;
   let taxableIncome;
@@ -27,11 +31,26 @@ const Stocks = (props) => {
 
   console.log("====================================");
 
-  console.log("stocksList = ");
-  console.log(stocksList);
-
   const db = firebase.firestore();
   const user = firebase.auth().currentUser;
+
+  async function getData() {
+    const listRef = db.collection("users").doc(user.uid);
+    const doc = await listRef.get();
+    if (!doc.exists) {
+      console.log("No such document!");
+    } else {
+      globalState.dispatch({
+        type: "updateStocksList",
+        payload: await doc.data().stocksList,
+      });
+      console.log("Document data:", doc.data());
+    }
+  }
+
+  useEffect(() => {
+    getData();
+  }, [showTotal]);
 
   const oneYearCheck = () => {
     yearCheck ? setYearCheck(false) : setYearCheck(true);
@@ -39,11 +58,12 @@ const Stocks = (props) => {
 
   const deleteListItem = (id) => {
     if (stocksList.length > 0) {
-      setStocksList(
-        stocksList.filter((item, index) => {
+      globalState.dispatch({
+        type: "deleteFromStocksList",
+        payload: stocksList.filter((item, index) => {
           return index + item.stockName !== id;
-        })
-      );
+        }),
+      });
     }
     setShowTotal(false);
   };
@@ -56,14 +76,11 @@ const Stocks = (props) => {
 
   if (stocksList.length > 0) {
     let stockIncomeArray = stocksList.map((item) => {
-      console.log("stockIncome");
-      console.log(item.stockIncome);
       return item.stockIncome;
     });
     taxableIncome =
       stockIncomeArray.reduce((a, b) => a + b) +
       Math.round(Number(annualIncome));
-    console.log("taxable Income = " + taxableIncome);
   } else {
     console.log(taxableIncome);
   }
@@ -88,26 +105,24 @@ const Stocks = (props) => {
     taxOwed = 51667 + (taxableIncome - 180000) * taxBracket;
   }
 
-  console.log("total taxable Income");
-  console.log(taxableIncome);
-  console.log("tax owed");
-  console.log(taxOwed);
-
   netProfit = taxableIncome - taxOwed;
 
   const addStocks = async (e) => {
     e.preventDefault();
-    setStocksList([
-      ...stocksList,
-      {
-        stockName,
-        buyPrice,
-        sellPrice,
-        volume,
-        yearCheck,
-        stockIncome,
-      },
-    ]);
+    globalState.dispatch({
+      type: "updateStocksList",
+      payload: [
+        ...stocksList,
+        {
+          stockName,
+          buyPrice,
+          sellPrice,
+          volume,
+          yearCheck,
+          stockIncome,
+        },
+      ],
+    });
     setStockName("");
     setBuyPrice(0);
     setSellPrice(0);
@@ -183,7 +198,7 @@ const Stocks = (props) => {
             <input type="checkbox" id="yearCheckBox" onClick={oneYearCheck} />
           </label>
 
-          <input type="submit" value="+" />
+          <input type="submit" value="Add Shares" />
 
           <label style={styles.label}>
             Annual Income:
@@ -216,6 +231,7 @@ const Stocks = (props) => {
           })}
         </ul>
       ) : null}
+
       {showTotal ? (
         <div style={styles.profit}>
           <div>
