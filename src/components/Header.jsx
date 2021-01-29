@@ -5,22 +5,24 @@ import firebase from "firebase/app";
 
 import { store } from "./store";
 
-const signout = () =>
-  firebase
-    .auth()
-    .signOut()
-    .then(
-      function () {
-        const globalState = useContext(store);
-        globalState.dispatch({ type: "logout" });
-        console.log("Signed Out");
-      },
-      function (error) {
-        console.error("Sign Out Error", error);
-      }
-    );
-
 const Header = () => {
+  const globalState = useContext(store);
+  const signout = () =>
+    firebase
+      .auth()
+      .signOut()
+      .then(
+        function () {
+          // globalState.dispatch({ type: "saveBudget" });
+          // globalState.dispatch({ type: "saveStocks" });
+          globalState.dispatch({ type: "logout" });
+
+          console.log("Signed Out");
+        },
+        function (error) {
+          console.error("Sign Out Error", error);
+        }
+      );
   return (
     <div style={styles.root}>
       <nav>

@@ -34,7 +34,7 @@ const Stocks = (props) => {
   const db = firebase.firestore();
   const user = firebase.auth().currentUser;
 
-  async function getData() {
+  const getStocks = async () => {
     const listRef = db.collection("users").doc(user.uid);
     const doc = await listRef.get();
     if (!doc.exists) {
@@ -46,11 +46,28 @@ const Stocks = (props) => {
       });
       console.log("Document data:", doc.data());
     }
-  }
+  };
+
+  const saveStocks = async () => {
+    const totalsDocRef = db.collection("users").doc(user.uid);
+    await totalsDocRef.set(
+      {
+        taxOwed: taxOwed || 0,
+        netProfit: netProfit || 0,
+        stocksList: stocksList,
+        taxableIncome: taxableIncome || 0,
+        taxBracket: taxBracket || 0,
+        annualIncome: annualIncome || 0,
+      },
+      { merge: true }
+    );
+  };
+  // globalState.dispatch({ type: "saveStocksFn", payload: saveStocks });
 
   useEffect(() => {
-    getData();
-  }, [showTotal]);
+    getStocks();
+    return saveStocks();
+  }, []);
 
   const oneYearCheck = () => {
     yearCheck ? setYearCheck(false) : setYearCheck(true);
@@ -59,7 +76,7 @@ const Stocks = (props) => {
   const deleteListItem = (id) => {
     if (stocksList.length > 0) {
       globalState.dispatch({
-        type: "deleteFromStocksList",
+        type: "updateStocksList",
         payload: stocksList.filter((item, index) => {
           return index + item.stockName !== id;
         }),
@@ -134,22 +151,8 @@ const Stocks = (props) => {
 
   const calculateProfit = async (e) => {
     e.preventDefault();
-
     globalState.dispatch({ type: "newTotal", payload: netProfit });
-    console.log(globalState);
-
-    const totalsDocRef = db.collection("users").doc(user.uid);
-    await totalsDocRef.set(
-      {
-        taxOwed: taxOwed,
-        netProfit: netProfit,
-        stocksList: stocksList,
-        taxableIncome: taxableIncome,
-        taxBracket: taxBracket || 0,
-        annualIncome: annualIncome || 0,
-      },
-      { merge: true }
-    );
+    saveStocks();
     showTotal ? setShowTotal(false) : setShowTotal(true);
   };
 

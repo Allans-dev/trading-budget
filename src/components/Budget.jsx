@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import firebase from "firebase/app";
 import "firebase/firestore";
 
@@ -11,11 +11,15 @@ const Budget = () => {
   const [savingsRate, setSavingsRate] = useState(50);
   const [description, setDescription] = useState("groceries");
   const [cost, setCost] = useState(40.0);
-  const [expenseArray, setExpenseArray] = useState([]);
   const [displayResults, setDisplayResults] = useState(false);
 
   const globalState = useContext(store);
+  const { expenseArray } = globalState.state;
+
   let profit;
+  let budget;
+  let totalExpenses;
+  let totalSavings;
 
   const db = firebase.firestore();
   const user = firebase.auth().currentUser;
@@ -26,19 +30,51 @@ const Budget = () => {
     profit = globalState.state.profit;
   }
 
-  let budget;
-  let totalExpense;
-  let totalSavings;
+  const getBudget = async () => {
+    const listRef = db.collection("users").doc(user.uid);
+    const doc = await listRef.get();
+    if (!doc.exists) {
+      console.log("No such document!");
+    } else {
+      globalState.dispatch({
+        type: "updateExpenses",
+        payload: await doc.data().expenseArray,
+      });
+      console.log("Document expenses:", doc.data().expenseArray);
+    }
+  };
 
-  const addExpense = (e) => {
-    e.preventDefault();
-    setExpenseArray([
-      ...expenseArray,
+  const saveBudget = async () => {
+    const budgetDocRef = db.collection("users").doc(user.uid);
+    await budgetDocRef.set(
       {
-        description,
-        cost,
+        budget: budget,
+        totalExpenses: totalExpenses,
+        totalSavings: totalSavings,
+        expenseArray: expenseArray,
       },
-    ]);
+      { merge: true }
+    );
+  };
+  // globalState.dispatch({ type: "saveBudgetFn", payload: saveBudget });
+
+  useEffect(() => {
+    getBudget();
+    return saveBudget();
+  }, []);
+
+  const addExpenses = (e) => {
+    e.preventDefault();
+    globalState.dispatch({
+      type: "updateExpenses",
+      payload: [
+        ...expenseArray,
+        {
+          description,
+          cost,
+        },
+      ],
+    });
     if (globalState.state.profit) {
       console.log("globalStateprofit:" + profit);
     }
@@ -47,37 +83,38 @@ const Budget = () => {
 
   const deleteListItem = (id) => {
     if (expenseArray.length > 0) {
-      setExpenseArray(
-        expenseArray.filter((item, index) => {
+      globalState.dispatch({
+        type: "updateExpenses",
+        payload: expenseArray.filter((item, index) => {
           return index !== id;
-        })
-      );
+        }),
+      });
     }
     setDisplayResults(false);
   };
 
   expenseArray.length > 0
-    ? (totalExpense = expenseArray
-        .map((item) => item.cost)
+    ? (totalExpenses = expenseArray
+        .map((item) => Number(item.cost))
         .reduce((a, b) => a + b))
-    : (totalExpense = 0);
+    : (totalExpenses = 0);
 
   switch (timeframe) {
     case "day":
-      budget = ((profit - totalExpense) * (1 - savingsRate / 100)) / 365;
-      totalSavings = ((profit - totalExpense) * savingsRate) / 100 / 365;
+      budget = ((profit - totalExpenses) * (1 - savingsRate / 100)) / 365;
+      totalSavings = ((profit - totalExpenses) * savingsRate) / 100 / 365;
       break;
     case "week":
-      budget = ((profit - totalExpense) * (1 - savingsRate / 100)) / 52;
-      totalSavings = ((profit - totalExpense) * savingsRate) / 100 / 52;
+      budget = ((profit - totalExpenses) * (1 - savingsRate / 100)) / 52;
+      totalSavings = ((profit - totalExpenses) * savingsRate) / 100 / 52;
       break;
     case "month":
-      budget = ((profit - totalExpense) * (1 - savingsRate / 100)) / 12;
-      totalSavings = ((profit - totalExpense) * savingsRate) / 100 / 12;
+      budget = ((profit - totalExpenses) * (1 - savingsRate / 100)) / 12;
+      totalSavings = ((profit - totalExpenses) * savingsRate) / 100 / 12;
       break;
     case "year":
-      budget = (profit - totalExpense) * (1 - savingsRate / 100);
-      totalSavings = ((profit - totalExpense) * savingsRate) / 100;
+      budget = (profit - totalExpenses) * (1 - savingsRate / 100);
+      totalSavings = ((profit - totalExpenses) * savingsRate) / 100;
       break;
     default:
       break;
@@ -87,18 +124,9 @@ const Budget = () => {
     e.preventDefault();
     globalState.dispatch({ type: "addNPAT", payload: budget });
     globalState.dispatch({ type: "addSavings", payload: totalSavings });
-    globalState.dispatch({ type: "addExpenses", payload: totalExpense });
+    globalState.dispatch({ type: "totalExpenses", payload: totalExpenses });
+    saveBudget();
     displayResults ? setDisplayResults(false) : setDisplayResults(true);
-    const budgetDocRef = db.collection("users").doc(user.uid);
-    await budgetDocRef.set(
-      {
-        budget: budget,
-        totalExpense: totalExpense,
-        totalSavings: totalSavings,
-        expenseArray: expenseArray,
-      },
-      { merge: true }
-    );
   };
 
   return (
@@ -123,7 +151,7 @@ const Budget = () => {
             />
           </label>
         </section>
-        <button style={styles.btnExpense} onClick={addExpense}>
+        <button style={styles.btnExpense} onClick={addExpenses}>
           +
         </button>
         <label>
@@ -180,8 +208,8 @@ const Budget = () => {
 
       {displayResults && budget > 0 ? (
         <div>NPAT: {budget}</div>
-      ) : displayResults && totalExpense > 0 ? (
-        <div>Total Expenses: {totalExpense}</div>
+      ) : displayResults && totalExpenses > 0 ? (
+        <div>Total Expenses: {totalExpenses}</div>
       ) : null}
 
       {displayResults && totalSavings > 0 ? (
