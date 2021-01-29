@@ -30,8 +30,9 @@ const Budget = () => {
     profit = globalState.state.profit;
   }
 
+  const listRef = db.collection("users").doc(user.uid);
+
   const getBudget = async () => {
-    const listRef = db.collection("users").doc(user.uid);
     const doc = await listRef.get();
     if (!doc.exists) {
       console.log("No such document!");
@@ -45,18 +46,18 @@ const Budget = () => {
   };
 
   const saveBudget = async () => {
-    const budgetDocRef = db.collection("users").doc(user.uid);
-    await budgetDocRef.set(
+    const doc = await listRef.get();
+    await listRef.set(
       {
         budget: budget,
         totalExpenses: totalExpenses,
         totalSavings: totalSavings,
-        expenseArray: expenseArray,
+        expenseArray:
+          expenseArray.length > 0 ? expenseArray : doc.data.expenseArray,
       },
       { merge: true }
     );
   };
-  // globalState.dispatch({ type: "saveBudgetFn", payload: saveBudget });
 
   useEffect(() => {
     getBudget();

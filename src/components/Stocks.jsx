@@ -34,8 +34,9 @@ const Stocks = (props) => {
   const db = firebase.firestore();
   const user = firebase.auth().currentUser;
 
+  const listRef = db.collection("users").doc(user.uid);
+
   const getStocks = async () => {
-    const listRef = db.collection("users").doc(user.uid);
     const doc = await listRef.get();
     if (!doc.exists) {
       console.log("No such document!");
@@ -49,20 +50,19 @@ const Stocks = (props) => {
   };
 
   const saveStocks = async () => {
-    const totalsDocRef = db.collection("users").doc(user.uid);
-    await totalsDocRef.set(
+    const doc = await listRef.get();
+    await listRef.set(
       {
-        taxOwed: taxOwed || 0,
-        netProfit: netProfit || 0,
-        stocksList: stocksList,
-        taxableIncome: taxableIncome || 0,
-        taxBracket: taxBracket || 0,
-        annualIncome: annualIncome || 0,
+        taxOwed: taxOwed || doc.data.taxOwed,
+        netProfit: netProfit || doc.data.netProfit,
+        stocksList: stocksList ? stocksList : doc.data.stocksList,
+        taxableIncome: taxableIncome || doc.data.taxableIncome,
+        taxBracket: taxBracket || doc.data.taxBracket,
+        annualIncome: annualIncome || doc.data.annualIncome,
       },
       { merge: true }
     );
   };
-  // globalState.dispatch({ type: "saveStocksFn", payload: saveStocks });
 
   useEffect(() => {
     getStocks();
