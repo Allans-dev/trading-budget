@@ -7,9 +7,7 @@ import { store } from "./store";
 
 import StocksListItem from "./StocksListItem";
 
-// save to database after switching tabs or logout, read from reducer to enable faster loading
-
-const Stocks = (props) => {
+const Stocks = () => {
   const [stockName, setStockName] = useState("VUL");
   const [buyPrice, setBuyPrice] = useState(10);
   const [sellPrice, setSellPrice] = useState(20);
@@ -19,7 +17,6 @@ const Stocks = (props) => {
   const [annualIncome, setAnnualIncome] = useState(45000);
 
   const globalState = useContext(store);
-
   const { stocksList } = globalState.state;
   console.log(globalState);
 
@@ -34,9 +31,8 @@ const Stocks = (props) => {
   const db = firebase.firestore();
   const user = firebase.auth().currentUser;
 
-  const listRef = db.collection("users").doc(user.uid);
-
   const getStocks = async () => {
+    const listRef = await db.collection("users").doc(user.uid);
     const doc = await listRef.get();
     if (!doc.exists) {
       console.log("No such document!");
@@ -45,20 +41,20 @@ const Stocks = (props) => {
         type: "updateStocksList",
         payload: await doc.data().stocksList,
       });
-      console.log("Document data:", doc.data());
+      console.log("Document stocks:", doc.data().stocksList);
     }
   };
 
   const saveStocks = async () => {
-    const doc = await listRef.get();
-    await listRef.set(
+    const totalsDocRef = db.collection("users").doc(user.uid);
+    await totalsDocRef.set(
       {
-        taxOwed: taxOwed || doc.data.taxOwed,
-        netProfit: netProfit || doc.data.netProfit,
-        stocksList: stocksList ? stocksList : doc.data.stocksList,
-        taxableIncome: taxableIncome || doc.data.taxableIncome,
-        taxBracket: taxBracket || doc.data.taxBracket,
-        annualIncome: annualIncome || doc.data.annualIncome,
+        taxOwed: taxOwed || null,
+        netProfit: netProfit || null,
+        stocksList: stocksList,
+        taxableIncome: taxableIncome || null,
+        taxBracket: taxBracket || null,
+        annualIncome: annualIncome,
       },
       { merge: true }
     );
@@ -91,7 +87,7 @@ const Stocks = (props) => {
     stockIncome = (Number(sellPrice) - Number(buyPrice)) * Number(volume);
   }
 
-  if (stocksList.length > 0) {
+  if (Array.isArray(stocksList)) {
     let stockIncomeArray = stocksList.map((item) => {
       return item.stockIncome;
     });
@@ -212,11 +208,11 @@ const Stocks = (props) => {
             />
           </label>
 
-          <button onClick={calculateProfit}>Calculate Profit</button>
+          <button onClick={calculateProfit}>Save and Calculate</button>
         </form>
       </section>
 
-      {stocksList.length > 0 ? (
+      {Array.isArray(stocksList) ? (
         <ul style={styles.ul}>
           {stocksList.map((item, index) => {
             return (

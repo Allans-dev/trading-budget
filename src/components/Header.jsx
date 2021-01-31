@@ -48,8 +48,8 @@ const Header = () => {
             </Link>
           </li>
         </ul>
+        <button onClick={signout}>Signout</button>
       </nav>
-      <button onClick={signout}>Signout</button>
     </div>
   );
 };

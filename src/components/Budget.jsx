@@ -30,10 +30,9 @@ const Budget = () => {
     profit = globalState.state.profit;
   }
 
-  const listRef = db.collection("users").doc(user.uid);
-
   const getBudget = async () => {
-    const doc = await listRef.get();
+    const budgetRef = user ? db.collection("users").doc(user.uid) : null;
+    const doc = user ? await budgetRef.get() : null;
     if (!doc.exists) {
       console.log("No such document!");
     } else {
@@ -46,14 +45,13 @@ const Budget = () => {
   };
 
   const saveBudget = async () => {
-    const doc = await listRef.get();
-    await listRef.set(
+    const budgetDocRef = db.collection("users").doc(user.uid);
+    await budgetDocRef.set(
       {
-        budget: budget,
-        totalExpenses: totalExpenses,
-        totalSavings: totalSavings,
-        expenseArray:
-          expenseArray.length > 0 ? expenseArray : doc.data.expenseArray,
+        expenseArray: expenseArray,
+        budget: budget ? budget : null,
+        totalExpenses: totalExpenses ? totalExpenses : null,
+        totalSavings: totalSavings ? totalSavings : null,
       },
       { merge: true }
     );
@@ -76,6 +74,7 @@ const Budget = () => {
         },
       ],
     });
+
     if (globalState.state.profit) {
       console.log("globalStateprofit:" + profit);
     }
@@ -94,11 +93,16 @@ const Budget = () => {
     setDisplayResults(false);
   };
 
-  expenseArray.length > 0
-    ? (totalExpenses = expenseArray
-        .map((item) => Number(item.cost))
-        .reduce((a, b) => a + b))
-    : (totalExpenses = 0);
+  const setTotalExpenses = async () => {
+    const dbRef = db.collection("users").doc(user.uid);
+    const get = await dbRef.get();
+    const expenseArray = get.data.expenseArray;
+    expenseArray.length > 0
+      ? (totalExpenses = expenseArray
+          .map((item) => Number(item.cost))
+          .reduce((a, b) => a + b))
+      : (totalExpenses = 0);
+  };
 
   switch (timeframe) {
     case "day":
@@ -123,6 +127,7 @@ const Budget = () => {
 
   const calcBudget = async (e) => {
     e.preventDefault();
+    setTotalExpenses();
     globalState.dispatch({ type: "addNPAT", payload: budget });
     globalState.dispatch({ type: "addSavings", payload: totalSavings });
     globalState.dispatch({ type: "totalExpenses", payload: totalExpenses });
@@ -188,10 +193,10 @@ const Budget = () => {
           </label>
         </section>
 
-        <input style={styles.submit} type="submit" value="Calculate Budget" />
+        <input style={styles.submit} type="submit" value="Save and Calculate" />
       </form>
 
-      {expenseArray.length > 0 ? (
+      {Array.isArray(expenseArray) ? (
         <ul style={styles.ul}>
           {expenseArray.map((item, index) => {
             return (

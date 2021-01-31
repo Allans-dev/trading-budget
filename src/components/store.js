@@ -1,6 +1,6 @@
 import { createContext, useReducer } from "react";
 
-const initialState = { authStatus: false, stocksList: [], expenseArray: [] };
+const initialState = { authStatus: false };
 
 const store = createContext(initialState);
 const { Provider } = store;
@@ -21,9 +21,6 @@ const StateProvider = ({ children }) => {
         return { ...state, expenseArray: payload };
       case "totalExpenses":
         return { ...state, totalExpenses: payload };
-      // case "invokePayload":
-      //   payload();
-      //   return { ...state };
       case "login":
         return { ...state, authStatus: true };
       case "logout":
