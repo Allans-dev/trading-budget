@@ -49,9 +49,9 @@ const Budget = () => {
     await budgetDocRef.set(
       {
         expenseArray: expenseArray,
-        budget: budget ? budget : null,
-        totalExpenses: totalExpenses ? totalExpenses : null,
-        totalSavings: totalSavings ? totalSavings : null,
+        budget: budget || null,
+        totalExpenses: totalExpenses || null,
+        totalSavings: totalSavings || null,
       },
       { merge: true }
     );
@@ -64,16 +64,28 @@ const Budget = () => {
 
   const addExpenses = (e) => {
     e.preventDefault();
-    globalState.dispatch({
-      type: "updateExpenses",
-      payload: [
-        ...expenseArray,
-        {
-          description,
-          cost,
-        },
-      ],
-    });
+    if (Array.isArray(expenseArray)) {
+      globalState.dispatch({
+        type: "updateExpenses",
+        payload: [
+          ...expenseArray,
+          {
+            description,
+            cost,
+          },
+        ],
+      });
+    } else {
+      globalState.dispatch({
+        type: "updateExpenses",
+        payload: [
+          {
+            description,
+            cost,
+          },
+        ],
+      });
+    }
 
     if (globalState.state.profit) {
       console.log("globalStateprofit:" + profit);
@@ -91,17 +103,6 @@ const Budget = () => {
       });
     }
     setDisplayResults(false);
-  };
-
-  const setTotalExpenses = async () => {
-    const dbRef = db.collection("users").doc(user.uid);
-    const get = await dbRef.get();
-    const expenseArray = get.data.expenseArray;
-    expenseArray.length > 0
-      ? (totalExpenses = expenseArray
-          .map((item) => Number(item.cost))
-          .reduce((a, b) => a + b))
-      : (totalExpenses = 0);
   };
 
   switch (timeframe) {
@@ -125,14 +126,20 @@ const Budget = () => {
       break;
   }
 
+  Array.isArray(expenseArray)
+    ? (totalExpenses = expenseArray
+        .map((item) => Number(item.cost))
+        .reduce((a, b) => a + b))
+    : (totalExpenses = 0);
+
   const calcBudget = async (e) => {
     e.preventDefault();
-    setTotalExpenses();
+
     globalState.dispatch({ type: "addNPAT", payload: budget });
     globalState.dispatch({ type: "addSavings", payload: totalSavings });
     globalState.dispatch({ type: "totalExpenses", payload: totalExpenses });
-    saveBudget();
     displayResults ? setDisplayResults(false) : setDisplayResults(true);
+    saveBudget();
   };
 
   return (
