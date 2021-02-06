@@ -13,8 +13,6 @@ const Header = () => {
       .signOut()
       .then(
         function () {
-          // globalState.dispatch({ type: "saveBudget" });
-          // globalState.dispatch({ type: "saveStocks" });
           globalState.dispatch({ type: "logout" });
 
           console.log("Signed Out");

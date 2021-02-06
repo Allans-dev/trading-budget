@@ -12,35 +12,41 @@ const StocksListItem = ({
   let id = index + stockName;
   return (
     <li style={styles.listItem} key={id}>
-      <div>{stockName}</div>
-      <div>
-        <div>Buy Price</div> {buyPrice}
+      <div style={styles.stockDetail}>
+        <div>{stockName}</div>
+        <div>
+          <div>Buy Price</div> {buyPrice}
+        </div>
+        <div>
+          <div>Sell Price</div> {sellPrice}
+        </div>
+        <div>
+          <div>Volume</div> {volume}
+        </div>
+
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            deleteListItem(id);
+          }}
+        >
+          -
+        </button>
       </div>
-      <div>
-        <div>Sell Price</div> {sellPrice}
-      </div>
-      <div>
-        <div>Volume</div> {volume}
-      </div>
-      {yearCheck ? <div>Held over one year</div> : null}
-      <button
-        onClick={(e) => {
-          e.preventDefault();
-          deleteListItem(id);
-        }}
-      >
-        -
-      </button>
+      {yearCheck ? <div style={styles.oneYear}>Held over one year</div> : null}
     </li>
   );
 };
 
 const styles = {
-  listItem: {
+  stockDetail: {
     display: "flex",
     flexDirection: "row",
-    flexWrap: "wrap",
+    flexWrap: "no-wrap",
     justifyContent: "space-between",
+  },
+  oneYear: {
+    flex: "0 0 100%",
   },
 };
 

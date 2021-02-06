@@ -8,13 +8,13 @@ import ExpenseItem from "./ExpenseItem";
 
 const Budget = () => {
   const [timeframe, setTimeframe] = useState("year");
-  const [savingsRate, setSavingsRate] = useState(50);
-  const [description, setDescription] = useState("groceries");
-  const [cost, setCost] = useState(40.0);
+  const [savingsRate, setSavingsRate] = useState(20);
+  const [description, setDescription] = useState("");
+  const [cost, setCost] = useState(0);
   const [displayResults, setDisplayResults] = useState(false);
 
-  const globalState = useContext(store);
-  const { expenseArray } = globalState.state;
+  const context = useContext(store);
+  const { expenseArray } = context.state;
 
   let profit;
   let budget;
@@ -24,10 +24,10 @@ const Budget = () => {
   const db = firebase.firestore();
   const user = firebase.auth().currentUser;
 
-  if (isNaN(globalState.state.profit)) {
+  if (isNaN(context.state.netProfit)) {
     profit = 0;
   } else {
-    profit = globalState.state.profit;
+    profit = context.state.netProfit;
   }
 
   const getBudget = async () => {
@@ -36,11 +36,23 @@ const Budget = () => {
     if (!doc.exists) {
       console.log("No such document!");
     } else {
-      globalState.dispatch({
+      context.dispatch({
         type: "updateExpenses",
         payload: await doc.data().expenseArray,
       });
-      console.log("Document expenses:", doc.data().expenseArray);
+      context.dispatch({
+        type: "updateBudget",
+        payload: await doc.data().budget,
+      });
+      context.dispatch({
+        type: "updateSavings",
+        payload: await doc.data().totalSavings,
+      });
+      context.dispatch({
+        type: "updateNetProfit",
+        payload: await doc.data().netProfit,
+      });
+      console.log("Document expenses:", doc.data());
     }
   };
 
@@ -49,9 +61,9 @@ const Budget = () => {
     await budgetDocRef.set(
       {
         expenseArray: expenseArray,
-        budget: budget || null,
-        totalExpenses: totalExpenses || null,
-        totalSavings: totalSavings || null,
+        budget: context.state.budget || null,
+        totalExpenses: context.state.totalExpenses || null,
+        totalSavings: context.state.totalSavings || null,
       },
       { merge: true }
     );
@@ -60,12 +72,13 @@ const Budget = () => {
   useEffect(() => {
     getBudget();
     return saveBudget();
+    // eslint-disable-next-line
   }, []);
 
   const addExpenses = (e) => {
     e.preventDefault();
     if (Array.isArray(expenseArray)) {
-      globalState.dispatch({
+      context.dispatch({
         type: "updateExpenses",
         payload: [
           ...expenseArray,
@@ -76,7 +89,7 @@ const Budget = () => {
         ],
       });
     } else {
-      globalState.dispatch({
+      context.dispatch({
         type: "updateExpenses",
         payload: [
           {
@@ -87,15 +100,15 @@ const Budget = () => {
       });
     }
 
-    if (globalState.state.profit) {
-      console.log("globalStateprofit:" + profit);
+    if (context.state.profit) {
+      console.log("context profit:" + profit);
     }
     setDisplayResults(false);
   };
 
   const deleteListItem = (id) => {
     if (expenseArray.length > 0) {
-      globalState.dispatch({
+      context.dispatch({
         type: "updateExpenses",
         payload: expenseArray.filter((item, index) => {
           return index !== id;
@@ -104,6 +117,12 @@ const Budget = () => {
     }
     setDisplayResults(false);
   };
+
+  Array.isArray(expenseArray)
+    ? (totalExpenses = expenseArray
+        .map((item) => Number(item.cost))
+        .reduce((a, b) => a + b))
+    : (totalExpenses = 0);
 
   switch (timeframe) {
     case "day":
@@ -121,23 +140,18 @@ const Budget = () => {
     case "year":
       budget = (profit - totalExpenses) * (1 - savingsRate / 100);
       totalSavings = ((profit - totalExpenses) * savingsRate) / 100;
+      console.log(totalSavings);
       break;
     default:
       break;
   }
 
-  Array.isArray(expenseArray)
-    ? (totalExpenses = expenseArray
-        .map((item) => Number(item.cost))
-        .reduce((a, b) => a + b))
-    : (totalExpenses = 0);
-
   const calcBudget = async (e) => {
     e.preventDefault();
 
-    globalState.dispatch({ type: "addNPAT", payload: budget });
-    globalState.dispatch({ type: "addSavings", payload: totalSavings });
-    globalState.dispatch({ type: "totalExpenses", payload: totalExpenses });
+    context.dispatch({ type: "updateBudget", payload: budget });
+    context.dispatch({ type: "updateSavings", payload: totalSavings });
+    context.dispatch({ type: "totalExpenses", payload: totalExpenses });
     displayResults ? setDisplayResults(false) : setDisplayResults(true);
     saveBudget();
   };
@@ -192,6 +206,7 @@ const Budget = () => {
               type="range"
               min={0}
               max={100}
+              value={20}
               onChange={(e) => {
                 setSavingsRate(e.target.value);
               }}
@@ -220,14 +235,14 @@ const Budget = () => {
       ) : null}
 
       {displayResults && budget > 0 ? (
-        <div>NPAT: {budget}</div>
+        <div>NPAT: {profit}</div>
       ) : displayResults && totalExpenses > 0 ? (
-        <div>Total Expenses: {totalExpenses}</div>
+        <div>Total Expenses: {context.state.totalExpenses}</div>
       ) : null}
 
       {displayResults && totalSavings > 0 ? (
         <div>
-          Your total savings is {totalSavings} per {timeframe}
+          Your total savings is {context.state.savings} per {timeframe}
         </div>
       ) : null}
     </article>

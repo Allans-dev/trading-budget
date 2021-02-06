@@ -8,23 +8,24 @@ import { store } from "./store";
 import StocksListItem from "./StocksListItem";
 
 const Stocks = () => {
-  const [stockName, setStockName] = useState("VUL");
-  const [buyPrice, setBuyPrice] = useState(10);
-  const [sellPrice, setSellPrice] = useState(20);
-  const [volume, setVolume] = useState(100);
+  const [stockName, setStockName] = useState("");
+  const [buyPrice, setBuyPrice] = useState(0);
+  const [sellPrice, setSellPrice] = useState(0);
+  const [volume, setVolume] = useState(0);
   const [showTotal, setShowTotal] = useState(false);
-  const [yearCheck, setYearCheck] = useState(false);
-  const [annualIncome, setAnnualIncome] = useState(45000);
+  const [annualIncome, setAnnualIncome] = useState(0);
 
-  const globalState = useContext(store);
-  const { stocksList } = globalState.state;
-  console.log(globalState);
+  const context = useContext(store);
+  const {
+    stocksList,
+    grossProfit,
+    taxOwed,
+    taxBracket,
+    taxableIncome,
+  } = context.state;
+  console.log(context);
 
   let stockIncome;
-  let taxableIncome;
-  let taxOwed;
-  let netProfit;
-  let taxBracket;
 
   console.log("====================================");
 
@@ -37,7 +38,7 @@ const Stocks = () => {
     if (!doc.exists) {
       console.log("No such document!");
     } else {
-      globalState.dispatch({
+      context.dispatch({
         type: "updateStocksList",
         payload: await doc.data().stocksList,
       });
@@ -49,11 +50,11 @@ const Stocks = () => {
     const totalsDocRef = db.collection("users").doc(user.uid);
     await totalsDocRef.set(
       {
-        taxOwed: taxOwed || null,
-        netProfit: netProfit || null,
+        grossProfit: grossProfit,
+        taxOwed: taxOwed,
         stocksList: stocksList,
-        taxableIncome: taxableIncome || null,
-        taxBracket: taxBracket || null,
+        taxableIncome: taxableIncome,
+        taxBracket: taxBracket,
         annualIncome: annualIncome,
       },
       { merge: true }
@@ -63,15 +64,18 @@ const Stocks = () => {
   useEffect(() => {
     getStocks();
     return saveStocks();
+    // eslint-disable-next-line
   }, []);
 
   const oneYearCheck = () => {
-    yearCheck ? setYearCheck(false) : setYearCheck(true);
+    context.yearCheck
+      ? context.dispatch({ type: "updateYearCheck", payload: false })
+      : context.dispatch({ type: "updateYearCheck", payload: true });
   };
 
   const deleteListItem = (id) => {
     if (stocksList.length > 0) {
-      globalState.dispatch({
+      context.dispatch({
         type: "updateStocksList",
         payload: stocksList.filter((item, index) => {
           return index + item.stockName !== id;
@@ -81,48 +85,92 @@ const Stocks = () => {
     setShowTotal(false);
   };
 
-  if (yearCheck) {
-    stockIncome = ((Number(sellPrice) - Number(buyPrice)) * Number(volume)) / 2;
-  } else {
-    stockIncome = (Number(sellPrice) - Number(buyPrice)) * Number(volume);
-  }
+  const setStockIncome = () => {
+    if (context.yearCheck) {
+      stockIncome =
+        ((Number(sellPrice) - Number(buyPrice)) * Number(volume)) / 2;
+    } else {
+      stockIncome = (Number(sellPrice) - Number(buyPrice)) * Number(volume);
+    }
+  };
 
-  if (Array.isArray(stocksList)) {
-    let stockIncomeArray = stocksList.map((item) => {
-      return item.stockIncome;
+  const setTaxableIncome = () => {
+    if (Array.isArray(stocksList)) {
+      let stockIncomeArray = stocksList.map((item) => {
+        return item.stockIncome;
+      });
+      context.dispatch({
+        type: "updateTaxableIncome",
+        payload:
+          stockIncomeArray.reduce((a, b) => a + b) +
+          Math.round(Number(annualIncome)),
+      });
+    } else {
+      console.log(taxableIncome);
+    }
+  };
+
+  const calcTax = () => {
+    if (taxableIncome <= 18200) {
+      context.dispatch({ type: "updateTaxBracket", payload: taxBracket });
+      context.dispatch({ type: "updateTaxOwed", payload: 0 });
+    }
+    context.dispatch({
+      type: "updateGrossProfit",
+      payload: taxableIncome - taxOwed,
     });
-    taxableIncome =
-      stockIncomeArray.reduce((a, b) => a + b) +
-      Math.round(Number(annualIncome));
-  } else {
-    console.log(taxableIncome);
-  }
+    if (taxableIncome > 18200 && taxableIncome < 45001) {
+      context.dispatch({ type: "updateTaxBracket", payload: 0.19 });
+      context.dispatch({
+        type: "updateTaxOwed",
+        payload: (taxableIncome - 18201) * taxBracket,
+      });
+      context.dispatch({
+        type: "updateGrossProfit",
+        payload: taxableIncome - taxOwed,
+      });
+    }
+    if (taxableIncome > 45000 && taxableIncome < 120001) {
+      context.dispatch({ type: "updateTaxBracket", payload: 0.325 });
+      context.dispatch({
+        type: "updateTaxOwed",
+        payload: 5092 + (taxableIncome - 45000) * taxBracket,
+      });
+      context.dispatch({
+        type: "updateGrossProfit",
+        payload: taxableIncome - taxOwed,
+      });
+    }
+    if (taxableIncome > 120000 && taxableIncome <= 180000) {
+      context.dispatch({ type: "updateTaxBracket", payload: 0.37 });
+      context.dispatch({
+        type: "updateTaxOwed",
+        payload: 29467 + (taxableIncome - 120000) * taxBracket,
+      });
+      context.dispatch({
+        type: "updateGrossProfit",
+        payload: taxableIncome - taxOwed,
+      });
+    }
+    if (taxableIncome > 180001) {
+      context.dispatch({ type: "updateTaxBracket", payload: 0.45 });
+      context.dispatch({
+        type: "updateTaxOwed",
+        payload: 51667 + (taxableIncome - 180000) * taxBracket,
+      });
+      context.dispatch({
+        type: "updateGrossProfit",
+        payload: taxableIncome - taxOwed,
+      });
+    }
+  };
 
-  if (taxableIncome <= 18200) {
-    taxOwed = 0;
-  }
-  if (taxableIncome > 18200 && taxableIncome < 45001) {
-    taxBracket = 0.19;
-    taxOwed = (taxableIncome - 18201) * taxBracket;
-  }
-  if (taxableIncome > 45000 && taxableIncome < 120001) {
-    taxBracket = 0.325;
-    taxOwed = 5092 + (taxableIncome - 45000) * taxBracket;
-  }
-  if (taxableIncome > 120000 && taxableIncome <= 180000) {
-    taxBracket = 0.37;
-    taxOwed = 29467 + (taxableIncome - 120000) * taxBracket;
-  }
-  if (taxableIncome > 180001) {
-    taxBracket = 0.45;
-    taxOwed = 51667 + (taxableIncome - 180000) * taxBracket;
-  }
-
-  netProfit = taxableIncome - taxOwed;
+  console.log(typeof taxableIncome + taxableIncome);
+  console.log(typeof taxOwed + taxOwed);
 
   const addStocks = async (e) => {
     e.preventDefault();
-    globalState.dispatch({
+    context.dispatch({
       type: "updateStocksList",
       payload: [
         ...stocksList,
@@ -131,7 +179,7 @@ const Stocks = () => {
           buyPrice,
           sellPrice,
           volume,
-          yearCheck,
+          yearCheck: context.yearCheck,
           stockIncome,
         },
       ],
@@ -140,14 +188,16 @@ const Stocks = () => {
     setBuyPrice(0);
     setSellPrice(0);
     setVolume(0);
-    setYearCheck(false);
+    context.dispatch({ type: "updateYearCheck", payload: false });
     document.getElementById("yearCheckBox").checked = false;
     setShowTotal(false);
   };
 
   const calculateProfit = async (e) => {
     e.preventDefault();
-    globalState.dispatch({ type: "newTotal", payload: netProfit });
+    setStockIncome();
+    setTaxableIncome();
+    calcTax();
     saveStocks();
     showTotal ? setShowTotal(false) : setShowTotal(true);
   };
@@ -246,7 +296,8 @@ const Stocks = () => {
               : 0}
           </div>
           <div>
-            Profit = {Math.round((netProfit + Number.EPSILON) * 100) / 100}
+            Gross Profit ={" "}
+            {Math.round((grossProfit + Number.EPSILON) * 100) / 100}
           </div>
           <aside style={styles.aside}>
             The above rates do not include the Medicare levy of 2% or any low
@@ -259,7 +310,7 @@ const Stocks = () => {
 };
 
 const styles = {
-  article: { textAlign: "center" },
+  article: { textAlign: "center", paddingBottom: "58px" },
   formSection: {
     display: "flex",
     justifyContent: "center",
