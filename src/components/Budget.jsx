@@ -8,27 +8,22 @@ import ExpenseItem from "./ExpenseItem";
 
 const Budget = () => {
   const [timeframe, setTimeframe] = useState("year");
-  const [savingsRate, setSavingsRate] = useState(20);
   const [description, setDescription] = useState("");
   const [cost, setCost] = useState(0);
   const [displayResults, setDisplayResults] = useState(false);
 
   const context = useContext(store);
-  const { expenseArray } = context.state;
-
-  let profit;
-  let budget;
-  let totalExpenses;
-  let totalSavings;
+  const {
+    expenseArray,
+    netProfit,
+    grossProfit,
+    totalSavings,
+    totalExpenses,
+    savingsRate,
+  } = context.state;
 
   const db = firebase.firestore();
   const user = firebase.auth().currentUser;
-
-  if (isNaN(context.state.netProfit)) {
-    profit = 0;
-  } else {
-    profit = context.state.netProfit;
-  }
 
   const getBudget = async () => {
     const budgetRef = user ? db.collection("users").doc(user.uid) : null;
@@ -41,18 +36,18 @@ const Budget = () => {
         payload: await doc.data().expenseArray,
       });
       context.dispatch({
-        type: "updateBudget",
-        payload: await doc.data().budget,
-      });
-      context.dispatch({
-        type: "updateSavings",
+        type: "updateTotalSavings",
         payload: await doc.data().totalSavings,
       });
       context.dispatch({
         type: "updateNetProfit",
         payload: await doc.data().netProfit,
       });
-      console.log("Document expenses:", doc.data());
+      context.dispatch({
+        type: "updateTotalExpenses",
+        payload: await doc.data().totalExpenses,
+      });
+      console.log("Document budget:", doc.data());
     }
   };
 
@@ -61,9 +56,9 @@ const Budget = () => {
     await budgetDocRef.set(
       {
         expenseArray: expenseArray,
-        budget: context.state.budget || null,
-        totalExpenses: context.state.totalExpenses || null,
-        totalSavings: context.state.totalSavings || null,
+        totalExpenses: totalExpenses,
+        totalSavings: totalSavings,
+        netProfit: netProfit,
       },
       { merge: true }
     );
@@ -100,9 +95,6 @@ const Budget = () => {
       });
     }
 
-    if (context.state.profit) {
-      console.log("context profit:" + profit);
-    }
     setDisplayResults(false);
   };
 
@@ -118,42 +110,84 @@ const Budget = () => {
     setDisplayResults(false);
   };
 
-  Array.isArray(expenseArray)
-    ? (totalExpenses = expenseArray
-        .map((item) => Number(item.cost))
-        .reduce((a, b) => a + b))
-    : (totalExpenses = 0);
+  const calcTotalExpenses = () => {
+    Array.isArray(expenseArray)
+      ? context.dispatch({
+          type: "updateTotalExpenses",
+          payload: expenseArray
+            .map((item) => Number(item.cost))
+            .reduce((a, b) => a + b),
+        })
+      : context.dispatch({ type: "updateTotalExpenses", payload: 0 });
+  };
 
-  switch (timeframe) {
-    case "day":
-      budget = ((profit - totalExpenses) * (1 - savingsRate / 100)) / 365;
-      totalSavings = ((profit - totalExpenses) * savingsRate) / 100 / 365;
-      break;
-    case "week":
-      budget = ((profit - totalExpenses) * (1 - savingsRate / 100)) / 52;
-      totalSavings = ((profit - totalExpenses) * savingsRate) / 100 / 52;
-      break;
-    case "month":
-      budget = ((profit - totalExpenses) * (1 - savingsRate / 100)) / 12;
-      totalSavings = ((profit - totalExpenses) * savingsRate) / 100 / 12;
-      break;
-    case "year":
-      budget = (profit - totalExpenses) * (1 - savingsRate / 100);
-      totalSavings = ((profit - totalExpenses) * savingsRate) / 100;
-      console.log(totalSavings);
-      break;
-    default:
-      break;
-  }
+  const setNetProfitAndTotalSavings = () => {
+    switch (timeframe) {
+      case "day":
+        context.dispatch({
+          type: "updateTotalSavings",
+          payload: ((grossProfit - totalExpenses) * savingsRate) / 100 / 365,
+        });
+        context.dispatch({
+          type: "updateNetProfit",
+          payload:
+            ((grossProfit - totalExpenses) * (1 - savingsRate / 100)) / 365,
+        });
+        break;
+      case "week":
+        context.dispatch({
+          type: "updateTotalSavings",
+          payload: ((grossProfit - totalExpenses) * savingsRate) / 100 / 52,
+        });
+        context.dispatch({
+          type: "updateNetProfit",
+          payload:
+            ((grossProfit - totalExpenses) * (1 - savingsRate / 100)) / 52,
+        });
+        break;
+      case "fortnight":
+        context.dispatch({
+          type: "updateTotalSavings",
+          payload: ((grossProfit - totalExpenses) * savingsRate) / 100 / 26,
+        });
+        context.dispatch({
+          type: "updateNetProfit",
+          payload:
+            ((grossProfit - totalExpenses) * (1 - savingsRate / 100)) / 26,
+        });
+        break;
+      case "month":
+        context.dispatch({
+          type: "updateTotalSavings",
+          payload: ((grossProfit - totalExpenses) * savingsRate) / 100 / 12,
+        });
+        context.dispatch({
+          type: "updateNetProfit",
+          payload:
+            ((grossProfit - totalExpenses) * (1 - savingsRate / 100)) / 12,
+        });
+        break;
+      case "year":
+        context.dispatch({
+          type: "updateTotalSavings",
+          payload: ((grossProfit - totalExpenses) * savingsRate) / 100,
+        });
+        context.dispatch({
+          type: "updateNetProfit",
+          payload: (grossProfit - totalExpenses) * (1 - savingsRate / 100),
+        });
+        console.log(totalSavings);
+        break;
+      default:
+        break;
+    }
+  };
 
   const calcBudget = async (e) => {
     e.preventDefault();
-
-    context.dispatch({ type: "updateBudget", payload: budget });
-    context.dispatch({ type: "updateSavings", payload: totalSavings });
-    context.dispatch({ type: "totalExpenses", payload: totalExpenses });
+    setNetProfitAndTotalSavings();
+    calcTotalExpenses();
     displayResults ? setDisplayResults(false) : setDisplayResults(true);
-    saveBudget();
   };
 
   return (
@@ -189,6 +223,7 @@ const Budget = () => {
             value={timeframe}
             onChange={(e) => {
               setTimeframe(e.target.value);
+              setDisplayResults(false);
             }}
           >
             <option value="day">day</option>
@@ -206,9 +241,13 @@ const Budget = () => {
               type="range"
               min={0}
               max={100}
-              value={20}
+              value={savingsRate}
               onChange={(e) => {
-                setSavingsRate(e.target.value);
+                context.dispatch({
+                  type: "updateSavingsRate",
+                  payload: e.target.value,
+                });
+                setDisplayResults(false);
               }}
             ></input>
             <div>{savingsRate}%</div>
@@ -234,15 +273,20 @@ const Budget = () => {
         </ul>
       ) : null}
 
-      {displayResults && budget > 0 ? (
-        <div>NPAT: {profit}</div>
-      ) : displayResults && totalExpenses > 0 ? (
-        <div>Total Expenses: {context.state.totalExpenses}</div>
-      ) : null}
-
-      {displayResults && totalSavings > 0 ? (
+      {displayResults && netProfit > 0 ? (
         <div>
-          Your total savings is {context.state.savings} per {timeframe}
+          <div>Total Expenses: {totalExpenses}</div>
+          <div>
+            Net Profit: {Math.round(netProfit * 100) / 100} per {timeframe}
+          </div>
+          <div>
+            Your total savings is {Math.round(totalSavings * 100) / 100} per{" "}
+            {timeframe}
+          </div>
+        </div>
+      ) : displayResults && totalExpenses > 0 ? (
+        <div>
+          <div>Total Expenses: {totalExpenses}</div>
         </div>
       ) : null}
     </article>

@@ -21,7 +21,8 @@ const Stocks = () => {
     grossProfit,
     taxOwed,
     taxBracket,
-    taxableIncome,
+    income,
+    yearCheck,
   } = context.state;
   console.log(context);
 
@@ -42,6 +43,10 @@ const Stocks = () => {
         type: "updateStocksList",
         payload: await doc.data().stocksList,
       });
+      context.dispatch({
+        type: "updateGrossProfit",
+        payload: await doc.data().grossProfit,
+      });
       console.log("Document stocks:", doc.data().stocksList);
     }
   };
@@ -53,7 +58,7 @@ const Stocks = () => {
         grossProfit: grossProfit,
         taxOwed: taxOwed,
         stocksList: stocksList,
-        taxableIncome: taxableIncome,
+        income: income,
         taxBracket: taxBracket,
         annualIncome: annualIncome,
       },
@@ -86,7 +91,7 @@ const Stocks = () => {
   };
 
   const setStockIncome = () => {
-    if (context.yearCheck) {
+    if (yearCheck) {
       stockIncome =
         ((Number(sellPrice) - Number(buyPrice)) * Number(volume)) / 2;
     } else {
@@ -94,79 +99,76 @@ const Stocks = () => {
     }
   };
 
-  const setTaxableIncome = () => {
+  const setIncome = () => {
     if (Array.isArray(stocksList)) {
       let stockIncomeArray = stocksList.map((item) => {
         return item.stockIncome;
       });
       context.dispatch({
-        type: "updateTaxableIncome",
+        type: "updateIncome",
         payload:
           stockIncomeArray.reduce((a, b) => a + b) +
           Math.round(Number(annualIncome)),
       });
     } else {
-      console.log(taxableIncome);
+      console.log(income);
     }
   };
 
   const calcTax = () => {
-    if (taxableIncome <= 18200) {
+    if (income <= 18200) {
       context.dispatch({ type: "updateTaxBracket", payload: taxBracket });
       context.dispatch({ type: "updateTaxOwed", payload: 0 });
+      context.dispatch({
+        type: "updateGrossProfit",
+        payload: income - taxOwed,
+      });
     }
-    context.dispatch({
-      type: "updateGrossProfit",
-      payload: taxableIncome - taxOwed,
-    });
-    if (taxableIncome > 18200 && taxableIncome < 45001) {
+    if (income > 18200 && income < 45001) {
       context.dispatch({ type: "updateTaxBracket", payload: 0.19 });
       context.dispatch({
         type: "updateTaxOwed",
-        payload: (taxableIncome - 18201) * taxBracket,
+        payload: (income - 18201) * taxBracket,
       });
       context.dispatch({
         type: "updateGrossProfit",
-        payload: taxableIncome - taxOwed,
+        payload: income - taxOwed,
       });
     }
-    if (taxableIncome > 45000 && taxableIncome < 120001) {
+    if (income > 45000 && income < 120001) {
       context.dispatch({ type: "updateTaxBracket", payload: 0.325 });
       context.dispatch({
         type: "updateTaxOwed",
-        payload: 5092 + (taxableIncome - 45000) * taxBracket,
+        payload: 5092 + (income - 45000) * taxBracket,
       });
       context.dispatch({
         type: "updateGrossProfit",
-        payload: taxableIncome - taxOwed,
+        payload: income - taxOwed,
       });
     }
-    if (taxableIncome > 120000 && taxableIncome <= 180000) {
+    if (income > 120000 && income <= 180000) {
       context.dispatch({ type: "updateTaxBracket", payload: 0.37 });
       context.dispatch({
         type: "updateTaxOwed",
-        payload: 29467 + (taxableIncome - 120000) * taxBracket,
+        payload: 29467 + (income - 120000) * taxBracket,
       });
       context.dispatch({
         type: "updateGrossProfit",
-        payload: taxableIncome - taxOwed,
+        payload: income - taxOwed,
       });
     }
-    if (taxableIncome > 180001) {
+    if (income > 180001) {
       context.dispatch({ type: "updateTaxBracket", payload: 0.45 });
       context.dispatch({
         type: "updateTaxOwed",
-        payload: 51667 + (taxableIncome - 180000) * taxBracket,
+        payload: 51667 + (income - 180000) * taxBracket,
       });
       context.dispatch({
         type: "updateGrossProfit",
-        payload: taxableIncome - taxOwed,
+        payload: income - taxOwed,
       });
     }
   };
-
-  console.log(typeof taxableIncome + taxableIncome);
-  console.log(typeof taxOwed + taxOwed);
 
   const addStocks = async (e) => {
     e.preventDefault();
@@ -179,7 +181,7 @@ const Stocks = () => {
           buyPrice,
           sellPrice,
           volume,
-          yearCheck: context.yearCheck,
+          yearCheck,
           stockIncome,
         },
       ],
@@ -193,12 +195,11 @@ const Stocks = () => {
     setShowTotal(false);
   };
 
-  const calculateProfit = async (e) => {
+  const calculateProfit = (e) => {
     e.preventDefault();
     setStockIncome();
-    setTaxableIncome();
+    setIncome();
     calcTax();
-    saveStocks();
     showTotal ? setShowTotal(false) : setShowTotal(true);
   };
 
@@ -250,7 +251,7 @@ const Stocks = () => {
           <input type="submit" value="Add Shares" />
 
           <label style={styles.label}>
-            Annual Income:
+            Annual income:
             <input
               type="number"
               value={annualIncome}
@@ -283,21 +284,15 @@ const Stocks = () => {
 
       {showTotal ? (
         <div style={styles.profit}>
+          <div>income: {income > 0 ? Math.round(income * 100) / 100 : 0}</div>
           <div>
-            Taxable Income ={" "}
-            {taxableIncome > 0
-              ? Math.round((taxableIncome + Number.EPSILON) * 100) / 100
-              : 0}
+            income tax Owed: {taxOwed > 0 ? Math.round(taxOwed * 100) / 100 : 0}
           </div>
           <div>
-            Income tax Owed ={" "}
-            {taxOwed > 0
-              ? Math.round((taxOwed + Number.EPSILON) * 100) / 100
-              : 0}
-          </div>
-          <div>
-            Gross Profit ={" "}
-            {Math.round((grossProfit + Number.EPSILON) * 100) / 100}
+            Profit after tax:{" "}
+            {isNaN(grossProfit)
+              ? Math.round(income - taxOwed * 100) / 100
+              : Math.round(grossProfit * 100) / 100}
           </div>
           <aside style={styles.aside}>
             The above rates do not include the Medicare levy of 2% or any low

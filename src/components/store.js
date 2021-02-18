@@ -4,10 +4,8 @@ const initialState = {
   authStatus: false,
   yearCheck: false,
   netProfit: 0,
-  grossProfit: 0,
-  taxOwed: 0,
-  taxableIncome: 0,
   taxBracket: 0,
+  savingsRate: 20,
 };
 
 const store = createContext(initialState);
@@ -21,24 +19,24 @@ const StateProvider = ({ children }) => {
         return { ...state, grossProfit: payload };
       case "updateNetProfit":
         return { ...state, netProfit: payload };
-      case "updateBudget":
-        return { ...state, budget: payload };
-      case "updateSavings":
-        return { ...state, savings: payload };
+      case "updateTotalSavings":
+        return { ...state, totalSavings: payload };
       case "updateYearCheck":
         return { ...state, yearCheck: payload };
       case "updateTaxBracket":
         return { ...state, taxBracket: payload };
       case "updateTaxOwed":
         return { ...state, taxOwed: payload };
-      case "updateTaxableIncome":
-        return { ...state, taxableIncome: payload };
+      case "updateIncome":
+        return { ...state, income: payload };
       case "updateStocksList":
         return { ...state, stocksList: payload };
       case "updateExpenses":
         return { ...state, expenseArray: payload };
-      case "totalExpenses":
+      case "updateTotalExpenses":
         return { ...state, totalExpenses: payload };
+      case "updateSavingsRate":
+        return { ...state, savingsRate: payload };
       case "login":
         return { ...state, authStatus: true };
       case "logout":
