@@ -8,6 +8,7 @@ import ExpenseItem from "./ExpenseItem";
 
 const Budget = () => {
   const [timeframe, setTimeframe] = useState("year");
+  const [category, setCategory] = useState("Groceries");
   const [description, setDescription] = useState("");
   const [cost, setCost] = useState(0);
   const [displayResults, setDisplayResults] = useState(false);
@@ -78,6 +79,7 @@ const Budget = () => {
         payload: [
           ...expenseArray,
           {
+            category,
             description,
             cost,
           },
@@ -88,6 +90,7 @@ const Budget = () => {
         type: "updateExpenses",
         payload: [
           {
+            category,
             description,
             cost,
           },
@@ -185,6 +188,7 @@ const Budget = () => {
 
   const calcBudget = async (e) => {
     e.preventDefault();
+    saveBudget();
     setNetProfitAndTotalSavings();
     calcTotalExpenses();
     displayResults ? setDisplayResults(false) : setDisplayResults(true);
@@ -196,11 +200,35 @@ const Budget = () => {
         <section style={styles.expense}>
           <label style={styles.label}>
             Description:{" "}
-            <input
-              type="text"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-            />
+            <select
+              required
+              id="description"
+              style={styles.description}
+              value={category}
+              onChange={(e) => {
+                setCategory(e.target.value);
+              }}
+            >
+              <option value="Restaurant">Restaurant</option>
+              <option value="Groceries">Groceries</option>
+              <option value="Entertainment">Entertainment</option>
+              <option value="Shopping">Shopping</option>
+              <option value="Drinks">Drinks</option>
+              <option value="Hobby">Hobby</option>
+              <option value="Household">Household</option>
+              <option value="Transport">Transport</option>
+              <option value="Education">Education</option>
+              <option value="Health">Health</option>
+              <option value="Other">Other</option>
+            </select>
+            {category !== "Other" ? null : (
+              <input
+                type="text"
+                value={description}
+                style={styles.other}
+                onChange={(e) => setDescription(e.target.value)}
+              />
+            )}
           </label>
           <br />
           <label style={styles.label}>
@@ -260,10 +288,12 @@ const Budget = () => {
       {Array.isArray(expenseArray) ? (
         <ul style={styles.ul}>
           {expenseArray.map((item, index) => {
+            console.log(item);
             return (
               <ExpenseItem
                 key={index}
                 index={index}
+                category={item.category}
                 description={item.description}
                 cost={item.cost}
                 deleteListItem={deleteListItem}
@@ -297,6 +327,7 @@ const styles = {
   budget: { textAlign: "center" },
   budgetForm: {
     backgroundColor: "bisque",
+    maxWidth: "213px",
     display: "inline-flex",
     flexDirection: "column",
     flexWrap: "wrap",
@@ -304,6 +335,7 @@ const styles = {
   label: {
     display: "flex",
     justifyContent: "space-between",
+    flexWrap: "wrap",
   },
   btnExpense: {
     display: "block",
@@ -318,6 +350,9 @@ const styles = {
     marginTop: "2%",
   },
   submit: { marginTop: "5%" },
+  other: {
+    flex: "0 0 50%",
+  },
 };
 
 export default Budget;

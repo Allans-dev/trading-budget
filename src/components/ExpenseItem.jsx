@@ -1,9 +1,16 @@
 import React from "react";
 
-const ExpenseItem = ({ index, description, cost, deleteListItem }) => (
+const ExpenseItem = ({
+  index,
+  category,
+  description,
+  cost,
+  deleteListItem,
+}) => (
   <li style={styles.listItem} key={index}>
-    <div>{description}</div>
-    <div>{cost}</div>
+    {category === "Other" ? null : <div style={styles.div}>{category}</div>}
+    {description ? <div style={styles.div}>{description}</div> : null}
+    <div style={styles.div}>{cost}</div>
     <button
       onClick={(e) => {
         e.preventDefault();
@@ -21,6 +28,9 @@ const styles = {
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-between",
+  },
+  div: {
+    flex: 1,
   },
 };
 
