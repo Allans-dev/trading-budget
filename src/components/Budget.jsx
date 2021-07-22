@@ -14,14 +14,11 @@ const Budget = () => {
   const [displayResults, setDisplayResults] = useState(false);
 
   const context = useContext(store);
-  const {
-    expenseArray,
-    netProfit,
-    grossProfit,
-    totalSavings,
-    totalExpenses,
-    savingsRate,
-  } = context.state;
+  const { expenseArray, grossProfit, savingsRate } = context.state;
+
+  let totalSavings = 0;
+  let totalExpenses = 0;
+  let netProfit = 0;
 
   const db = firebase.firestore();
   const user = firebase.auth().currentUser;
@@ -67,7 +64,6 @@ const Budget = () => {
 
   useEffect(() => {
     getBudget();
-    return saveBudget();
     // eslint-disable-next-line
   }, []);
 
