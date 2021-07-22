@@ -40,11 +40,6 @@ const Header = () => {
               Budget
             </Link>
           </li>
-          <li>
-            <Link style={styles.listItem} to="/analysis">
-              Analysis
-            </Link>
-          </li>
         </ul>
         <button onClick={signout}>Signout</button>
       </nav>

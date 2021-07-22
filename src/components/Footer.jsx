@@ -21,11 +21,6 @@ const Footer = () => {
               Budget
             </Link>
           </li>
-          <li>
-            <Link style={styles.listItem} to="/analysis">
-              Analysis
-            </Link>
-          </li>
         </ul>
       </nav>
     </div>

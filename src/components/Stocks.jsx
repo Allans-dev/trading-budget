@@ -23,10 +23,9 @@ const Stocks = () => {
     taxBracket,
     income,
     yearCheck,
+    stockNetProfit,
   } = context.state;
-  console.log(context);
-
-  let stockIncome;
+  console.log(stocksList);
 
   console.log("====================================");
 
@@ -34,7 +33,7 @@ const Stocks = () => {
   const user = firebase.auth().currentUser;
 
   const getStocks = async () => {
-    const listRef = await db.collection("users").doc(user.uid);
+    const listRef = db.collection("users").doc(user.uid);
     const doc = await listRef.get();
     if (!doc.exists) {
       console.log("No such document!");
@@ -47,28 +46,46 @@ const Stocks = () => {
         type: "updateGrossProfit",
         payload: await doc.data().grossProfit,
       });
+      context.dispatch({
+        type: "updateIncome",
+        payload: await doc.data().income,
+      });
+      context.dispatch({
+        type: "updateTaxOwed",
+        payload: await doc.data().taxOwed,
+      });
+      context.dispatch({
+        type: "updateYearCheck",
+        payload: await doc.data().yearCheck,
+      });
       console.log("Document stocks:", doc.data().stocksList);
     }
   };
 
   const saveStocks = async () => {
+    console.log(stocksList);
     const totalsDocRef = db.collection("users").doc(user.uid);
-    await totalsDocRef.set(
-      {
-        grossProfit: grossProfit,
-        taxOwed: taxOwed,
-        stocksList: stocksList,
-        income: income,
-        taxBracket: taxBracket,
-        annualIncome: annualIncome,
-      },
-      { merge: true }
-    );
+    await totalsDocRef
+      .set(
+        {
+          grossProfit,
+          taxOwed,
+          stocksList,
+          income,
+          taxBracket,
+        },
+        { merge: true }
+      )
+      .then(() => {
+        console.log("Document successfully written!");
+      })
+      .catch((error) => {
+        console.error("Error writing document: ", error);
+      });
   };
 
   useEffect(() => {
     getStocks();
-    return saveStocks();
     // eslint-disable-next-line
   }, []);
 
@@ -90,28 +107,27 @@ const Stocks = () => {
     setShowTotal(false);
   };
 
-  const setStockIncome = () => {
-    if (yearCheck) {
-      stockIncome =
-        ((Number(sellPrice) - Number(buyPrice)) * Number(volume)) / 2;
-    } else {
-      stockIncome = (Number(sellPrice) - Number(buyPrice)) * Number(volume);
-    }
+  const calcStockNetProfit = () => {
+    context.dispatch({
+      type: "updateStockNetProfit",
+      payload: yearCheck
+        ? ((Number(sellPrice) - Number(buyPrice)) * Number(volume)) / 2
+        : (Number(sellPrice) - Number(buyPrice)) * Number(volume),
+    });
   };
 
   const setIncome = () => {
     if (Array.isArray(stocksList)) {
-      let stockIncomeArray = stocksList.map((item) => {
-        return item.stockIncome;
+      let incomeArray = stocksList.map((item) => {
+        return item.income;
       });
       context.dispatch({
         type: "updateIncome",
         payload:
-          stockIncomeArray.reduce((a, b) => a + b) +
+          incomeArray.reduce((a, b) => a + b) +
           Math.round(Number(annualIncome)),
       });
     } else {
-      console.log(income);
     }
   };
 
@@ -172,6 +188,7 @@ const Stocks = () => {
 
   const addStocks = async (e) => {
     e.preventDefault();
+    calcStockNetProfit();
     context.dispatch({
       type: "updateStocksList",
       payload: [
@@ -182,7 +199,7 @@ const Stocks = () => {
           sellPrice,
           volume,
           yearCheck,
-          stockIncome,
+          stockNetProfit,
         },
       ],
     });
@@ -197,10 +214,10 @@ const Stocks = () => {
 
   const calculateProfit = (e) => {
     e.preventDefault();
-    setStockIncome();
     setIncome();
     calcTax();
     showTotal ? setShowTotal(false) : setShowTotal(true);
+    saveStocks();
   };
 
   return (

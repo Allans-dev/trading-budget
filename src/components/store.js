@@ -6,6 +6,20 @@ const initialState = {
   netProfit: 0,
   taxBracket: 0,
   savingsRate: 20,
+  taxOwed: 0,
+  stocksList: [
+    {
+      stockName: "AAPL",
+      buyPrice: 100,
+      sellPrice: 150,
+      volume: 4,
+      yearCheck: true,
+      stockNetProfit: 200,
+    },
+  ],
+  grossProfit: 0,
+  income: 0,
+  stockNetProfit: 0,
 };
 
 const store = createContext(initialState);
@@ -29,8 +43,10 @@ const StateProvider = ({ children }) => {
         return { ...state, taxOwed: payload };
       case "updateIncome":
         return { ...state, income: payload };
+      case "updateStockNetProfit":
+        return { ...state, stockNetProfit: payload };
       case "updateStocksList":
-        return { ...state, stocksList: payload };
+        return { ...state, stocksList: [...payload] };
       case "updateExpenses":
         return { ...state, expenseArray: payload };
       case "updateTotalExpenses":

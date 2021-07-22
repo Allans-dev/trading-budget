@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 import Landing from "./components/Landing";
 import AddShares from "./components/Stocks";
-import AddSavings from "./components/Analysis";
 import Budget from "./components/Budget";
 
 import Footer from "./components/Footer";
@@ -113,9 +112,6 @@ const App = () => {
           </Route>
           <Route path="/budget">
             <Budget />
-          </Route>
-          <Route path="/analysis">
-            <AddSavings />
           </Route>
           <Route path="/">
             <Landing />
