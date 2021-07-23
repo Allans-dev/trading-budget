@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 
 import StocksListItem from "./StocksListItem";
 
-import { store } from "./stores/stocks-store";
+import { store } from "./stocks-store";
 
 const StocksView = (props) => {
   const context = useContext(store);
@@ -128,7 +128,7 @@ const StocksView = (props) => {
 
       {showTotal ? (
         <div style={styles.profit}>
-          <div>Total Income: {totalIncome}</div>
+          <div>Total Taxable Income: {totalIncome}</div>
           <div>income tax Owed: {taxOwed}</div>
           <div>Take-home profits: {profitBE}</div>
           <aside style={styles.aside}>

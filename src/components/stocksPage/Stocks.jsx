@@ -1,14 +1,15 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import firebase from "firebase/app";
 import "firebase/firestore";
 
-import { store } from "./stores/stocks-store";
+import { store } from "./stocks-store";
 
 import StocksView from "./StocksView";
 
 const Stocks = () => {
   const context = useContext(store);
+  const [yearCheck, setYearCheck] = useState(false);
 
   const {
     stocksList,
@@ -21,7 +22,7 @@ const Stocks = () => {
     buyPrice,
     volume,
     showTotal,
-    yearCheck,
+    totalIncome,
   } = context.state;
 
   const db = firebase.firestore();
@@ -67,11 +68,6 @@ const Stocks = () => {
       });
   };
 
-  useEffect(() => {
-    getStocks();
-    // eslint-disable-next-line
-  }, []);
-
   const saveStocks = async () => {
     const totalsDocRef = db.collection("users").doc(user.uid);
     await totalsDocRef
@@ -82,31 +78,28 @@ const Stocks = () => {
           stocksList,
           salary,
           taxBracket,
+          totalIncome,
         },
         { merge: true }
       )
       .then(() => {
         console.log("Document successfully written!");
-        console.log(
-          "profitBE - " + profitBE,
-          "salary - " + salary,
-          "taxOwed - " + taxOwed
-        );
-        context.dispatch({
-          type: "updateShowTotal",
-          payload: showTotal ? false : true,
-        });
       })
       .catch((error) => {
         console.error("Error writing document: ", error);
       });
   };
 
-  const oneYearCheck = () => {
-    yearCheck
-      ? context.dispatch({ type: "updateYearCheck", payload: false })
-      : context.dispatch({ type: "updateYearCheck", payload: true });
-  };
+  useEffect(() => {
+    getStocks();
+    // eslint-disable-next-line
+  }, []);
+
+  useEffect(() => () => saveStocks());
+
+  function oneYearCheck() {
+    yearCheck ? setYearCheck(false) : setYearCheck(true);
+  }
 
   const deleteListItem = (id) => {
     if (stocksList.length > 0) {
@@ -126,45 +119,46 @@ const Stocks = () => {
       return item.iProfit;
     });
 
-    let totalIncome =
-      profitArray.reduce((a, b) => a + b) + Math.round(Number(salary));
+    const stockTotal = profitArray.reduce((a, b) => a + b);
+
+    let totalIncome = yearCheck
+      ? stockTotal / 2 + Math.round(Number(salary))
+      : stockTotal + Math.round(Number(salary));
     context.dispatch({
       type: "updateTotalIncome",
       payload: totalIncome,
     });
+
     return totalIncome;
   };
 
   const calcTax = () => {
     //calc total income
-
-    const checkedIncome = yearCheck ? calcTotal() / 2 : calcTotal();
-
+    const checkedIncome = calcTotal();
     // tax Bracket Calcs
-
     if (checkedIncome > 180001) {
       context.dispatch({ type: "updateTaxBracket", payload: 0.45 });
       context.dispatch({
         type: "updateTaxOwed",
-        payload: 51667 + (checkedIncome - 180000) * taxBracket,
+        payload: 51667 + (checkedIncome - 180000) * 0.45,
       });
     } else if (checkedIncome > 120000) {
       context.dispatch({ type: "updateTaxBracket", payload: 0.37 });
       context.dispatch({
         type: "updateTaxOwed",
-        payload: 29467 + (checkedIncome - 120000) * taxBracket,
+        payload: 29467 + (checkedIncome - 120000) * 0.37,
       });
     } else if (checkedIncome > 45000) {
       context.dispatch({ type: "updateTaxBracket", payload: 0.325 });
       context.dispatch({
         type: "updateTaxOwed",
-        payload: 5092 + (checkedIncome - 45000) * taxBracket,
+        payload: 5092 + (checkedIncome - 45000) * 0.325,
       });
     } else if (checkedIncome > 18200) {
       context.dispatch({ type: "updateTaxBracket", payload: 0.19 });
       context.dispatch({
         type: "updateTaxOwed",
-        payload: (checkedIncome - 18201) * taxBracket,
+        payload: (checkedIncome - 18201) * 0.19,
       });
     } else if (checkedIncome <= 18200) {
       context.dispatch({ type: "updateTaxBracket", payload: 0 });
@@ -180,7 +174,6 @@ const Stocks = () => {
     e.preventDefault();
 
     let calcIProfit = Number((sellPrice - buyPrice) * volume);
-
     const payload = Array.isArray(stocksList)
       ? [
           ...stocksList,
@@ -213,7 +206,7 @@ const Stocks = () => {
     context.dispatch({ type: "updateBuyPrice", payload: 0 });
     context.dispatch({ type: "updateSellPrice", payload: 0 });
     context.dispatch({ type: "updateVolume", payload: 0 });
-    context.dispatch({ type: "updateYearCheck", payload: false });
+    setYearCheck(false);
 
     document.getElementById("yearCheckBox").checked = false;
 
@@ -223,8 +216,10 @@ const Stocks = () => {
   const calculateProfit = (e) => {
     e.preventDefault();
     calcTax();
-    //save to db & display
-    saveStocks();
+    context.dispatch({
+      type: "updateShowTotal",
+      payload: showTotal ? false : true,
+    });
   };
 
   return (

@@ -1,20 +1,22 @@
 import { createContext, useReducer } from "react";
 
 const initialState = {
-  // taxBracket: 0,
-  // taxOwed: 0,
-  // stocksList: [
+  taxBracket: 0,
+  taxOwed: 0,
+  profitBE: 0,
+  stocksList: [],
+  // [
   //   {
-  //     stockName: "AAPL",
-  //     buyPrice: 100,
-  //     sellPrice: 150,
-  //     volume: 4,
-  //     iProfit: 0,
-  //     yearCheck: true,
+  //     // stockName: "AAPL",
+  //     // buyPrice: 100,
+  //     // sellPrice: 150,
+  //     // volume: 4,
+  //     // iProfit: 0,
+  //     // yearCheck: false,
   //   },
   // ],
-  // totalStocksIncome: 0,
-  // salary: 0,
+  totalIncome: 0,
+  salary: 0,
   //inputs
   stockName: "",
   buyPrice: 0,
@@ -45,7 +47,7 @@ const StockStateProvider = ({ children }) => {
       //logicStates
 
       case "updateProfitBE":
-        return { ...state, profitBE: Number(payload) };
+        return { ...state, profitBE: payload };
       case "updateYearCheck":
         return { ...state, yearCheck: payload };
       case "updateTaxBracket":

@@ -2,16 +2,16 @@ import React, { useState } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 import Landing from "./components/Landing";
-import AddShares from "./components/Stocks";
-import Budget from "./components/Budget";
+import AddShares from "./components/stocksPage/Stocks";
+import Budget from "./components/budgetPage/Budget";
 
 import Footer from "./components/Footer";
 import Header from "./components/Header";
 
-import { StateProvider } from "./components/stores/main-store";
+import { StateProvider } from "./components/main-store";
 
-import { StockStateProvider } from "./components/stores/stocks-store";
-import { BudgetStateProvider } from "./components/stores/budget-store";
+import { StockStateProvider } from "./components/stocksPage/stocks-store";
+import { BudgetStateProvider } from "./components/budgetPage/budget-store";
 
 import "./App.css";
 
@@ -40,7 +40,7 @@ if (!firebase.apps.length) {
 const db = firebase.firestore();
 
 const App = () => {
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [authStatus, setAuthStatus] = useState(false);
 
   const ui =
     firebaseui.auth.AuthUI.getInstance() ||
@@ -98,14 +98,14 @@ const App = () => {
         },
         { merge: true }
       );
-      setLoggedIn(true);
+      setAuthStatus(true);
     } else {
-      setLoggedIn(false);
+      setAuthStatus(false);
       ui.start("#firebaseui-auth-container", uiConfig);
     }
   });
 
-  return loggedIn ? (
+  return authStatus ? (
     <StateProvider>
       <Router style={styles.root}>
         <Header />
@@ -128,7 +128,6 @@ const App = () => {
       </Router>
     </StateProvider>
   ) : (
-    // No user is signed in.
     <div>
       <div id="loader">Loading...</div>
       <div id="firebaseui-auth-container"></div>

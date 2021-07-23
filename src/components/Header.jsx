@@ -1,26 +1,20 @@
-import React, { useContext } from "react";
-import { Link } from "react-router-dom";
+import React from "react";
+import { Link, Redirect } from "react-router-dom";
 
 import firebase from "firebase/app";
 
-import { store } from "./stores/main-store";
-
 const Header = () => {
-  const globalState = useContext(store);
   const signout = () =>
     firebase
       .auth()
       .signOut()
-      .then(
-        function () {
-          globalState.dispatch({ type: "logout" });
-
-          console.log("Signed Out");
-        },
-        function (error) {
-          console.error("Sign Out Error", error);
-        }
-      );
+      .then(() => {
+        <Redirect to="/" />;
+        console.log("Signed Out");
+      })
+      .catch((error) => {
+        console.error("Sign Out Error", error);
+      });
   return (
     <div style={styles.root}>
       <nav>
