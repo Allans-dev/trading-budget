@@ -17,7 +17,7 @@ const Stocks = () => {
 
   const context = useContext(store);
 
-  const { stocksList, grossProfit, taxOwed, taxBracket, totalIncome } =
+  const { stocksList, profitBE, taxOwed, taxBracket, totalIncome } =
     context.state;
 
   const { iProfit, yearCheck } =
@@ -44,8 +44,8 @@ const Stocks = () => {
         payload: await doc.data().stocksList,
       });
       context.dispatch({
-        type: "updateGrossProfit",
-        payload: (await doc.data().grossProfit) || 0,
+        type: "updateProfitBE",
+        payload: await doc.data().profitBE,
       });
       context.dispatch({
         type: "updateTotalIncome",
@@ -78,7 +78,7 @@ const Stocks = () => {
     await totalsDocRef
       .set(
         {
-          grossProfit,
+          profitBE,
           taxOwed,
           stocksList,
           iProfit,
@@ -113,23 +113,9 @@ const Stocks = () => {
     setShowTotal(false);
   };
 
-  // const calcindividualProfit = () => {
-  //   let individualProfit = yearCheck
-  //     ? ((Number(sellPrice) - Number(buyPrice)) * Number(volume)) / 2
-  //     : (Number(sellPrice) - Number(buyPrice)) * Number(volume);
-  //   context.dispatch({
-  //     type: "updateindividualProfit",
-  //     payload: individualProfit,
-  //   });
-  // };
-
   const setIncomes = () => {
     let profitArray = stocksList.map((item) => {
       return item.iProfit;
-    });
-    context.dispatch({
-      type: "updateIProfit",
-      payload: profitArray.reduce((a, b) => a + b),
     });
     context.dispatch({
       type: "updateTotalIncome",
@@ -144,7 +130,7 @@ const Stocks = () => {
       context.dispatch({ type: "updateTaxBracket", payload: taxBracket });
       context.dispatch({ type: "updateTaxOwed", payload: 0 });
       context.dispatch({
-        type: "updateGrossProfit",
+        type: "updateProfitBE",
         payload: checkedIncome - taxOwed,
       });
     }
@@ -155,7 +141,7 @@ const Stocks = () => {
         payload: (checkedIncome - 18201) * taxBracket,
       });
       context.dispatch({
-        type: "updateGrossProfit",
+        type: "updateProfitBE",
         payload: checkedIncome - taxOwed,
       });
     }
@@ -166,7 +152,7 @@ const Stocks = () => {
         payload: 5092 + (checkedIncome - 45000) * taxBracket,
       });
       context.dispatch({
-        type: "updateGrossProfit",
+        type: "updateProfitBE",
         payload: checkedIncome - taxOwed,
       });
     }
@@ -177,7 +163,7 @@ const Stocks = () => {
         payload: 29467 + (checkedIncome - 120000) * taxBracket,
       });
       context.dispatch({
-        type: "updateGrossProfit",
+        type: "updateProfitBE",
         payload: checkedIncome - taxOwed,
       });
     }
@@ -188,7 +174,7 @@ const Stocks = () => {
         payload: 51667 + (checkedIncome - 180000) * taxBracket,
       });
       context.dispatch({
-        type: "updateGrossProfit",
+        type: "updateProfitBE",
         payload: checkedIncome - taxOwed,
       });
     }
@@ -196,13 +182,13 @@ const Stocks = () => {
 
   const addStocks = async (e) => {
     e.preventDefault();
-    context.dispatch({
-      type: "updateIProfit",
-      payload: (sellPrice - buyPrice) * volume,
-    });
-    console.log(stocksList);
 
     let calcIProfit = (sellPrice - buyPrice) * volume;
+
+    context.dispatch({
+      type: "updateIProfit",
+      payload: calcIProfit,
+    });
 
     const payload = Array.isArray(stocksList)
       ? [
@@ -213,7 +199,7 @@ const Stocks = () => {
             sellPrice,
             volume,
             yearCheck,
-            iProfit: calcIProfit,
+            iProfit,
           },
         ]
       : [
@@ -223,7 +209,7 @@ const Stocks = () => {
             sellPrice,
             volume,
             yearCheck,
-            iProfit: calcIProfit,
+            iProfit,
           },
         ];
 
@@ -244,6 +230,7 @@ const Stocks = () => {
     e.preventDefault();
     setIncomes();
     calcTax();
+
     showTotal ? setShowTotal(false) : setShowTotal(true);
     saveStocks();
   };
@@ -329,11 +316,11 @@ const Stocks = () => {
 
       {showTotal ? (
         <div style={styles.profit}>
-          <div>Net Profit: {totalIncome}</div>
+          <div>Total Income: {totalIncome}</div>
           <div>
             income tax Owed: {taxOwed > 0 ? Math.round(taxOwed * 100) / 100 : 0}
           </div>
-          <div>Profit after tax: {grossProfit}</div>
+          <div>Take-home profits: {profitBE}</div>
           <aside style={styles.aside}>
             The above rates do not include the Medicare levy of 2% or any low
             income offsets.

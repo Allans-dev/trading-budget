@@ -16,7 +16,7 @@ const initialState = {
       yearCheck: true,
     },
   ],
-  grossProfit: 0,
+  profitBE: 0,
   totalIncome: 0,
   totalExpenses: 0,
   totalSavings: 0,
@@ -30,8 +30,8 @@ const StateProvider = ({ children }) => {
   const [state, dispatch] = useReducer((state, action) => {
     const { type, payload } = action;
     switch (type) {
-      case "updateGrossProfit":
-        return { ...state, grossProfit: payload };
+      case "updateProfitBE":
+        return { ...state, profitBE: payload };
       case "updateNetProfit":
         return { ...state, netProfit: payload };
       case "updateTotalSavings":
