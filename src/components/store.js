@@ -2,7 +2,6 @@ import { createContext, useReducer } from "react";
 
 const initialState = {
   authStatus: false,
-  yearCheck: false,
   netProfit: 0,
   taxBracket: 0,
   savingsRate: 20,
@@ -13,13 +12,15 @@ const initialState = {
       buyPrice: 100,
       sellPrice: 150,
       volume: 4,
+      iProfit: 0,
       yearCheck: true,
-      stockNetProfit: 200,
     },
   ],
   grossProfit: 0,
-  income: 0,
-  stockNetProfit: 0,
+  totalIncome: 0,
+  totalExpenses: 0,
+  totalSavings: 0,
+  totalStocksIncome: 0,
 };
 
 const store = createContext(initialState);
@@ -41,12 +42,15 @@ const StateProvider = ({ children }) => {
         return { ...state, taxBracket: payload };
       case "updateTaxOwed":
         return { ...state, taxOwed: payload };
-      case "updateIncome":
-        return { ...state, income: payload };
-      case "updateStockNetProfit":
-        return { ...state, stockNetProfit: payload };
+      case "updateTotalIncome":
+        return { ...state, totalIncome: payload };
+      case "updateIProfit":
+        return { ...state, iProfit: payload };
       case "updateStocksList":
-        return { ...state, stocksList: [...payload] };
+        return {
+          ...state,
+          stocksList: Array.isArray(payload) ? [...payload] : payload,
+        };
       case "updateExpenses":
         return { ...state, expenseArray: payload };
       case "updateTotalExpenses":

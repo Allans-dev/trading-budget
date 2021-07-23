@@ -14,11 +14,14 @@ const Budget = () => {
   const [displayResults, setDisplayResults] = useState(false);
 
   const context = useContext(store);
-  const { expenseArray, grossProfit, savingsRate } = context.state;
-
-  let totalSavings = 0;
-  let totalExpenses = 0;
-  let netProfit = 0;
+  const {
+    expenseArray,
+    grossProfit,
+    savingsRate,
+    totalExpenses,
+    totalSavings,
+    netProfit,
+  } = context.state;
 
   const db = firebase.firestore();
   const user = firebase.auth().currentUser;
@@ -182,7 +185,7 @@ const Budget = () => {
     }
   };
 
-  const calcBudget = async (e) => {
+  const calcBudget = (e) => {
     e.preventDefault();
     saveBudget();
     setNetProfitAndTotalSavings();
@@ -299,7 +302,7 @@ const Budget = () => {
         </ul>
       ) : null}
 
-      {displayResults && netProfit > 0 ? (
+      {displayResults === true && netProfit > 0 ? (
         <div>
           <div>Total Expenses: {totalExpenses}</div>
           <div>
@@ -310,7 +313,7 @@ const Budget = () => {
             {timeframe}
           </div>
         </div>
-      ) : displayResults && totalExpenses > 0 ? (
+      ) : displayResults === true && totalExpenses > 0 ? (
         <div>
           <div>Total Expenses: {totalExpenses}</div>
         </div>
