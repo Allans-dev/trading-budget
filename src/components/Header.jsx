@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 import firebase from "firebase/app";
 
-import { store } from "./store";
+import { store } from "./stores/main-store";
 
 const Header = () => {
   const globalState = useContext(store);

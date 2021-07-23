@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from "react";
 import firebase from "firebase/app";
 import "firebase/firestore";
 
-import { store } from "./store";
+import { store } from "./stores/budget-store";
 
 import ExpenseItem from "./ExpenseItem";
 

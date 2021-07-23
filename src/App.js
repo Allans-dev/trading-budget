@@ -8,7 +8,10 @@ import Budget from "./components/Budget";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
 
-import { StateProvider } from "./components/store";
+import { StateProvider } from "./components/stores/main-store";
+
+import { StockStateProvider } from "./components/stores/stocks-store";
+import { BudgetStateProvider } from "./components/stores/budget-store";
 
 import "./App.css";
 
@@ -107,12 +110,16 @@ const App = () => {
       <Router style={styles.root}>
         <Header />
         <Switch>
-          <Route path="/stocks">
-            <AddShares />
-          </Route>
-          <Route path="/budget">
-            <Budget />
-          </Route>
+          <StockStateProvider>
+            <Route path="/stocks">
+              <AddShares />
+            </Route>
+          </StockStateProvider>
+          <BudgetStateProvider>
+            <Route path="/budget">
+              <Budget />
+            </Route>
+          </BudgetStateProvider>
           <Route path="/">
             <Landing />
           </Route>
