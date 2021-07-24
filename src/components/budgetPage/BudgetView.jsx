@@ -7,7 +7,7 @@ import ExpenseItem from "./ExpenseItem";
 const BudgetView = (props) => {
   const context = useContext(store);
   const {
-    timeframe,
+    // timeFrame,
     category,
     description,
     cost,
@@ -17,7 +17,9 @@ const BudgetView = (props) => {
     totalSavings,
     netProfit,
     displayResults,
-  } = context;
+  } = context.state;
+
+  // console.log(timeFrame);
 
   const { calcBudget, addExpenses, deleteListItem } = props;
 
@@ -29,8 +31,8 @@ const BudgetView = (props) => {
             Description:{" "}
             <select
               required
-              id="description"
-              style={styles.description}
+              id="category"
+              style={styles.category}
               value={category}
               onChange={(e) => {
                 context.dispatch({
@@ -40,7 +42,9 @@ const BudgetView = (props) => {
               }}
             >
               <option value="Restaurant">Restaurant</option>
-              <option value="Groceries">Groceries</option>
+              <option defaultValue value="Groceries">
+                Groceries
+              </option>
               <option value="Entertainment">Entertainment</option>
               <option value="Shopping">Shopping</option>
               <option value="Drinks">Drinks</option>
@@ -83,12 +87,12 @@ const BudgetView = (props) => {
         <button style={styles.btnExpense} onClick={addExpenses}>
           +
         </button>
-        <label>
+        {/* <label>
           Current timeframe:{" "}
           <select
             id="timeframe"
-            style={styles.timeframe}
-            value={timeframe}
+            style={styles.timeFrame}
+            value={timeFrame}
             onChange={(e) => {
               context.dispatch({
                 type: "updateTimeFrame",
@@ -106,7 +110,7 @@ const BudgetView = (props) => {
             <option value="month">month</option>
             <option value="year">year</option>
           </select>
-        </label>
+        </label> */}
         <section style={styles.savings}>
           <label>
             <span style={{ display: "block" }}>Savings Rate</span>
@@ -137,7 +141,6 @@ const BudgetView = (props) => {
       {Array.isArray(expenseArray) ? (
         <ul style={styles.ul}>
           {expenseArray.map((item, index) => {
-            console.log(item);
             return (
               <ExpenseItem
                 key={index}
@@ -156,11 +159,12 @@ const BudgetView = (props) => {
         <div>
           <div>Total Expenses: {totalExpenses}</div>
           <div>
-            Net Profit: {Math.round(netProfit * 100) / 100} per {timeframe}
+            Your total savings is {Math.round(totalSavings * 100) / 100}
+            {/* {timeFrame} */}
           </div>
           <div>
-            Your total savings is {Math.round(totalSavings * 100) / 100} per{" "}
-            {timeframe}
+            Net Profit: {Math.round(netProfit * 100) / 100}
+            {/* {timeFrame} */}
           </div>
         </div>
       ) : displayResults === true && totalExpenses > 0 ? (
@@ -190,7 +194,7 @@ const styles = {
     display: "block",
     marginTop: "2%",
   },
-  timeframe: { marginTop: "5%" },
+  timeFrame: { marginTop: "5%" },
   savings: { marginTop: "5%" },
   btnSavings: {
     display: "block",

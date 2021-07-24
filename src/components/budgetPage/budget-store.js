@@ -1,15 +1,17 @@
 import { createContext, useReducer } from "react";
 
 const initialState = {
+  expenseArray: [],
+  totalExpenses: 0,
+  totalSavings: 0,
   netProfit: 0,
 
   savingsRate: 20,
   profitBE: 0,
-  expenseArray: [],
-  totalExpenses: 0,
-  totalSavings: 0,
 
   category: "Groceries",
+  description: "",
+  timeFrame: "",
   displayResults: false,
 };
 
@@ -20,12 +22,17 @@ const BudgetStateProvider = ({ children }) => {
   const [state, dispatch] = useReducer((state, action) => {
     const { type, payload } = action;
     switch (type) {
+      case "updateProfitBE":
+        return { ...state, profitBE: payload };
       case "updateNetProfit":
         return { ...state, netProfit: payload };
       case "updateTotalSavings":
         return { ...state, totalSavings: payload };
       case "updateExpenses":
-        return { ...state, expenseArray: payload };
+        return {
+          ...state,
+          expenseArray: Array.isArray(payload) ? [...payload] : payload,
+        };
       case "updateTotalExpenses":
         return { ...state, totalExpenses: payload };
       case "updateSavingsRate":
