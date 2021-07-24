@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 
 import Landing from "./components/Landing";
-import AddShares from "./components/stocksPage/Stocks";
+import Stocks from "./components/stocksPage/Stocks";
 import Budget from "./components/budgetPage/Budget";
 
 import Footer from "./components/Footer";
@@ -109,21 +109,22 @@ const App = () => {
     <StateProvider>
       <Router style={styles.root}>
         <Header />
-        <Switch>
-          <StockStateProvider>
-            <Route path="/stocks">
-              <AddShares />
-            </Route>
-          </StockStateProvider>
-          <BudgetStateProvider>
-            <Route path="/budget">
-              <Budget />
-            </Route>
-          </BudgetStateProvider>
-          <Route path="/">
-            <Landing />
+
+        <BudgetStateProvider>
+          <Route exact path="/budget">
+            <Budget />
           </Route>
-        </Switch>
+        </BudgetStateProvider>
+
+        <StockStateProvider>
+          <Route exact path="/stocks">
+            <Stocks />
+          </Route>
+        </StockStateProvider>
+
+        <Route exact path="/">
+          <Landing />
+        </Route>
         <Footer />
       </Router>
     </StateProvider>

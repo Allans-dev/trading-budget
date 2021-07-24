@@ -5,16 +5,6 @@ const initialState = {
   taxOwed: 0,
   profitBE: 0,
   stocksList: [],
-  // [
-  //   {
-  //     // stockName: "AAPL",
-  //     // buyPrice: 100,
-  //     // sellPrice: 150,
-  //     // volume: 4,
-  //     // iProfit: 0,
-  //     // yearCheck: false,
-  //   },
-  // ],
   totalIncome: 0,
   salary: 0,
   //inputs

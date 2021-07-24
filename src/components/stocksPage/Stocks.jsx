@@ -10,7 +10,7 @@ import StocksView from "./StocksView";
 const Stocks = () => {
   const context = useContext(store);
   const [yearCheck, setYearCheck] = useState(false);
-
+  // console.log(context);
   const {
     stocksList,
     profitBE,
