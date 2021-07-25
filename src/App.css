@@ -1,3 +1,52 @@
 body {
-  background-color: aquamarine;
+  margin: 0 auto;
+  border: 1px solid black;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  width: 100vw;
+  height: 100vh;
+  animation: back 5s linear, 0s;
+  animation-iteration-count: infinite;
+  background-image: linear-gradient(#3a89f0, #f0b03a);
+  transform: rotate(360deg);
+}
+
+@keyframes back {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+body::after {
+  content: "";
+  position: absolute;
+  z-index: -3;
+  width: 300vw;
+  height: 300vw;
+  animation: front 10s linear 0s;
+  animation-iteration-count: infinite;
+  background-image: linear-gradient(#3a89f0, #f0b03a);
+  background-blend-mode: multiply;
+  border-radius: 100%;
+  margin: -150vw;
+}
+
+@keyframes front {
+  0% {
+    /* margin: -50vw 0%; */
+  }
+  25% {
+    /* margin: 0% 50vw; */
+  }
+  50% {
+    /* margin: 50vw 0%; */
+  }
+  75% {
+    /* margin: 0% -50vw; */
+  }
+  100% {
+    /* margin: -50vw 0%; */
+    transform: rotate(-360deg);
+  }
 }

@@ -177,6 +177,7 @@ const BudgetView = (props) => {
 };
 
 const styles = {
+  ul: { paddingLeft: 0, display: "flex", flexDirection: "column" },
   budget: { textAlign: "center" },
   budgetForm: {
     backgroundColor: "bisque",

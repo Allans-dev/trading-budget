@@ -39,7 +39,7 @@ const styles = {
     bottom: 0,
     width: "100%",
     maxWidth: width,
-    backgroundColor: "black",
+    backgroundColor: "rgba(255,255,255,0.3",
     padding: "20px 0",
   },
   listContainer: {

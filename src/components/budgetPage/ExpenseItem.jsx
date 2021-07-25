@@ -39,6 +39,7 @@ const styles = {
   },
   div: {
     flex: 1,
+    alignItems: "left",
   },
 };
 

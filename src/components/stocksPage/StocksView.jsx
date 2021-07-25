@@ -142,7 +142,7 @@ const StocksView = (props) => {
 };
 
 const styles = {
-  article: { textAlign: "center", paddingBottom: "58px" },
+  article: { textAlign: "center", paddingBottom: "58px", zIndex: "1" },
   formSection: {
     display: "flex",
     justifyContent: "center",
