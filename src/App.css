@@ -1,52 +1,40 @@
 body {
-  margin: 0 auto;
-  border: 1px solid black;
-  width: 100vw;
-  height: 100vh;
   overflow: hidden;
-  width: 100vw;
-  height: 100vh;
-  animation: back 5s linear, 0s;
-  animation-iteration-count: infinite;
-  background-image: linear-gradient(#3a89f0, #f0b03a);
-  transform: rotate(360deg);
-}
-
-@keyframes back {
-  100% {
-    transform: rotate(360deg);
-  }
+  padding-top: 100px;
 }
 
 body::after {
   content: "";
   position: absolute;
-  z-index: -3;
+  z-index: -1;
   width: 300vw;
   height: 300vw;
-  animation: front 10s linear 0s;
+  animation: front 6s linear 0s;
   animation-iteration-count: infinite;
   background-image: linear-gradient(#3a89f0, #f0b03a);
-  background-blend-mode: multiply;
-  border-radius: 100%;
   margin: -150vw;
 }
 
+@media (orientation: portrait) {
+  body {
+    background-image: linear-gradient(#3a89f0, #f0b03a);
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+  }
+
+  body::after {
+    width: 100%;
+    height: 100%;
+    animation: none;
+    opacity: 1;
+  }
+}
+
 @keyframes front {
-  0% {
-    /* margin: -50vw 0%; */
-  }
-  25% {
-    /* margin: 0% 50vw; */
-  }
-  50% {
-    /* margin: 50vw 0%; */
-  }
-  75% {
-    /* margin: 0% -50vw; */
-  }
   100% {
-    /* margin: -50vw 0%; */
     transform: rotate(-360deg);
   }
 }

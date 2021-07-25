@@ -107,26 +107,28 @@ const App = () => {
 
   return authStatus ? (
     <StateProvider>
-      <Router style={styles.root}>
-        <Header />
+      <div style={styles.root}>
+        <Router style={styles.after}>
+          <Header />
 
-        <BudgetStateProvider>
-          <Route exact path="/budget">
-            <Budget />
+          <BudgetStateProvider>
+            <Route exact path="/budget">
+              <Budget />
+            </Route>
+          </BudgetStateProvider>
+
+          <StockStateProvider>
+            <Route exact path="/stocks">
+              <Stocks />
+            </Route>
+          </StockStateProvider>
+
+          <Route exact path="/">
+            <Landing />
           </Route>
-        </BudgetStateProvider>
-
-        <StockStateProvider>
-          <Route exact path="/stocks">
-            <Stocks />
-          </Route>
-        </StockStateProvider>
-
-        <Route exact path="/">
-          <Landing />
-        </Route>
-        <Footer />
-      </Router>
+          <Footer />
+        </Router>
+      </div>
     </StateProvider>
   ) : (
     <div>
@@ -144,7 +146,20 @@ const width =
 const styles = {
   root: {
     maxWidth: width,
+    overflow: "hidden",
   },
+  // after: {
+  //   maxWidth: width,
+  //   overflow: "hidden",
+  //   position: "absolute",
+  //   zIndex: "-1",
+  //   width: "300vw",
+  //   height: "300vw",
+  //   animation: "front 8s linear 0s",
+  //   animationIterationCount: "infinite",
+  //   backgroundImage: "linear-gradient('#3a89f0', '#f0b03a')",
+  //   margin: "-150vw",
+  // },
 };
 
 export default App;

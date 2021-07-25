@@ -38,7 +38,6 @@ const styles = {
     left: 0,
     bottom: 0,
     width: "100%",
-    maxWidth: width,
     backgroundColor: "rgba(255,255,255,0.3",
     padding: "20px 0",
   },

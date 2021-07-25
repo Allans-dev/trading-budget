@@ -48,10 +48,10 @@ const width =
 
 const styles = {
   root: {
-    position: "relative",
+    position: "fixed",
     left: 0,
     top: 0,
-    maxWidth: width,
+    width: "100%",
     backgroundColor: "rgba(255,255,255,0.3",
     padding: "20px 0",
     marginBottom: "20px",
