@@ -26,9 +26,9 @@ const StocksView = (props) => {
 
   return (
     <article class="article">
-      <section class="formSection">
-        <form class="form" onSubmit={addStocks}>
-          <label class="label">
+      <section class="stocksFormSection">
+        <form onSubmit={addStocks}>
+          <label>
             Share Name:
             <input
               type="text"
@@ -42,8 +42,8 @@ const StocksView = (props) => {
               required
             />
           </label>
-          <label class="label">
-            Unit Price (Bought):
+          <label>
+            Buy Price:
             <input
               type="number"
               value={buyPrice}
@@ -56,8 +56,8 @@ const StocksView = (props) => {
               required
             />
           </label>
-          <label class="label">
-            Unit Price (Sold):
+          <label>
+            Sold Price:
             <input
               type="number"
               value={sellPrice}
@@ -70,8 +70,8 @@ const StocksView = (props) => {
               required
             />
           </label>
-          <label class="label">
-            Number of Shares:
+          <label>
+            Volume:
             <input
               type="number"
               value={volume}
@@ -91,8 +91,8 @@ const StocksView = (props) => {
 
           <input type="submit" value="Add Shares" />
 
-          <label class="label">
-            Annual income:
+          <label>
+            Other Income:
             <input
               type="number"
               value={salary}
@@ -105,7 +105,7 @@ const StocksView = (props) => {
             />
           </label>
 
-          <button onClick={calculateProfit}>
+          <button class="button green" onClick={calculateProfit}>
             {" "}
             {showTotal ? "Show Stocks" : "Save and Calculate"}
           </button>
@@ -113,7 +113,7 @@ const StocksView = (props) => {
       </section>
 
       {Array.isArray(stocksList) ? (
-        <ul class="stocks-ul">
+        <section class="result-section">
           {showTotal ? (
             <section class="profit">
               <div>Total Taxable Income: {totalIncome}</div>
@@ -125,20 +125,31 @@ const StocksView = (props) => {
               </aside>
             </section>
           ) : (
-            stocksList.map((item, index) => (
-              <StocksListItem
-                key={index}
-                index={index}
-                stockName={item.stockName}
-                buyPrice={item.buyPrice}
-                sellPrice={item.sellPrice}
-                volume={item.volume}
-                yearCheck={item.yearCheck}
-                deleteListItem={deleteListItem}
-              />
-            ))
+            <section class="stocks-display">
+              <div class="stock-header">
+                <span>Code</span>
+                <span>Buy Price</span>
+                <span>Sell Price</span>
+                <span>Volume</span>
+                <span></span>
+              </div>
+              <ul>
+                {stocksList.map((item, index) => (
+                  <StocksListItem
+                    key={index}
+                    index={index}
+                    stockName={item.stockName}
+                    buyPrice={item.buyPrice}
+                    sellPrice={item.sellPrice}
+                    volume={item.volume}
+                    yearCheck={item.yearCheck}
+                    deleteListItem={deleteListItem}
+                  />
+                ))}
+              </ul>
+            </section>
           )}
-        </ul>
+        </section>
       ) : null}
     </article>
   );

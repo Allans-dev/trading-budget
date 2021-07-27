@@ -16,17 +16,12 @@ const StocksListItem = ({
     <li class="list-item" key={id}>
       <div class="stock-detail">
         <div>{stockName}</div>
-        <div>
-          <span>Buy Price</span> {buyPrice}
-        </div>
-        <div>
-          <span>Sell Price</span> {sellPrice}
-        </div>
-        <div>
-          <span>Volume</span> {volume}
-        </div>
+        <div>{buyPrice}</div>
+        <div>{sellPrice}</div>
+        <div>{volume}</div>
 
         <button
+          class="button delete"
           onClick={(e) => {
             e.preventDefault();
             deleteListItem(id);
