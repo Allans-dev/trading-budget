@@ -8,7 +8,8 @@ const Landing = () => {
 
 const styles = {
   root: {
-    paddingTop: "calc(40px+1em)",
+    gridArea: "Content",
+    // paddingTop: "calc(40px+1em)",
   },
 };
 

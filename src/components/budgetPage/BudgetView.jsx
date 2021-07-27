@@ -178,7 +178,7 @@ const BudgetView = (props) => {
 
 const styles = {
   ul: { paddingLeft: 0, display: "flex", flexDirection: "column" },
-  budget: { textAlign: "center" },
+  budget: { textAlign: "center", gridArea: "Content" },
   budgetForm: {
     backgroundColor: "bisque",
     maxWidth: "213px",

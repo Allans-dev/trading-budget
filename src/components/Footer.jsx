@@ -3,43 +3,35 @@ import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
-    <div style={styles.root}>
+    <section style={styles.root}>
       <nav>
         <ul style={styles.listContainer}>
-          <li>
-            <Link style={styles.listItem} to="/">
-              Home
-            </Link>
-          </li>
-          <li>
-            <Link style={styles.listItem} to="/stocks">
-              Stocks
-            </Link>
-          </li>
-          <li>
-            <Link style={styles.listItem} to="/budget">
-              Budget
-            </Link>
-          </li>
+          <Link style={styles.listItem} to="/">
+            <li>Home</li>
+          </Link>
+
+          <Link style={styles.listItem} to="/stocks">
+            <li>Stocks</li>
+          </Link>
+
+          <Link style={styles.listItem} to="/budget">
+            <li>Budget</li>
+          </Link>
         </ul>
       </nav>
-    </div>
+    </section>
   );
 };
 
-const width =
-  window.innerWidth ||
-  document.documentElement.clientWidth ||
-  document.body.clientWidth;
-
 const styles = {
   root: {
-    position: "fixed",
-    left: 0,
-    bottom: 0,
+    position: "relative",
+    display: "grid",
+    gridArea: "Footer",
     width: "100%",
-    backgroundColor: "rgba(255,255,255,0.3",
-    padding: "20px 0",
+    height: "3em",
+    lineHeight: "3em",
+    backgroundColor: "rgba(255,255,255,0.3)",
   },
   listContainer: {
     listStyle: "none",
@@ -50,8 +42,11 @@ const styles = {
     justifyContent: "space-around",
   },
   listItem: {
+    textAlign: "center",
     textDecoration: "none",
     color: "#ededed",
+    width: "10%",
+    height: "100%",
   },
 };
 

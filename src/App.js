@@ -107,8 +107,8 @@ const App = () => {
 
   return authStatus ? (
     <StateProvider>
-      <div style={styles.root}>
-        <Router style={styles.after}>
+      <article class={"root"} style={styles.root}>
+        <Router>
           <Header />
 
           <BudgetStateProvider>
@@ -128,38 +128,31 @@ const App = () => {
           </Route>
           <Footer />
         </Router>
-      </div>
+      </article>
     </StateProvider>
   ) : (
-    <div>
+    <article style={styles.root}>
       <div id="loader">Loading...</div>
       <div id="firebaseui-auth-container"></div>
-    </div>
+    </article>
   );
 };
 
-const width =
-  window.innerWidth ||
-  document.documentElement.clientWidth ||
-  document.body.clientWidth;
+// const width =
+//   window.innerWidth ||
+//   document.documentElement.clientWidth ||
+//   document.body.clientWidth;
+
+// const height =
+//   window.innerHeight ||
+//   document.documentElement.clientHeight ||
+//   document.body.clientHeight;
 
 const styles = {
   root: {
-    maxWidth: width,
-    overflow: "hidden",
+    // maxWidth: width,
+    // maxHeight: height,
   },
-  // after: {
-  //   maxWidth: width,
-  //   overflow: "hidden",
-  //   position: "absolute",
-  //   zIndex: "-1",
-  //   width: "300vw",
-  //   height: "300vw",
-  //   animation: "front 8s linear 0s",
-  //   animationIterationCount: "infinite",
-  //   backgroundImage: "linear-gradient('#3a89f0', '#f0b03a')",
-  //   margin: "-150vw",
-  // },
 };
 
 export default App;

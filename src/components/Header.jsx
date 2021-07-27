@@ -41,20 +41,15 @@ const Header = () => {
   );
 };
 
-const width =
-  window.innerWidth ||
-  document.documentElement.clientWidth ||
-  document.body.clientWidth;
-
 const styles = {
   root: {
-    position: "fixed",
-    left: 0,
-    top: 0,
+    position: "relative",
+    display: "grid",
+    gridArea: "Header",
+    height: "3em",
+    lineHeight: "3em",
     width: "100%",
-    backgroundColor: "rgba(255,255,255,0.3",
-    padding: "20px 0",
-    marginBottom: "20px",
+    backgroundColor: "rgba(255,255,255,0.3)",
   },
   listContainer: {
     listStyle: "none",
@@ -65,8 +60,11 @@ const styles = {
     justifyContent: "space-around",
   },
   listItem: {
+    textAlign: "center",
     textDecoration: "none",
     color: "#ededed",
+    width: "10%",
+    height: "100%",
   },
 };
 
