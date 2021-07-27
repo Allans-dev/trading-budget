@@ -16,28 +16,26 @@ const Header = () => {
         console.error("Sign Out Error", error);
       });
   return (
-    <div style={styles.root}>
+    <section style={styles.root}>
       <nav>
         <ul style={styles.listContainer}>
-          <li>
-            <Link style={styles.listItem} to="/">
-              Home
-            </Link>
-          </li>
-          <li>
-            <Link style={styles.listItem} to="/stocks">
-              Stocks
-            </Link>
-          </li>
-          <li>
-            <Link style={styles.listItem} to="/budget">
-              Budget
-            </Link>
-          </li>
+          <Link style={styles.listItem} to="/">
+            <li>Home</li>
+          </Link>
+
+          <Link style={styles.listItem} to="/stocks">
+            <li>Stocks</li>
+          </Link>
+
+          <Link style={styles.listItem} to="/budget">
+            <li>Budget</li>
+          </Link>
         </ul>
-        <button onClick={signout}>Signout</button>
+        <button style={styles.btn} onClick={signout}>
+          Signout
+        </button>
       </nav>
-    </div>
+    </section>
   );
 };
 
@@ -66,6 +64,7 @@ const styles = {
     width: "10%",
     height: "100%",
   },
+  btn: { position: "absolute" },
 };
 
 export default Header;

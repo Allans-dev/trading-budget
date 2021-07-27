@@ -107,7 +107,7 @@ const App = () => {
 
   return authStatus ? (
     <StateProvider>
-      <article class={"root"} style={styles.root}>
+      <article class={"root"}>
         <Router>
           <Header />
 
@@ -131,7 +131,7 @@ const App = () => {
       </article>
     </StateProvider>
   ) : (
-    <article style={styles.root}>
+    <article class={"root"}>
       <div id="loader">Loading...</div>
       <div id="firebaseui-auth-container"></div>
     </article>
@@ -148,11 +148,11 @@ const App = () => {
 //   document.documentElement.clientHeight ||
 //   document.body.clientHeight;
 
-const styles = {
-  root: {
-    // maxWidth: width,
-    // maxHeight: height,
-  },
-};
+// const styles = {
+//   root: {
+//     // maxWidth: width,
+//     // maxHeight: height,
+//   },
+// };
 
 export default App;

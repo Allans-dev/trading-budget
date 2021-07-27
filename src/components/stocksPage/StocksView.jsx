@@ -4,6 +4,8 @@ import StocksListItem from "./StocksListItem";
 
 import { store } from "./stocks-store";
 
+import "./stocks_styles.css";
+
 const StocksView = (props) => {
   const context = useContext(store);
 
@@ -23,10 +25,10 @@ const StocksView = (props) => {
   } = context.state;
 
   return (
-    <article style={styles.article}>
-      <section style={styles.formSection}>
-        <form style={styles.form} onSubmit={addStocks}>
-          <label style={styles.label}>
+    <article class="article">
+      <section class="formSection">
+        <form class="form" onSubmit={addStocks}>
+          <label class="label">
             Share Name:
             <input
               type="text"
@@ -40,7 +42,7 @@ const StocksView = (props) => {
               required
             />
           </label>
-          <label style={styles.label}>
+          <label class="label">
             Unit Price (Bought):
             <input
               type="number"
@@ -54,7 +56,7 @@ const StocksView = (props) => {
               required
             />
           </label>
-          <label style={styles.label}>
+          <label class="label">
             Unit Price (Sold):
             <input
               type="number"
@@ -68,7 +70,7 @@ const StocksView = (props) => {
               required
             />
           </label>
-          <label style={styles.label}>
+          <label class="label">
             Number of Shares:
             <input
               type="number"
@@ -82,14 +84,14 @@ const StocksView = (props) => {
               required
             />
           </label>
-          <label style={styles.left}>
+          <label class="left">
             Held more than 1 year?{" "}
             <input type="checkbox" id="yearCheckBox" onClick={oneYearCheck} />
           </label>
 
           <input type="submit" value="Add Shares" />
 
-          <label style={styles.label}>
+          <label class="label">
             Annual income:
             <input
               type="number"
@@ -108,7 +110,7 @@ const StocksView = (props) => {
       </section>
 
       {Array.isArray(stocksList) ? (
-        <ul style={styles.ul}>
+        <ul class="stocks-ul">
           {stocksList.map((item, index) => {
             return (
               <StocksListItem
@@ -127,11 +129,11 @@ const StocksView = (props) => {
       ) : null}
 
       {showTotal ? (
-        <div style={styles.profit}>
+        <div class="profit">
           <div>Total Taxable Income: {totalIncome}</div>
           <div>income tax Owed: {taxOwed}</div>
           <div>Profit before expenses and savings: {profitBE}</div>
-          <aside style={styles.aside}>
+          <aside class="aside">
             The above rates do not include the Medicare levy of 2% or any low
             income offsets.
           </aside>
@@ -139,42 +141,6 @@ const StocksView = (props) => {
       ) : null}
     </article>
   );
-};
-
-const styles = {
-  article: {
-    textAlign: "center",
-    paddingBottom: "58px",
-    gridArea: "Content",
-    // minHeight: "calc(100vh-6em)",
-  },
-  formSection: {
-    display: "flex",
-    justifyContent: "center",
-  },
-  form: {
-    backgroundColor: "bisque",
-    display: "inline-flex",
-    flexDirection: "column",
-    flexWrap: "wrap",
-  },
-  left: {
-    textAlign: "left",
-  },
-  label: {
-    display: "flex",
-    justifyContent: "space-between",
-  },
-  ul: {
-    backgroundColor: "bisque",
-    padding: 0,
-  },
-  profit: {
-    display: "block",
-  },
-  aside: {
-    margin: "10px",
-  },
 };
 
 export default StocksView;

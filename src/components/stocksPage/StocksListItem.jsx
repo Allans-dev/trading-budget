@@ -1,5 +1,7 @@
 import React from "react";
 
+import "./stocks_styles.css";
+
 const StocksListItem = ({
   index,
   stockName,
@@ -11,17 +13,17 @@ const StocksListItem = ({
 }) => {
   let id = index + stockName;
   return (
-    <li style={styles.listItem} key={id}>
-      <div style={styles.stockDetail}>
+    <li class="list-item" key={id}>
+      <div class="stock-detail">
         <div>{stockName}</div>
         <div>
-          <div>Buy Price</div> {buyPrice}
+          <span>Buy Price</span> {buyPrice}
         </div>
         <div>
-          <div>Sell Price</div> {sellPrice}
+          <span>Sell Price</span> {sellPrice}
         </div>
         <div>
-          <div>Volume</div> {volume}
+          <span>Volume</span> {volume}
         </div>
 
         <button
@@ -33,21 +35,9 @@ const StocksListItem = ({
           -
         </button>
       </div>
-      {yearCheck ? <div style={styles.oneYear}>Held over one year</div> : null}
+      {yearCheck ? <div class="one-year">Held over one year</div> : null}
     </li>
   );
-};
-
-const styles = {
-  stockDetail: {
-    display: "flex",
-    flexDirection: "row",
-    flexWrap: "no-wrap",
-    justifyContent: "space-between",
-  },
-  oneYear: {
-    flex: "0 0 100%",
-  },
 };
 
 export default StocksListItem;

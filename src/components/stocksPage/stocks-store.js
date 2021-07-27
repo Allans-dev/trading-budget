@@ -8,9 +8,6 @@ const initialState = {
   totalIncome: 0,
   salary: 0,
   //inputs
-  stockName: "",
-  buyPrice: 0,
-  sellPrice: 0,
   showTotal: false,
 };
 

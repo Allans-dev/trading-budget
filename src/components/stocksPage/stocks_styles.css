@@ -1,0 +1,69 @@
+.article {
+  display: grid;
+  grid-template-areas:
+    "left middle right"
+    ". results .";
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 2fr inherit;
+  text-align: center;
+  padding-bottom: 58px;
+  grid-area: Content;
+}
+
+.formSection {
+  grid-area: middle;
+  justify-content: center;
+}
+
+.form {
+  color: #d6d6d6;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 2em;
+  border-radius: 15px;
+  display: inline-flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+}
+
+.left {
+  text-align: left;
+}
+.label {
+  display: flex;
+  justify-content: space-between;
+}
+.stocks-ul {
+  grid-area: results;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #d6d6d6;
+  border-radius: 15px;
+  padding: 2em;
+  list-style-type: none;
+}
+.profit {
+  display: block;
+}
+.aside {
+  margin: 10px;
+}
+
+/* Stocks List Item Styles */
+
+.list-item {
+  grid-area: results;
+}
+
+.stock-detail {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+}
+
+.stock-detail div span {
+  display: block;
+}
+
+.one-year {
+  flex: "0 0 100%";
+}
