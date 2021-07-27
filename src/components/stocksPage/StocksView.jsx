@@ -105,14 +105,27 @@ const StocksView = (props) => {
             />
           </label>
 
-          <button onClick={calculateProfit}>Save and Calculate</button>
+          <button onClick={calculateProfit}>
+            {" "}
+            {showTotal ? "Show Stocks" : "Save and Calculate"}
+          </button>
         </form>
       </section>
 
       {Array.isArray(stocksList) ? (
         <ul class="stocks-ul">
-          {stocksList.map((item, index) => {
-            return (
+          {showTotal ? (
+            <section class="profit">
+              <div>Total Taxable Income: {totalIncome}</div>
+              <div>income tax Owed: {taxOwed}</div>
+              <div>Profit before expenses and savings: {profitBE}</div>
+              <aside class="aside">
+                The above rates do not include the Medicare levy of 2% or any
+                low income offsets.
+              </aside>
+            </section>
+          ) : (
+            stocksList.map((item, index) => (
               <StocksListItem
                 key={index}
                 index={index}
@@ -123,21 +136,9 @@ const StocksView = (props) => {
                 yearCheck={item.yearCheck}
                 deleteListItem={deleteListItem}
               />
-            );
-          })}
+            ))
+          )}
         </ul>
-      ) : null}
-
-      {showTotal ? (
-        <div class="profit">
-          <div>Total Taxable Income: {totalIncome}</div>
-          <div>income tax Owed: {taxOwed}</div>
-          <div>Profit before expenses and savings: {profitBE}</div>
-          <aside class="aside">
-            The above rates do not include the Medicare levy of 2% or any low
-            income offsets.
-          </aside>
-        </div>
       ) : null}
     </article>
   );

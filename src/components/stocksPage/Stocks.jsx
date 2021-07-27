@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useCallback } from "react";
 
 import firebase from "firebase/app";
 import "firebase/firestore";
@@ -10,6 +10,8 @@ import StocksView from "./StocksView";
 const Stocks = () => {
   const context = useContext(store);
   const [yearCheck, setYearCheck] = useState(false);
+  // const [, updateState] = useState();
+  // const forceUpdate = useCallback(() => updateState({}), []);
   // console.log(context);
   const {
     stocksList,
@@ -114,59 +116,39 @@ const Stocks = () => {
     context.dispatch({ type: "updateShowTotal", payload: false });
   };
 
-  const calcTotal = () => {
-    let profitArray = stocksList.map((item) => {
-      return item.iProfit;
-    });
-
-    const stockTotal = profitArray.reduce((a, b) => a + b);
-
-    let totalIncome = yearCheck
-      ? stockTotal / 2 + Math.round(Number(salary))
-      : stockTotal + Math.round(Number(salary));
+  const calcTaxBracket = (checkedIncome) => {
     context.dispatch({
-      type: "updateTotalIncome",
-      payload: totalIncome,
+      type: "updateTaxBracket",
+      payload:
+        checkedIncome > 180_001
+          ? 0.45
+          : checkedIncome > 120_001 && checkedIncome < 180_000
+          ? 0.37
+          : checkedIncome > 45_000 && checkedIncome < 120_000
+          ? 0.325
+          : checkedIncome > 18_201 && checkedIncome < 45_000
+          ? 0.19
+          : checkedIncome <= 18_200
+          ? 0
+          : 0,
     });
-
-    return totalIncome;
   };
 
-  const calcTax = () => {
-    //calc total income
-    const checkedIncome = calcTotal();
-    // tax Bracket Calcs
-    if (checkedIncome > 180001) {
-      context.dispatch({ type: "updateTaxBracket", payload: 0.45 });
-      context.dispatch({
-        type: "updateTaxOwed",
-        payload: 51667 + (checkedIncome - 180000) * 0.45,
-      });
-    } else if (checkedIncome > 120000) {
-      context.dispatch({ type: "updateTaxBracket", payload: 0.37 });
-      context.dispatch({
-        type: "updateTaxOwed",
-        payload: 29467 + (checkedIncome - 120000) * 0.37,
-      });
-    } else if (checkedIncome > 45000) {
-      context.dispatch({ type: "updateTaxBracket", payload: 0.325 });
-      context.dispatch({
-        type: "updateTaxOwed",
-        payload: 5092 + (checkedIncome - 45000) * 0.325,
-      });
-    } else if (checkedIncome > 18200) {
-      context.dispatch({ type: "updateTaxBracket", payload: 0.19 });
-      context.dispatch({
-        type: "updateTaxOwed",
-        payload: (checkedIncome - 18201) * 0.19,
-      });
-    } else if (checkedIncome <= 18200) {
-      context.dispatch({ type: "updateTaxBracket", payload: 0 });
-      context.dispatch({ type: "updateTaxOwed", payload: 0 });
-    }
+  const calcTaxOwed = (checkedIncome) => {
     context.dispatch({
-      type: "updateProfitBE",
-      payload: checkedIncome - taxOwed,
+      type: "updateTaxOwed",
+      payload:
+        checkedIncome > 180_001 && checkedIncome < 180_000
+          ? (checkedIncome - 180_000) * taxBracket + 51_667
+          : checkedIncome > 120_000 && checkedIncome < 120_000
+          ? (checkedIncome - 120_000) * taxBracket + 29_467
+          : checkedIncome > 45_000 && checkedIncome < 45_000
+          ? (checkedIncome - 45_000) * taxBracket + 5_092
+          : checkedIncome > 18_201
+          ? (checkedIncome - 18_201) * taxBracket
+          : checkedIncome <= 18_200
+          ? 0
+          : 0,
     });
   };
 
@@ -213,9 +195,40 @@ const Stocks = () => {
     context.dispatch({ type: "updateShowTotal", payload: false });
   };
 
+  const calcTotal = () => {
+    let profitArray = stocksList.map((item) => {
+      return item.iProfit;
+    });
+
+    const stockTotal = profitArray.reduce((a, b) => a + b);
+
+    let totalIncome = yearCheck
+      ? stockTotal / 2 + Math.round(Number(salary))
+      : stockTotal + Math.round(Number(salary));
+    context.dispatch({
+      type: "updateTotalIncome",
+      payload: totalIncome,
+    });
+
+    return totalIncome;
+  };
+
+  const combine = () => {
+    const checkedIncome = calcTotal();
+
+    calcTaxBracket(checkedIncome);
+
+    calcTaxOwed(checkedIncome);
+
+    context.dispatch({
+      type: "updateProfitBE",
+      payload: checkedIncome - taxOwed,
+    });
+  };
+
   const calculateProfit = (e) => {
     e.preventDefault();
-    calcTax();
+    combine();
     context.dispatch({
       type: "updateShowTotal",
       payload: showTotal ? false : true,
