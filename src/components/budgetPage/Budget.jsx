@@ -151,7 +151,7 @@ const Budget = () => {
   };
 
   const calcNetProfits = () => {
-    const netProfit = profitBE - totalExpenses - totalSavings;
+    const netProfit = profitBE - calcTotalExpenses() - calcTotalSavings();
 
     console.log(profitBE, totalExpenses, totalSavings);
 
