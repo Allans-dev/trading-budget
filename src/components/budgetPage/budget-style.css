@@ -14,6 +14,18 @@
   flex-direction: "column";
 }
 
+.budget-page ul li {
+  display: "flex";
+  flex-direction: "row";
+  flex-wrap: "nowrap";
+  justify-content: "space-between";
+}
+
+.budget-page li div {
+  flex: 1;
+  align-items: "left";
+}
+
 .results {
   grid-area: exp;
 }

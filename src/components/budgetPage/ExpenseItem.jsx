@@ -7,18 +7,14 @@ const ExpenseItem = ({
   cost,
   deleteListItem,
 }) => (
-  <li style={styles.listItem} key={index}>
-    {category === "Other" ? (
-      <div style={styles.div}>{description}</div>
-    ) : (
-      <div style={styles.div}>{category}</div>
-    )}
+  <li key={index}>
+    {category === "Other" ? <div>{description}</div> : <div>{category}</div>}
     {/* {description ? (
-      <div style={styles.div}>{description}</div>
+      <div>{description}</div>
     ) : (
-      <div style={styles.div} />
+      <div />
     )} */}
-    <div style={styles.div}>{cost}</div>
+    <div>{cost}</div>
     <button
       onClick={(e) => {
         e.preventDefault();
@@ -29,18 +25,5 @@ const ExpenseItem = ({
     </button>
   </li>
 );
-
-const styles = {
-  listItem: {
-    display: "flex",
-    flexDirection: "row",
-    flexWrap: "nowrap",
-    justifyContent: "space-between",
-  },
-  div: {
-    flex: 1,
-    alignItems: "left",
-  },
-};
 
 export default ExpenseItem;
