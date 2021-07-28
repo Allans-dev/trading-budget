@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState, useCallback } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import firebase from "firebase/app";
 import "firebase/firestore";
@@ -10,9 +10,6 @@ import StocksView from "./StocksView";
 const Stocks = () => {
   const context = useContext(store);
   const [yearCheck, setYearCheck] = useState(false);
-  // const [, updateState] = useState();
-  // const forceUpdate = useCallback(() => updateState({}), []);
-  // console.log(context);
   const {
     stocksList,
     profitBE,
@@ -117,62 +114,46 @@ const Stocks = () => {
   };
 
   const calcTaxBracket = (checkedIncome) => {
-    // context.dispatch({
-    //   type: "updateTaxBracket",
-    //   payload:
-    //     checkedIncome > 180_001
-    //       ? 0.45
-    //       : checkedIncome > 120_001 && checkedIncome < 180_000
-    //       ? 0.37
-    //       : checkedIncome > 45_000 && checkedIncome < 120_000
-    //       ? 0.325
-    //       : checkedIncome > 18_201 && checkedIncome < 45_000
-    //       ? 0.19
-    //       : checkedIncome <= 18_200
-    //       ? 0
-    //       : 0,
-    // });
-    return checkedIncome > 180_001
-      ? 0.45
-      : checkedIncome > 120_001 && checkedIncome < 180_000
-      ? 0.37
-      : checkedIncome > 45_000 && checkedIncome < 120_000
-      ? 0.325
-      : checkedIncome > 18_201 && checkedIncome < 45_000
-      ? 0.19
-      : checkedIncome <= 18_200
-      ? 0
-      : 0;
+    const taxBracket =
+      checkedIncome > 180_001
+        ? 0.45
+        : checkedIncome > 120_001 && checkedIncome < 180_000
+        ? 0.37
+        : checkedIncome > 45_000 && checkedIncome < 120_000
+        ? 0.325
+        : checkedIncome > 18_201 && checkedIncome < 45_000
+        ? 0.19
+        : checkedIncome <= 18_200
+        ? 0
+        : 0;
+
+    context.dispatch({
+      type: "updateTaxBracket",
+      payload: taxBracket,
+    });
+    return taxBracket;
   };
 
   const calcTaxOwed = (checkedIncome, taxBracket) => {
-    // context.dispatch({
-    //   type: "updateTaxOwed",
-    //   payload:
-    //   checkedIncome > 180_001 && checkedIncome < 180_000
-    //   ? (checkedIncome - 180_000) * taxBracket + 51_667
-    //   : checkedIncome > 120_000 && checkedIncome < 120_000
-    //   ? (checkedIncome - 120_000) * taxBracket + 29_467
-    //   : checkedIncome > 45_000 && checkedIncome < 45_000
-    //   ? (checkedIncome - 45_000) * taxBracket + 5_092
-    //   : checkedIncome > 18_201
-    //   ? (checkedIncome - 18_201) * taxBracket
-    //   : checkedIncome <= 18_200
-    //   ? 0
-    //   : 0,
-    // });
+    const taxOwed =
+      checkedIncome > 180_001 && checkedIncome < 180_000
+        ? (checkedIncome - 180_000) * taxBracket + 51_667
+        : checkedIncome > 120_000 && checkedIncome < 120_000
+        ? (checkedIncome - 120_000) * taxBracket + 29_467
+        : checkedIncome > 45_000 && checkedIncome < 45_000
+        ? (checkedIncome - 45_000) * taxBracket + 5_092
+        : checkedIncome > 18_201
+        ? (checkedIncome - 18_201) * taxBracket
+        : checkedIncome <= 18_200
+        ? 0
+        : 0;
 
-    return checkedIncome > 180_001 && checkedIncome < 180_000
-      ? (checkedIncome - 180_000) * taxBracket + 51_667
-      : checkedIncome > 120_000 && checkedIncome < 120_000
-      ? (checkedIncome - 120_000) * taxBracket + 29_467
-      : checkedIncome > 45_000 && checkedIncome < 45_000
-      ? (checkedIncome - 45_000) * taxBracket + 5_092
-      : checkedIncome > 18_201
-      ? (checkedIncome - 18_201) * taxBracket
-      : checkedIncome <= 18_200
-      ? 0
-      : 0;
+    context.dispatch({
+      type: "updateTaxOwed",
+      payload: taxOwed,
+    });
+
+    return taxOwed;
   };
 
   const addStocks = async (e) => {

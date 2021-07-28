@@ -13,10 +13,10 @@ const BudgetView = (props) => {
     cost,
     expenseArray,
     savingsRate,
-    totalExpenses,
-    totalSavings,
-    netProfit,
     displayResults,
+    totalSavings,
+    totalExpenses,
+    netProfit,
   } = context.state;
 
   // console.log(timeFrame);
@@ -157,7 +157,7 @@ const BudgetView = (props) => {
 
       {displayResults === true && netProfit > 0 ? (
         <div>
-          <div>Total Expenses: {totalExpenses}</div>
+          <div>Total Expenses: {Math.round(totalExpenses * 100) / 100}</div>
           <div>
             Your total savings is {Math.round(totalSavings * 100) / 100}
             {/* {timeFrame} */}

@@ -27,6 +27,7 @@ const Budget = () => {
   console.log(profitBE);
   console.log(netProfit);
   console.log("======================");
+
   const db = firebase.firestore();
   const user = firebase.auth().currentUser;
 
@@ -89,32 +90,34 @@ const Budget = () => {
 
   useEffect(() => () => saveBudget());
 
+  const eArray = Array.isArray(expenseArray)
+    ? [
+        ...expenseArray,
+        {
+          category,
+          description,
+          cost,
+        },
+      ]
+    : [{ category, description, cost }];
+
   const addExpenses = (e) => {
     e.preventDefault();
-
-    const payload = Array.isArray(expenseArray)
-      ? [
-          ...expenseArray,
-          {
-            category,
-            description,
-            cost,
-          },
-        ]
-      : [{ category, description, cost }];
+    // const eArray = setExpenseArray();
 
     context.dispatch({
       type: "updateExpenses",
-      payload,
+      payload: eArray,
     });
-    context.dispatch({ type: "updateDisplayResults", payload: true });
   };
 
   const deleteListItem = (id) => {
-    if (expenseArray.length > 0) {
+    // const expenseArray = setExpenseArray();
+
+    if (eArray.length > 0) {
       context.dispatch({
         type: "updateExpenses",
-        payload: expenseArray.filter((item, index) => {
+        payload: eArray.filter((item, index) => {
           return index !== id;
         }),
       });
@@ -123,101 +126,59 @@ const Budget = () => {
   };
 
   const calcTotalExpenses = () => {
-    Array.isArray(expenseArray)
-      ? context.dispatch({
-          type: "updateTotalExpenses",
-          payload: expenseArray
-            .map((item) => Number(item.cost))
-            .reduce((a, b) => a + b),
-        })
-      : context.dispatch({ type: "updateTotalExpenses", payload: 0 });
+    // const expenseArray = setExpenseArray();
+    const totalExpenses =
+      eArray.length > 0
+        ? expenseArray.map((item) => Number(item.cost)).reduce((a, b) => a + b)
+        : 0;
+
+    context.dispatch({
+      type: "updateTotalExpenses",
+      payload: totalExpenses,
+    });
+
+    return totalExpenses;
   };
 
-  const setNetProfitAndTotalSavings = () => {
+  const calcTotalSavings = () => {
+    const totalSavings = ((profitBE - totalExpenses) * savingsRate) / 100;
+
     context.dispatch({
       type: "updateTotalSavings",
-      payload: ((profitBE - totalExpenses) * savingsRate) / 100,
+      payload: totalSavings,
     });
-    context.dispatch({
-      type: "updateNetProfit",
-      payload: profitBE - totalExpenses - totalSavings,
-    });
+    return totalSavings;
   };
 
-  // const setNetProfitAndTotalSavings = () => {
-  //   switch (timeFrame) {
-  //     case "day":
-  //       context.dispatch({
-  //         type: "updateTotalSavings",
-  //         payload: ((profitBE - totalExpenses) * savingsRate) / 100 / 365,
-  //       });
-  //       context.dispatch({
-  //         type: "updateNetProfit",
-  //         payload: ((profitBE - totalExpenses) * (1 - savingsRate / 100)) / 365,
-  //       });
-  //       break;
-  //     case "week":
-  //       context.dispatch({
-  //         type: "updateTotalSavings",
-  //         payload: ((profitBE - totalExpenses) * savingsRate) / 100 / 52,
-  //       });
-  //       context.dispatch({
-  //         type: "updateNetProfit",
-  //         payload: ((profitBE - totalExpenses) * (1 - savingsRate / 100)) / 52,
-  //       });
-  //       break;
-  //     case "fortnight":
-  //       context.dispatch({
-  //         type: "updateTotalSavings",
-  //         payload: ((profitBE - totalExpenses) * savingsRate) / 100 / 26,
-  //       });
-  //       context.dispatch({
-  //         type: "updateNetProfit",
-  //         payload: ((profitBE - totalExpenses) * (1 - savingsRate / 100)) / 26,
-  //       });
-  //       break;
-  //     case "month":
-  //       context.dispatch({
-  //         type: "updateTotalSavings",
-  //         payload: ((profitBE - totalExpenses) * savingsRate) / 100 / 12,
-  //       });
-  //       context.dispatch({
-  //         type: "updateNetProfit",
-  //         payload: ((profitBE - totalExpenses) * (1 - savingsRate / 100)) / 12,
-  //       });
-  //       break;
-  //     case "year":
-  //       context.dispatch({
-  //         type: "updateTotalSavings",
-  //         payload: ((profitBE - totalExpenses) * savingsRate) / 100,
-  //       });
-  //       context.dispatch({
-  //         type: "updateNetProfit",
-  //         payload: (profitBE - totalExpenses) * (1 - savingsRate / 100),
-  //       });
-  //       // console.log(totalSavings);
-  //       break;
-  //     default:
-  //       context.dispatch({
-  //         type: "updateTotalSavings",
-  //         payload: ((profitBE - totalExpenses) * savingsRate) / 100,
-  //       });
-  //       context.dispatch({
-  //         type: "updateNetProfit",
-  //         payload: profitBE - totalExpenses - totalSavings,
-  //       });
-  //       break;
-  //   }
-  // };
+  const calcNetProfits = () => {
+    const netProfit = profitBE - totalExpenses - totalSavings;
+
+    console.log(profitBE, totalExpenses, totalSavings);
+
+    context.dispatch({
+      type: "updateNetProfit",
+      payload: netProfit,
+    });
+
+    return netProfit;
+  };
 
   const calcBudget = (e) => {
     e.preventDefault();
-    saveBudget();
-    setNetProfitAndTotalSavings();
+    calcTotalSavings();
     calcTotalExpenses();
+    calcNetProfits();
+    saveBudget();
+
     displayResults
-      ? context.dispatch({ type: "updateDisplayResults", payload: false })
-      : context.dispatch({ type: "updateDisplayResults", payload: true });
+      ? context.dispatch({
+          type: "updateDisplayResults",
+          payload: false,
+        })
+      : context.dispatch({
+          type: "updateDisplayResults",
+          payload: true,
+        });
   };
 
   return (
@@ -225,8 +186,77 @@ const Budget = () => {
       calcBudget={calcBudget}
       addExpenses={addExpenses}
       deleteListItem={deleteListItem}
+      totalExpenses={calcTotalExpenses}
+      totalSavings={calcTotalSavings}
+      netProfit={calcNetProfits}
     />
   );
 };
+
+// const setNetProfitAndTotalSavings = () => {
+//   switch (timeFrame) {
+//     case "day":
+//       context.dispatch({
+//         type: "updateTotalSavings",
+//         payload: ((profitBE - totalExpenses) * savingsRate) / 100 / 365,
+//       });
+//       context.dispatch({
+//         type: "updateNetProfit",
+//         payload: ((profitBE - totalExpenses) * (1 - savingsRate / 100)) / 365,
+//       });
+//       break;
+//     case "week":
+//       context.dispatch({
+//         type: "updateTotalSavings",
+//         payload: ((profitBE - totalExpenses) * savingsRate) / 100 / 52,
+//       });
+//       context.dispatch({
+//         type: "updateNetProfit",
+//         payload: ((profitBE - totalExpenses) * (1 - savingsRate / 100)) / 52,
+//       });
+//       break;
+//     case "fortnight":
+//       context.dispatch({
+//         type: "updateTotalSavings",
+//         payload: ((profitBE - totalExpenses) * savingsRate) / 100 / 26,
+//       });
+//       context.dispatch({
+//         type: "updateNetProfit",
+//         payload: ((profitBE - totalExpenses) * (1 - savingsRate / 100)) / 26,
+//       });
+//       break;
+//     case "month":
+//       context.dispatch({
+//         type: "updateTotalSavings",
+//         payload: ((profitBE - totalExpenses) * savingsRate) / 100 / 12,
+//       });
+//       context.dispatch({
+//         type: "updateNetProfit",
+//         payload: ((profitBE - totalExpenses) * (1 - savingsRate / 100)) / 12,
+//       });
+//       break;
+//     case "year":
+//       context.dispatch({
+//         type: "updateTotalSavings",
+//         payload: ((profitBE - totalExpenses) * savingsRate) / 100,
+//       });
+//       context.dispatch({
+//         type: "updateNetProfit",
+//         payload: (profitBE - totalExpenses) * (1 - savingsRate / 100),
+//       });
+//       // console.log(totalSavings);
+//       break;
+//     default:
+//       context.dispatch({
+//         type: "updateTotalSavings",
+//         payload: ((profitBE - totalExpenses) * savingsRate) / 100,
+//       });
+//       context.dispatch({
+//         type: "updateNetProfit",
+//         payload: profitBE - totalExpenses - totalSavings,
+//       });
+//       break;
+//   }
+// };
 
 export default Budget;
