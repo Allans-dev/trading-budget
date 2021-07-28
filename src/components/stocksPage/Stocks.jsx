@@ -178,7 +178,10 @@ const Stocks = () => {
   const addStocks = async (e) => {
     e.preventDefault();
 
-    const calcIProfit = Number((sellPrice - buyPrice) * volume);
+    const calcIProfit =
+      yearCheck && Number((sellPrice - buyPrice) * volume) > 0
+        ? Number((sellPrice - buyPrice) * volume) / 2
+        : Number((sellPrice - buyPrice) * volume);
 
     const payload = Array.isArray(stocksList)
       ? [
