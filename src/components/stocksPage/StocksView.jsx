@@ -22,6 +22,7 @@ const StocksView = (props) => {
     totalIncome,
     taxOwed,
     profitBE,
+    iProfit,
   } = context.state;
 
   return (
@@ -115,7 +116,7 @@ const StocksView = (props) => {
       {Array.isArray(stocksList) ? (
         <section class="result-section">
           {showTotal ? (
-            <section class="profit">
+            <section class="summary">
               <div>Total Taxable Income: {totalIncome}</div>
               <div>income tax Owed: {taxOwed}</div>
               <div>Profit before expenses and savings: {profitBE}</div>
@@ -131,6 +132,7 @@ const StocksView = (props) => {
                 <span>Buy Price</span>
                 <span>Sell Price</span>
                 <span>Volume</span>
+                <span>Profit/Loss</span>
                 <span></span>
               </div>
               <ul>
@@ -144,6 +146,7 @@ const StocksView = (props) => {
                     volume={item.volume}
                     yearCheck={item.yearCheck}
                     deleteListItem={deleteListItem}
+                    iProfit={iProfit}
                   />
                 ))}
               </ul>

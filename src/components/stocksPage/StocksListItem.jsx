@@ -10,6 +10,7 @@ const StocksListItem = ({
   volume,
   yearCheck,
   deleteListItem,
+  iProfit,
 }) => {
   let id = index + stockName;
   return (
@@ -19,6 +20,7 @@ const StocksListItem = ({
         <div>{buyPrice}</div>
         <div>{sellPrice}</div>
         <div>{volume}</div>
+        <div>{Number((sellPrice - buyPrice) * volume)}</div>
 
         <button
           class="button delete"

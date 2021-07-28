@@ -50,13 +50,13 @@
 
 .result-section {
   grid-area: stocks;
-}
-
-.stocks-display {
   background-color: rgba(26, 26, 26, 0.5);
   color: #d6d6d6;
   border-radius: 15px;
   padding: 15px;
+}
+
+.stocks-display {
   list-style-type: none;
   margin-top: 5px;
   display: grid;
@@ -65,18 +65,26 @@
 
 .stocks-display .stock-header {
   display: grid;
-  grid-template-columns: auto auto auto auto auto;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr auto;
   column-gap: 50px;
-  justify-content: center;
+  text-align: right;
   align-items: center;
 }
 
 .stock-header span {
-  min-width: 80px;
+  width: 5em;
+  /* border-bottom: 1px solid #d6d6d6; */
+  text-decoration: underline;
+  font-weight: 500;
 }
 
-.profit {
-  grid-area: calc;
+.stock-header span:first-of-type {
+  text-align: left;
+}
+
+.stock-header span:last-of-type {
+  max-width: 40px;
+  border-bottom: none;
 }
 .aside {
   margin: 10px;
@@ -90,19 +98,24 @@
 
 .list-item .button {
   padding: 5px 10px;
+  max-width: 25px;
+  max-height: 25px;
 }
 
 .stock-detail {
   display: grid;
-  grid-template-columns: auto auto auto auto auto;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
   column-gap: 50px;
   align-items: center;
-  justify-content: left;
+  text-align: right;
+}
+
+.stock-detail div:first-of-type {
+  text-align: left;
 }
 
 .stock-detail div {
-  min-width: 80px;
-  max-width: 80px;
+  width: 5em;
 }
 
 .one-year {
