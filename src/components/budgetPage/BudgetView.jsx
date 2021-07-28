@@ -4,6 +4,8 @@ import { store } from "./budget-store";
 
 import ExpenseItem from "./ExpenseItem";
 
+import "./budget-style.css";
+
 const BudgetView = (props) => {
   const context = useContext(store);
   const {
@@ -24,15 +26,15 @@ const BudgetView = (props) => {
   const { calcBudget, addExpenses, deleteListItem } = props;
 
   return (
-    <article style={styles.budget}>
-      <form style={styles.budgetForm} onSubmit={calcBudget}>
-        <section style={styles.expense}>
-          <label style={styles.label}>
+    <article class="budget-page">
+      <form onSubmit={calcBudget}>
+        <section>
+          <label>
             Description:{" "}
             <select
               required
               id="category"
-              style={styles.category}
+              class="category"
               value={category}
               onChange={(e) => {
                 context.dispatch({
@@ -59,7 +61,7 @@ const BudgetView = (props) => {
               <input
                 type="text"
                 value={description}
-                style={styles.other}
+                class="other"
                 onChange={(e) =>
                   context.dispatch({
                     type: "updateDescription",
@@ -70,7 +72,7 @@ const BudgetView = (props) => {
             )}
           </label>
           <br />
-          <label style={styles.label}>
+          <label>
             Cost:{" "}
             <input
               type="number"
@@ -84,9 +86,7 @@ const BudgetView = (props) => {
             />
           </label>
         </section>
-        <button style={styles.btnExpense} onClick={addExpenses}>
-          +
-        </button>
+        <button onClick={addExpenses}>+</button>
         {/* <label>
           Current timeframe:{" "}
           <select
@@ -111,7 +111,7 @@ const BudgetView = (props) => {
             <option value="year">year</option>
           </select>
         </label> */}
-        <section style={styles.savings}>
+        <section class="savings">
           <label>
             <span style={{ display: "block" }}>Savings Rate</span>
             <input
@@ -135,78 +135,44 @@ const BudgetView = (props) => {
           </label>
         </section>
 
-        <input style={styles.submit} type="submit" value="Save and Calculate" />
+        <input type="submit" value="Save and Calculate" />
       </form>
-
-      {Array.isArray(expenseArray) ? (
-        <ul style={styles.ul}>
-          {expenseArray.map((item, index) => {
-            return (
-              <ExpenseItem
-                key={index}
-                index={index}
-                category={item.category}
-                description={item.description}
-                cost={item.cost}
-                deleteListItem={deleteListItem}
-              />
-            );
-          })}
-        </ul>
-      ) : null}
-
-      {displayResults === true && netProfit > 0 ? (
-        <div>
-          <div>Total Expenses: {Math.round(totalExpenses * 100) / 100}</div>
+      <section class="results">
+        {displayResults === true && netProfit > 0 ? (
           <div>
-            Your total savings is {Math.round(totalSavings * 100) / 100}
-            {/* {timeFrame} */}
+            <div>Total Expenses: {Math.round(totalExpenses * 100) / 100}</div>
+            <div>
+              Your total savings is {Math.round(totalSavings * 100) / 100}
+              {/* {timeFrame} */}
+            </div>
+            <div>
+              Net Profit: {Math.round(netProfit * 100) / 100}
+              {/* {timeFrame} */}
+            </div>
           </div>
-          <div>
-            Net Profit: {Math.round(netProfit * 100) / 100}
-            {/* {timeFrame} */}
+        ) : displayResults === true && totalExpenses > 0 ? (
+          <div class="expenses">
+            <div>Total Expenses: {totalExpenses}</div>
           </div>
-        </div>
-      ) : displayResults === true && totalExpenses > 0 ? (
-        <div>
-          <div>Total Expenses: {totalExpenses}</div>
-        </div>
-      ) : null}
+        ) : Array.isArray(expenseArray) ? (
+          <ul>
+            {expenseArray.map((item, index) => {
+              return (
+                <ExpenseItem
+                  key={index}
+                  index={index}
+                  category={item.category}
+                  description={item.description}
+                  cost={item.cost}
+                  deleteListItem={deleteListItem}
+                />
+              );
+            })}
+          </ul>
+        ) : null}
+      </section>
     </article>
   );
-};
-
-const styles = {
-  ul: { paddingLeft: 0, display: "flex", flexDirection: "column" },
-  budget: { textAlign: "center", gridArea: "Content" },
-  budgetForm: {
-    backgroundColor: "bisque",
-    maxWidth: "213px",
-    display: "inline-flex",
-    flexDirection: "column",
-    flexWrap: "wrap",
-  },
-  label: {
-    display: "flex",
-    justifyContent: "space-between",
-    flexWrap: "wrap",
-  },
-  btnExpense: {
-    display: "block",
-    marginTop: "2%",
-  },
-  timeFrame: { marginTop: "5%" },
-  savings: { marginTop: "5%" },
-  btnSavings: {
-    display: "block",
-    width: "60%",
-    marginLeft: "20%",
-    marginTop: "2%",
-  },
-  submit: { marginTop: "5%" },
-  other: {
-    flex: "0 0 50%",
-  },
 };
 
 export default BudgetView;
