@@ -8,20 +8,17 @@ const ExpenseItem = ({
   deleteListItem,
 }) => (
   <li key={index}>
-    {category === "Other" ? <div>{description}</div> : <div>{category}</div>}
-    {/* {description ? (
-      <div>{description}</div>
-    ) : (
-      <div />
-    )} */}
+    <div>{category}</div>
+    {description ? <div>{description}</div> : <div />}
     <div>{cost}</div>
     <button
+      class="button delete"
       onClick={(e) => {
         e.preventDefault();
         deleteListItem(index);
       }}
     >
-      -
+      X
     </button>
   </li>
 );

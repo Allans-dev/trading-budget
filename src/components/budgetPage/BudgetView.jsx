@@ -16,6 +16,7 @@ const BudgetView = (props) => {
     expenseArray,
     savingsRate,
     displayResults,
+    otherCategory,
     totalSavings,
     totalExpenses,
     netProfit,
@@ -27,10 +28,10 @@ const BudgetView = (props) => {
 
   return (
     <article class="budget-page">
-      <form onSubmit={calcBudget}>
-        <section>
-          <label>
-            Description:{" "}
+      <form onSubmit={addExpenses}>
+        <section class="add-expense">
+          <label class="category">
+            Category:{" "}
             <select
               required
               id="category"
@@ -44,9 +45,7 @@ const BudgetView = (props) => {
               }}
             >
               <option value="Restaurant">Restaurant</option>
-              <option defaultValue value="Groceries">
-                Groceries
-              </option>
+              <option value="Groceries">Groceries</option>
               <option value="Entertainment">Entertainment</option>
               <option value="Shopping">Shopping</option>
               <option value="Drinks">Drinks</option>
@@ -59,22 +58,39 @@ const BudgetView = (props) => {
             </select>
             {category !== "Other" ? null : (
               <input
-                type="text"
-                value={description}
+                required
                 class="other"
-                onChange={(e) =>
+                type="text"
+                value={otherCategory}
+                onChange={(e) => {
                   context.dispatch({
-                    type: "updateDescription",
+                    type: "updateOtherCategory",
                     payload: e.target.value,
-                  })
-                }
+                  });
+                }}
+                maxlength="10"
               />
             )}
           </label>
-          <br />
-          <label>
+
+          <label class="description">
+            Description:
+            <input
+              type="text"
+              value={description}
+              onChange={(e) =>
+                context.dispatch({
+                  type: "updateDescription",
+                  payload: e.target.value,
+                })
+              }
+              maxlength="10"
+            />
+          </label>
+          <label class="cost">
             Cost:{" "}
             <input
+              required
               type="number"
               value={cost}
               onChange={(e) =>
@@ -85,8 +101,9 @@ const BudgetView = (props) => {
               }
             />
           </label>
+          <input type="submit" value="+" />
         </section>
-        <button onClick={addExpenses}>+</button>
+
         {/* <label>
           Current timeframe:{" "}
           <select
@@ -112,7 +129,7 @@ const BudgetView = (props) => {
           </select>
         </label> */}
         <section class="savings">
-          <label>
+          <label class="saving-label">
             <span style={{ display: "block" }}>Savings Rate</span>
             <input
               id="savings-rate"
@@ -134,12 +151,14 @@ const BudgetView = (props) => {
             <div>{savingsRate}%</div>
           </label>
         </section>
-
-        <input type="submit" value="Save and Calculate" />
+        <button class="green button" onClick={calcBudget}>
+          {displayResults ? "Show Expenses" : "Save and Calculate"}
+        </button>
       </form>
+
       <section class="results">
         {displayResults === true && netProfit > 0 ? (
-          <div>
+          <div class="summary">
             <div>Total Expenses: {Math.round(totalExpenses * 100) / 100}</div>
             <div>
               Your total savings is {Math.round(totalSavings * 100) / 100}
@@ -156,18 +175,17 @@ const BudgetView = (props) => {
           </div>
         ) : Array.isArray(expenseArray) ? (
           <ul>
-            {expenseArray.map((item, index) => {
-              return (
-                <ExpenseItem
-                  key={index}
-                  index={index}
-                  category={item.category}
-                  description={item.description}
-                  cost={item.cost}
-                  deleteListItem={deleteListItem}
-                />
-              );
-            })}
+            {expenseArray.map((item, index) => (
+              <ExpenseItem
+                key={index}
+                index={index}
+                category={item.category}
+                description={item.description}
+                cost={item.cost}
+                deleteListItem={deleteListItem}
+                otherCategory={otherCategory}
+              />
+            ))}
           </ul>
         ) : null}
       </section>

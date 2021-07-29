@@ -22,6 +22,7 @@ const Budget = () => {
     description,
     cost,
     displayResults,
+    otherCategory,
   } = context.state;
 
   console.log(profitBE);
@@ -90,45 +91,53 @@ const Budget = () => {
 
   useEffect(() => () => saveBudget());
 
-  const eArray = Array.isArray(expenseArray)
-    ? [
-        ...expenseArray,
-        {
-          category,
-          description,
-          cost,
-        },
-      ]
-    : [{ category, description, cost }];
-
   const addExpenses = (e) => {
     e.preventDefault();
     // const eArray = setExpenseArray();
-
+    console.log(expenseArray);
     context.dispatch({
       type: "updateExpenses",
-      payload: eArray,
+      payload: Array.isArray(expenseArray)
+        ? [
+            ...expenseArray,
+            {
+              category: category !== "Other" ? category : otherCategory,
+              description,
+              cost,
+            },
+          ]
+        : [
+            {
+              category: category !== "Other" ? category : otherCategory,
+              description,
+              cost,
+            },
+          ],
     });
+    context.dispatch({ type: "updateDescription", payload: "" });
+    context.dispatch({ type: "updateOtherCategory", payload: "" });
+    saveBudget();
   };
 
   const deleteListItem = (id) => {
     // const expenseArray = setExpenseArray();
 
-    if (eArray.length > 0) {
+    if (expenseArray.length > 0) {
       context.dispatch({
         type: "updateExpenses",
-        payload: eArray.filter((item, index) => {
+        payload: expenseArray.filter((item, index) => {
           return index !== id;
         }),
       });
     }
-    context.dispatch({ type: "updateDisplayResults", payload: false });
+    // context.dispatch({ type: "updateDisplayResults", payload: false });
   };
 
   const calcTotalExpenses = () => {
     // const expenseArray = setExpenseArray();
+    console.log(expenseArray);
     const totalExpenses =
-      eArray.length > 0
+      expenseArray.length > 0
         ? expenseArray.map((item) => Number(item.cost)).reduce((a, b) => a + b)
         : 0;
 
@@ -140,8 +149,8 @@ const Budget = () => {
     return totalExpenses;
   };
 
-  const calcTotalSavings = () => {
-    const totalSavings = ((profitBE - totalExpenses) * savingsRate) / 100;
+  const calcTotalSavings = (totalE) => {
+    const totalSavings = ((profitBE - totalE) * savingsRate) / 100;
 
     context.dispatch({
       type: "updateTotalSavings",
@@ -150,8 +159,8 @@ const Budget = () => {
     return totalSavings;
   };
 
-  const calcNetProfits = () => {
-    const netProfit = profitBE - calcTotalExpenses() - calcTotalSavings();
+  const calcNetProfits = (totalE, totalS) => {
+    const netProfit = profitBE - totalE - totalS;
 
     console.log(profitBE, totalExpenses, totalSavings);
 
@@ -163,22 +172,20 @@ const Budget = () => {
     return netProfit;
   };
 
+  const combine = () => {
+    const totalE = calcTotalExpenses();
+    const totalS = calcTotalSavings(totalE);
+    calcNetProfits(totalE, totalS);
+  };
+
   const calcBudget = (e) => {
     e.preventDefault();
-    calcTotalSavings();
-    calcTotalExpenses();
-    calcNetProfits();
-    saveBudget();
+    combine();
 
-    displayResults
-      ? context.dispatch({
-          type: "updateDisplayResults",
-          payload: false,
-        })
-      : context.dispatch({
-          type: "updateDisplayResults",
-          payload: true,
-        });
+    context.dispatch({
+      type: "updateDisplayResults",
+      payload: displayResults ? false : true,
+    });
   };
 
   return (
@@ -186,9 +193,6 @@ const Budget = () => {
       calcBudget={calcBudget}
       addExpenses={addExpenses}
       deleteListItem={deleteListItem}
-      totalExpenses={calcTotalExpenses}
-      totalSavings={calcTotalSavings}
-      netProfit={calcNetProfits}
     />
   );
 };

@@ -8,11 +8,10 @@ const initialState = {
 
   savingsRate: 20,
   profitBE: 0,
-
-  category: "Groceries",
   description: "",
   timeFrame: "",
   displayResults: false,
+  category: "Groceries",
 };
 
 const store = createContext(initialState);
@@ -46,6 +45,8 @@ const BudgetStateProvider = ({ children }) => {
         return { ...state, timeFrame: payload };
       case "updateCategory":
         return { ...state, category: payload };
+      case "updateOtherCategory":
+        return { ...state, otherCategory: payload };
       case "updateDescription":
         return { ...state, description: payload };
       case "updateCost":

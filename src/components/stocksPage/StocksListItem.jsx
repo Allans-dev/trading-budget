@@ -29,7 +29,7 @@ const StocksListItem = ({
             deleteListItem(id);
           }}
         >
-          -
+          X
         </button>
       </div>
       {yearCheck ? <div class="one-year">Held over one year</div> : null}

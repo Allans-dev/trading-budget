@@ -64,7 +64,7 @@ ul {
   border: none;
   border-radius: 5px;
   transition: 1s;
-  opacity: 0.8;
+  opacity: 0.75;
 }
 
 .button:hover {
@@ -79,4 +79,5 @@ ul {
 
 .delete {
   background-color: #f13e2a;
+  /* border: 1px solid black; */
 }

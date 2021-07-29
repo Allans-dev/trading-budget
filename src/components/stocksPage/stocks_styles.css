@@ -74,7 +74,6 @@
 }
 
 .stocks-display {
-  list-style-type: none;
   margin-top: 5px;
   display: grid;
   grid-template-rows: minmax(1em 2em) minmax(1em 2em);
@@ -82,18 +81,11 @@
 
 .stocks-display .stock-header {
   display: grid;
-  grid-template-columns: 0.5fr 2fr 2fr 2fr 2fr auto;
+  grid-template-columns: 0.5fr 2fr 2fr 2fr 2fr 0.65fr;
   column-gap: 1.5%;
-  text-align: right;
+  text-align: center;
   align-items: center;
 }
-
-/* minmax(max-content 1fr)
-    minmax(max-content 1fr)
-    minmax(max-content 1fr)
-    minmax(max-content 1fr)
-    minmax(max-content 1fr)
-    auto; */
 
 @media only screen and (max-width: 523px) {
   .stocks-display {
@@ -102,19 +94,19 @@
 }
 
 .stock-header span {
-  width: 5em;
-  /* border-bottom: 1px solid #d6d6d6; */
+  /* width: 5em; */
   text-decoration: underline;
   font-weight: 500;
+  width: 100%;
 }
 
 .stock-header span:first-of-type {
-  text-align: left;
   width: 45px;
+  text-align: left;
 }
 
 .stock-header span:last-of-type {
-  border-bottom: none;
+  min-width: 100%;
 }
 .aside {
   margin: 10px;
@@ -127,17 +119,17 @@
 }
 
 .list-item .button {
-  padding: 5px 10px;
   max-width: 25px;
   max-height: 25px;
+  color: #d6d6d6;
 }
 
 .stock-detail {
   display: grid;
-  grid-template-columns: 0.5fr 2fr 2fr 2fr 2fr 2fr;
+  grid-template-columns: 0.5fr 2fr 2fr 2fr 2fr 0.5fr;
   column-gap: 1.5%;
   align-items: center;
-  text-align: right;
+  text-align: center;
 }
 
 .stock-detail div:first-of-type {
@@ -146,7 +138,7 @@
 }
 
 .stock-detail div {
-  width: 5em;
+  width: 100%;
 }
 
 .one-year {
