@@ -102,7 +102,7 @@ const BudgetView = (props) => {
               }
             />
           </label>
-          <input type="submit" value="+" />
+          <input class="add-button" type="submit" value="+" />
         </section>
 
         {/* <label>

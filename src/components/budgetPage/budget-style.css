@@ -57,12 +57,13 @@
 .budget-page .add-expense input {
   height: 1.5em;
   width: 50%;
+  margin: 5px 2px;
 }
 
 .budget-page .add-expense select {
   height: 1.5em;
   width: 50%;
-  margin-right: 2px;
+  margin: 5px 2px;
 }
 
 .budget-page .add-expense .category {
@@ -117,15 +118,16 @@
   padding-bottom: 5px;
 }
 
-.budget-page .add-expense input[type="submit"] {
+.budget-page .add-expense .add-button {
   grid-column: 2;
-  grid-row: 2;
+  grid-row: 1/4;
   border: 0;
-  height: 30px;
-  width: 30px;
+  width: 1.5em;
+  height: 100%;
   line-height: 30px;
   font-size: larger;
   text-align: center;
+  margin: 0;
 }
 
 .budget-page .savings-label .savings-rate {
