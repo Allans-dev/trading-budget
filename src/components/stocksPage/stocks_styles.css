@@ -51,6 +51,12 @@
   justify-content: space-between;
 }
 
+.stocksFormSection .button,
+.stocksFormSection input[type="submit"] {
+  margin: 0.5em;
+  padding: 0.5em;
+}
+
 .left {
   text-align: left;
 }
@@ -95,9 +101,6 @@
 
 .stock-header span:last-of-type {
   min-width: 100%;
-}
-.aside {
-  margin: 10px;
 }
 
 /* Stocks List Item Styles */
@@ -153,6 +156,7 @@
   text-align: left;
 }
 
-.aside {
+/* .aside {
   text-align: center;
-}
+  margin: 10px;
+} */

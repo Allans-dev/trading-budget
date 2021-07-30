@@ -97,7 +97,7 @@ const StocksView = (props) => {
           <input type="submit" value="Add Shares" />
 
           <label>
-            Other Income:
+            Income:
             <input
               type="number"
               value={salary}

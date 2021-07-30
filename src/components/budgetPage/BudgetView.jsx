@@ -69,7 +69,7 @@ const BudgetView = (props) => {
                     payload: e.target.value,
                   });
                 }}
-                maxlength="10"
+                maxLength="10"
               />
             )}
           </label>
@@ -85,7 +85,7 @@ const BudgetView = (props) => {
                   payload: e.target.value,
                 })
               }
-              maxlength="10"
+              maxLength="10"
             />
           </label>
           <label class="cost">
