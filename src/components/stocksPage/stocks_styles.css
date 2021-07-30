@@ -104,8 +104,8 @@
 
 .list-item {
   grid-area: results;
-  margin-top: 15px;
-  line-height: 26px;
+  margin-top: 10px;
+  line-height: 25px;
 }
 
 .list-item .button {
@@ -120,7 +120,6 @@
   display: grid;
   grid-template-columns: 0.5fr 2fr 2fr 2fr 2fr 0.5fr;
   column-gap: 1.5%;
-  /* align-items: center; */
   border-left: 1px solid #d6d6d6;
   max-height: 25px;
   border-top: 1px solid #d6d6d6;
@@ -139,4 +138,21 @@
   text-align: left;
   border-left: 1px solid #d6d6d6;
   padding: 0 5px;
+}
+
+.none {
+  display: none;
+}
+
+.result-section .summary {
+  display: grid;
+  grid-template-areas:
+    "3fr 1fr"
+    "3fr 1fr"
+    "3fr 1fr";
+  text-align: left;
+}
+
+.aside {
+  text-align: center;
 }

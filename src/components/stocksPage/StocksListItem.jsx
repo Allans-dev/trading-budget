@@ -17,10 +17,31 @@ const StocksListItem = ({
     <li class="list-item" key={id}>
       <div class="stock-detail">
         <div>{stockName}</div>
-        <div>{buyPrice}</div>
-        <div>{sellPrice}</div>
-        <div>{volume}</div>
-        <div>{Number((sellPrice - buyPrice) * volume)}</div>
+        <div>
+          {new Intl.NumberFormat("en-US", {
+            style: "currency",
+            currency: "USD",
+            maximumFractionDigits: 0,
+          }).format((Math.round(buyPrice) * 100) / 100)}
+        </div>
+        <div>
+          {new Intl.NumberFormat("en-US", {
+            style: "currency",
+            currency: "USD",
+            maximumFractionDigits: 0,
+          }).format(Math.round(sellPrice * 100) / 100)}
+        </div>
+        <div>{new Intl.NumberFormat().format(volume)}</div>
+        <div>
+          {" "}
+          {new Intl.NumberFormat("en-US", {
+            style: "currency",
+            currency: "USD",
+            maximumFractionDigits: 0,
+          }).format(
+            Math.round(Number((sellPrice - buyPrice) * volume) * 100) / 100
+          )}
+        </div>
 
         <button
           class="button delete"

@@ -118,21 +118,30 @@ const StocksView = (props) => {
       </section>
 
       {Array.isArray(stocksList) ? (
-        <section class="result-section">
+        <section class={stocksList.length > 0 ? `result-section` : `none`}>
           {showTotal ? (
             <section class="summary">
-              <div>
-                Total Taxable Income: {Math.round(totalIncome * 100) / 100}
-              </div>
-              <div>Income tax Owed: {Math.round(taxOwed * 100) / 100}</div>
-              <div>
-                Income before expenses and savings:{" "}
-                {Math.round(profitBE * 100) / 100}
-              </div>
-              <aside class="aside">
-                The above rates do not include the Medicare levy of 2% or any
-                low income offsets.
-              </aside>
+              <span>Total Taxable Income: </span>
+              <span>
+                {new Intl.NumberFormat("en-US", {
+                  style: "currency",
+                  currency: "USD",
+                }).format(Math.round(totalIncome * 100) / 100)}
+              </span>
+              <span>Income tax Owed: </span>
+              <span>
+                {new Intl.NumberFormat("en-US", {
+                  style: "currency",
+                  currency: "USD",
+                }).format(Math.round(taxOwed * 100) / 100)}{" "}
+              </span>
+              <span>Take-Home Income: </span>
+              <span>
+                {new Intl.NumberFormat("en-US", {
+                  style: "currency",
+                  currency: "USD",
+                }).format(Math.round(profitBE * 100) / 100)}
+              </span>
             </section>
           ) : (
             <section class="stocks-display">

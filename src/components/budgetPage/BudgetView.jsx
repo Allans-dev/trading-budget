@@ -10,6 +10,7 @@ const BudgetView = (props) => {
   const context = useContext(store);
   const {
     // timeFrame,
+    profitBE,
     category,
     description,
     cost,
@@ -156,22 +157,51 @@ const BudgetView = (props) => {
         </section>
       </form>
 
-      <section class="results">
+      <section class={expenseArray.length > 0 ? "results" : "none"}>
         {displayResults === true && netProfit > 0 ? (
           <div class="summary">
-            <div>Total Expenses: {Math.round(totalExpenses * 100) / 100}</div>
-            <div>
-              Your total savings is {Math.round(totalSavings * 100) / 100}
-              {/* {timeFrame} */}
-            </div>
-            <div>
-              Net Profit: {Math.round(netProfit * 100) / 100}
-              {/* {timeFrame} */}
-            </div>
+            <span>Take-Home Income: </span>
+            <span>
+              {new Intl.NumberFormat("en-US", {
+                style: "currency",
+                currency: "USD",
+              }).format(Math.round(profitBE * 100) / 100)}
+            </span>
+            <span>Total Expenses:</span>
+            <span>
+              {" "}
+              {new Intl.NumberFormat("en-US", {
+                style: "currency",
+                currency: "USD",
+              }).format(Math.round(totalExpenses * 100) / 100)}
+            </span>
+            <span>Total Savings: </span>
+            <span>
+              {new Intl.NumberFormat("en-US", {
+                style: "currency",
+                currency: "USD",
+              }).format(Math.round(totalSavings * 100) / 100)}
+            </span>
+
+            {/* <span>{timeFrame} </span> */}
+            <span>Net Profit: </span>
+            <span>
+              {new Intl.NumberFormat("en-US", {
+                style: "currency",
+                currency: "USD",
+              }).format(Math.round(netProfit * 100) / 100)}
+            </span>
+            {/* {timeFrame} */}
           </div>
         ) : displayResults === true && totalExpenses > 0 ? (
           <div class="expenses">
-            <div>Total Expenses: {totalExpenses}</div>
+            <div>
+              Total Expenses:{" "}
+              {new Intl.NumberFormat("en-US", {
+                style: "currency",
+                currency: "USD",
+              }).format(Math.round(totalExpenses * 100) / 100)}
+            </div>
           </div>
         ) : Array.isArray(expenseArray) ? (
           <ul>

@@ -114,6 +114,8 @@ const Budget = () => {
             },
           ],
     });
+
+    // context.dispatch({ type: "updateDisplayResults", payload: true });
     context.dispatch({ type: "updateDescription", payload: "" });
     context.dispatch({ type: "updateOtherCategory", payload: "" });
     saveBudget();

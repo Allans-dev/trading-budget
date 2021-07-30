@@ -10,7 +10,12 @@ const ExpenseItem = ({
   <li key={index}>
     <div>{category}</div>
     {description ? <div>{description}</div> : <div />}
-    <div>{cost}</div>
+    <div>
+      {new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+      }).format(Math.round(cost * 100) / 100)}
+    </div>
     <button
       class="button delete"
       onClick={(e) => {
