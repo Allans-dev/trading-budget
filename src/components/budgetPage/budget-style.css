@@ -10,6 +10,20 @@
   color: #d6d6d6;
 }
 
+@media only screen and (max-width: 523px) {
+  .budget-page {
+    grid-template-areas:
+      ". middle ."
+      ". exp .";
+    grid-template-columns: 0.1fr 8fr 0.1fr;
+  }
+
+  .budget-page form {
+    padding: 0px;
+    border-radius: 5px;
+  }
+}
+
 .budget-page li div {
   flex: 1;
   align-items: "left";
@@ -19,10 +33,10 @@
   grid-area: middle;
   justify-content: center;
   background-color: rgba(26, 26, 26, 0.5);
-  padding: 15px;
+  padding: 5px;
   margin: 15px auto;
   border-radius: 15px;
-  max-width: 320px;
+  max-width: 300px;
 }
 
 .budget-page .add-expense {
@@ -30,7 +44,7 @@
   grid-template-columns: 250px max-content;
   grid-template-rows: max-content max-content max-content;
   grid-auto-flow: row;
-  column-gap: 5%;
+  column-gap: 2%;
   padding: 15px;
 }
 
@@ -94,7 +108,7 @@
   padding-left: 15px;
   text-align: left;
   display: grid;
-  grid-template-columns: 3fr 5em;
+  grid-template-columns: 3fr 3.5em;
   grid-template-rows: 1fr 1fr;
 }
 
@@ -107,9 +121,9 @@
   grid-column: 2;
   grid-row: 2;
   border: 0;
-  height: 40px;
-  width: 40px;
-  line-height: 40px;
+  height: 30px;
+  width: 30px;
+  line-height: 30px;
   font-size: larger;
   text-align: center;
 }
