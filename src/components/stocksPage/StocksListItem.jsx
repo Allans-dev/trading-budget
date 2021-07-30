@@ -32,7 +32,7 @@ const StocksListItem = ({
           X
         </button>
       </div>
-      {yearCheck ? <div class="one-year">Held over one year</div> : null}
+      {yearCheck ? <span class="one-year">Held over one year</span> : null}
     </li>
   );
 };

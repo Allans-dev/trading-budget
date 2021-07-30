@@ -40,6 +40,7 @@ const StocksView = (props) => {
                   payload: e.target.value,
                 })
               }
+              maxlength="6"
               required
             />
           </label>
@@ -54,6 +55,7 @@ const StocksView = (props) => {
                   payload: e.target.value,
                 })
               }
+              maxlength="5"
               required
             />
           </label>
@@ -68,6 +70,7 @@ const StocksView = (props) => {
                   payload: e.target.value,
                 })
               }
+              maxlength="5"
               required
             />
           </label>
@@ -82,6 +85,7 @@ const StocksView = (props) => {
                   payload: e.target.value,
                 })
               }
+              maxlength="5"
               required
             />
           </label>
