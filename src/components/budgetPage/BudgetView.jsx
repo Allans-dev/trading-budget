@@ -129,8 +129,8 @@ const BudgetView = (props) => {
           </select>
         </label> */}
         <section class="savings">
-          <label class="saving-label">
-            <span style={{ display: "block" }}>Savings Rate</span>
+          <label class="savings-label">
+            <span style={{ display: "block" }}>Savings Rate:</span>
             <input
               id="savings-rate"
               type="range"
@@ -148,12 +148,12 @@ const BudgetView = (props) => {
                 });
               }}
             ></input>
-            <div>{savingsRate}%</div>
+            <div class="savings-rate">{savingsRate}%</div>
           </label>
+          <button class="green button" onClick={calcBudget}>
+            {displayResults ? "Show Expenses" : "Save and Calculate"}
+          </button>
         </section>
-        <button class="green button" onClick={calcBudget}>
-          {displayResults ? "Show Expenses" : "Save and Calculate"}
-        </button>
       </form>
 
       <section class="results">

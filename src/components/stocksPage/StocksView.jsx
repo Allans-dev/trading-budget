@@ -117,9 +117,14 @@ const StocksView = (props) => {
         <section class="result-section">
           {showTotal ? (
             <section class="summary">
-              <div>Total Taxable Income: {totalIncome}</div>
-              <div>Income tax Owed: {taxOwed}</div>
-              <div>Income before expenses and savings: {profitBE}</div>
+              <div>
+                Total Taxable Income: {Math.round(totalIncome * 100) / 100}
+              </div>
+              <div>Income tax Owed: {Math.round(taxOwed * 100) / 100}</div>
+              <div>
+                Income before expenses and savings:{" "}
+                {Math.round(profitBE * 100) / 100}
+              </div>
               <aside class="aside">
                 The above rates do not include the Medicare levy of 2% or any
                 low income offsets.
