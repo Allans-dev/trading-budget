@@ -57,6 +57,11 @@
   padding: 0.5em;
 }
 
+.stocksFormSection input[type="submit"] {
+  background-color: #f0b03a;
+  border-radius: 5px;
+}
+
 .left {
   text-align: left;
 }
@@ -111,12 +116,16 @@
   line-height: 25px;
 }
 
+/* delete */
+
 .list-item .button {
   max-width: 25px;
   max-height: 25px;
   color: #d6d6d6;
   align-self: center;
   line-height: 12px;
+  margin: 0.5em;
+  padding: 0.5em;
 }
 
 .stock-detail {

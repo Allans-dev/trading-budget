@@ -2,16 +2,16 @@ import React, { useState } from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 
 import Landing from "./components/Landing";
-import Stocks from "./components/stocksPage/Stocks";
-import Budget from "./components/budgetPage/Budget";
+import Stocks from "./components/Stocks/Stocks";
+import Budget from "./components/Budget/Budget";
 
-import Footer from "./components/Footer";
-import Header from "./components/Header";
+import Footer from "./components/Footer/Footer";
+import Header from "./components/Header/Header";
 
-import { StateProvider } from "./components/main-store";
+import { StateProvider } from "./main-store";
 
-import { StockStateProvider } from "./components/stocksPage/stocks-store";
-import { BudgetStateProvider } from "./components/budgetPage/budget-store";
+import { StockStateProvider } from "./components/Stocks/stocks-store";
+import { BudgetStateProvider } from "./components/Budget/budget-store";
 
 import "./App.css";
 
@@ -107,7 +107,7 @@ const App = () => {
 
   return authStatus ? (
     <StateProvider>
-      <article class={"root"}>
+      <article class="root">
         <Router>
           <Header />
 
@@ -137,22 +137,5 @@ const App = () => {
     </article>
   );
 };
-
-// const width =
-//   window.innerWidth ||
-//   document.documentElement.clientWidth ||
-//   document.body.clientWidth;
-
-// const height =
-//   window.innerHeight ||
-//   document.documentElement.clientHeight ||
-//   document.body.clientHeight;
-
-// const styles = {
-//   root: {
-//     // maxWidth: width,
-//     // maxHeight: height,
-//   },
-// };
 
 export default App;

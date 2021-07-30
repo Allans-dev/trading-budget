@@ -12,6 +12,7 @@ const initialState = {
   timeFrame: "",
   displayResults: false,
   category: "Groceries",
+  cost: 0,
 };
 
 const store = createContext(initialState);
