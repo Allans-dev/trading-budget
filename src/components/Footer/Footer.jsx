@@ -1,53 +1,29 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
+import "./footer_styles.css";
+
 const Footer = () => {
   return (
-    <section style={styles.root}>
-      <nav>
-        <ul style={styles.listContainer}>
-          <Link style={styles.listItem} to="/">
-            <li>Home</li>
+    <section class="footer">
+      <div class="footer-top">
+        <span>
+          <Link class="privacy-policy" to="/privacy-policy">
+            Privacy Policy
           </Link>
-
-          <Link style={styles.listItem} to="/stocks">
-            <li>Stocks</li>
+        </span>
+        |
+        <span>
+          <Link class="disclaimer" to="/disclaimer">
+            Disclaimer
           </Link>
-
-          <Link style={styles.listItem} to="/budget">
-            <li>Budget</li>
-          </Link>
-        </ul>
-      </nav>
+        </span>
+      </div>
+      <div class="copyright">
+        Copyright &copy; 2021 code.allan | All rights Reserved
+      </div>
     </section>
   );
-};
-
-const styles = {
-  root: {
-    position: "relative",
-    display: "grid",
-    gridArea: "Footer",
-    width: "100%",
-    height: "3em",
-    lineHeight: "3em",
-    backgroundColor: "rgba(255,255,255,0.3)",
-  },
-  listContainer: {
-    listStyle: "none",
-    margin: 0,
-    padding: 0,
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-around",
-  },
-  listItem: {
-    textAlign: "center",
-    textDecoration: "none",
-    color: "#ededed",
-    width: "10%",
-    height: "100%",
-  },
 };
 
 export default Footer;

@@ -1,0 +1,14 @@
+.privacy-policy-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.policy-block {
+  width: 80%;
+}
+
+.policy-block span {
+  display: inline-block;
+  margin: 10px 0;
+}

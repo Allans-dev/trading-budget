@@ -8,6 +8,9 @@ import Budget from "./components/Budget/Budget";
 import Footer from "./components/Footer/Footer";
 import Header from "./components/Header/Header";
 
+import PrivacyPolicy from "./components/PrivacyPolicy/PrivacyPolicy";
+import Disclaimer from "./components/Disclaimer/Disclaimer";
+
 import { StateProvider } from "./main-store";
 
 import { StockStateProvider } from "./components/Stocks/stocks-store";
@@ -123,9 +126,17 @@ const App = () => {
             </Route>
           </StockStateProvider>
 
+          <Route exact path="/privacy-policy">
+            <PrivacyPolicy />
+          </Route>
+          <Route exact path="/disclaimer">
+            <Disclaimer />
+          </Route>
+
           <Route exact path="/">
             <Landing />
           </Route>
+
           <Footer />
         </Router>
       </article>

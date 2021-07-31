@@ -1,0 +1,14 @@
+.disclaimer-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.disclaimer-block {
+  width: 80%;
+}
+
+.disclaimer-block span {
+  display: inline-block;
+  margin: 10px 0;
+}

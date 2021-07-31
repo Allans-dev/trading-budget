@@ -110,7 +110,7 @@
 
 /* Stocks List Item Styles */
 
-.list-item {
+.stock-header .list-item {
   grid-area: results;
   margin-top: 10px;
   line-height: 25px;
@@ -118,7 +118,7 @@
 
 /* delete */
 
-.list-item .button {
+.stock-header .list-item .button {
   max-width: 25px;
   max-height: 25px;
   color: #d6d6d6;
