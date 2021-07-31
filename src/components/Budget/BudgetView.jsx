@@ -4,7 +4,7 @@ import { store } from "./budget-store";
 
 import ExpenseItem from "./ExpenseItem";
 
-import "./budget-style.css";
+import "./budget_style.css";
 
 const BudgetView = (props) => {
   const context = useContext(store);

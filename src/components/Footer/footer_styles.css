@@ -3,10 +3,11 @@
   display: grid;
   grid-area: Footer;
   width: 100%;
-  height: 4em;
+  height: 100%;
   background-color: rgba(26, 26, 26, 0.5);
   color: #ededed;
   text-align: center;
+  font-size: 12px;
 }
 
 .footer-top {
