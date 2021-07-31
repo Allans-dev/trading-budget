@@ -111,15 +111,16 @@
 
 /* Stocks List Item Styles */
 
-.stock-header .list-item {
+.stocks-display .list-item {
   grid-area: results;
   margin-top: 10px;
   line-height: 25px;
+  margin: 10px 0;
 }
 
 /* delete */
 
-.stock-header .list-item .button {
+.stocks-display .list-item .button {
   max-width: 25px;
   max-height: 25px;
   color: #d6d6d6;

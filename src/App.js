@@ -65,7 +65,7 @@ const App = () => {
     },
     // Will use popup for IDP Providers sign-in flow instead of the default, redirect.
     signInFlow: "popup",
-    signInSuccessUrl: "/",
+    signInSuccessUrl: "/stocks",
     signInOptions: [
       // Leave the lines as is for the providers you want to offer your users.
       firebase.auth.GoogleAuthProvider.PROVIDER_ID,
@@ -85,9 +85,9 @@ const App = () => {
       // },
     ],
     // Terms of service url.
-    tosUrl: "<your-tos-url>",
+    tosUrl: "/logged-out-disclaimer",
     // Privacy policy url.
-    privacyPolicyUrl: "<your-privacy-policy-url>",
+    privacyPolicyUrl: "/logged-out-privacy-policy",
   };
 
   firebase.auth().onAuthStateChanged(async (user) => {
@@ -102,9 +102,11 @@ const App = () => {
         { merge: true }
       );
       setAuthStatus(true);
-    } else {
+    } else if (!user) {
       setAuthStatus(false);
       ui.start("#firebaseui-auth-container", uiConfig);
+    } else {
+      console.log("error");
     }
   });
 
@@ -145,7 +147,16 @@ const App = () => {
   ) : (
     <article class={"root"}>
       <div id="loader">Loading...</div>
-      <div id="firebaseui-auth-container"></div>
+      <Router>
+        <div id="firebaseui-auth-container"></div>
+        <Route exact path="/logged-out-privacy-policy">
+          <PrivacyPolicy />
+        </Route>
+
+        <Route exact path="/logged-out-disclaimer">
+          <Disclaimer />
+        </Route>
+      </Router>
     </article>
   );
 };
