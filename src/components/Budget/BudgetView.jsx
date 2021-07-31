@@ -29,7 +29,7 @@ const BudgetView = (props) => {
 
   return (
     <article class="budget-page">
-      <form onSubmit={addExpenses}>
+      <form>
         <section class="add-expense">
           <label class="category">
             Category:{" "}
@@ -102,7 +102,9 @@ const BudgetView = (props) => {
               }
             />
           </label>
-          <input class="add-button" type="submit" value="+" />
+          <button class="add-button" onClick={addExpenses}>
+            +
+          </button>
         </section>
 
         {/* <label>

@@ -28,7 +28,7 @@ const StocksView = (props) => {
   return (
     <article class="article">
       <section class="stocksFormSection">
-        <form onSubmit={addStocks}>
+        <form>
           <label>
             Share Name:
             <input
@@ -40,7 +40,7 @@ const StocksView = (props) => {
                   payload: e.target.value,
                 })
               }
-              maxlength="6"
+              maxLength="6"
               required
             />
           </label>
@@ -55,7 +55,7 @@ const StocksView = (props) => {
                   payload: e.target.value,
                 })
               }
-              maxlength="5"
+              maxLength="5"
               required
             />
           </label>
@@ -70,7 +70,7 @@ const StocksView = (props) => {
                   payload: e.target.value,
                 })
               }
-              maxlength="5"
+              maxLength="5"
               required
             />
           </label>
@@ -85,7 +85,7 @@ const StocksView = (props) => {
                   payload: e.target.value,
                 })
               }
-              maxlength="5"
+              maxLength="5"
               required
             />
           </label>
@@ -94,7 +94,9 @@ const StocksView = (props) => {
             <input type="checkbox" id="yearCheckBox" onClick={oneYearCheck} />
           </label>
 
-          <input type="submit" value="Add Shares" />
+          <button class="add-shares" onClick={addStocks}>
+            Add Shares
+          </button>
 
           <label>
             Income:

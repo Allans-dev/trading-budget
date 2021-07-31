@@ -9,6 +9,11 @@ const initialState = {
   salary: 0,
   //inputs
   showTotal: false,
+  stockName: "",
+  buyPrice: 0,
+  sellPrice: 0,
+  volume: 0,
+  income: 0,
 };
 
 const store = createContext(initialState);
