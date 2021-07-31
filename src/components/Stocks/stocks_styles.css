@@ -118,7 +118,7 @@
 /* Stocks List Item Styles */
 
 .stocks-display .list-item {
-  grid-area: results;
+  grid-area: stocks;
   margin-top: 10px;
   line-height: 25px;
   margin: 10px 0;
@@ -166,11 +166,9 @@
 
 .result-section .summary {
   display: grid;
-  grid-template-areas:
-    "3fr 1fr"
-    "3fr 1fr"
-    "3fr 1fr";
+  grid-template-columns: 3fr 1fr;
   text-align: left;
+  padding: 0.5em;
 }
 
 #yearCheckBox {

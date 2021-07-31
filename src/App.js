@@ -145,7 +145,7 @@ const App = () => {
       </article>
     </StateProvider>
   ) : (
-    <article class={"root"}>
+    <article class="root">
       <div id="loader">Loading...</div>
       <Router>
         <div id="firebaseui-auth-container"></div>

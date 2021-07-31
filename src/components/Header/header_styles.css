@@ -40,8 +40,8 @@
   line-height: 3em;
 }
 .header .sign-out {
-  position: absolute;
-  right: 3em;
+  position: relative;
+  margin-right: 5px;
   height: 2em;
   line-height: 2em;
   color: #4e4e4e;
