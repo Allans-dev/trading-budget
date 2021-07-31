@@ -5,6 +5,7 @@ import "./disclaimer_styles.css";
 const Disclaimer = () => (
   <article class="disclaimer-page">
     <div class="disclaimer-block">
+      <h2>Disclaimer</h2>
       <span>
         The information on this website is for general information only. It
         should not be taken as constituting professional advice from the website

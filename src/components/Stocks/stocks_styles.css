@@ -71,7 +71,7 @@
   background-color: rgba(26, 26, 26, 0.5);
   color: #d6d6d6;
   border-radius: 15px;
-  padding: 15px;
+  padding: 10px;
 }
 
 .stocks-display {
@@ -86,6 +86,7 @@
   column-gap: 1.5%;
   text-align: center;
   align-items: center;
+  margin-bottom: 10px;
 }
 
 @media only screen and (max-width: 523px) {
@@ -165,6 +166,9 @@
   text-align: left;
 }
 
+#yearCheckBox {
+  margin: auto 2em;
+}
 /* .aside {
   text-align: center;
   margin: 10px;

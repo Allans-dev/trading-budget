@@ -129,6 +129,7 @@ const App = () => {
           <Route exact path="/privacy-policy">
             <PrivacyPolicy />
           </Route>
+
           <Route exact path="/disclaimer">
             <Disclaimer />
           </Route>
