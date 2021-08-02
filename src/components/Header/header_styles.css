@@ -40,10 +40,18 @@
   line-height: 3em;
 }
 .header .sign-out {
-  position: relative;
-  margin-right: 5px;
+  position: absolute;
+  right: 5%;
   height: 2em;
   line-height: 2em;
   color: #4e4e4e;
   display: inline-block;
+}
+
+@media only screen and (max-width: 523px) {
+  .header .sign-out {
+    position: relative;
+    margin-right: 3%;
+    right: 0;
+  }
 }

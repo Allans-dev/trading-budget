@@ -22,9 +22,9 @@ const Header = () => {
       <nav>
         {/* <div>menu</div> */}
         <ul class="list-container">
-          <Link class="list-item" to="/">
+          {/* <Link class="list-item" to="/">
             <li>Home</li>
-          </Link>
+          </Link> */}
 
           <Link class="list-item" to="/stocks">
             <li>Stocks</li>
@@ -32,6 +32,9 @@ const Header = () => {
 
           <Link class="list-item" to="/budget">
             <li>Budget</li>
+          </Link>
+          <Link class="list-item" to="/analysis">
+            <li>Analysis</li>
           </Link>
         </ul>
         <button class="sign-out action button" onClick={signout}>

@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 import Landing from "./components/Landing";
 import Stocks from "./components/Stocks/Stocks";
 import Budget from "./components/Budget/Budget";
+import Analysis from "./components/Analysis/Analysis";
 
 import Footer from "./components/Footer/Footer";
 import Header from "./components/Header/Header";
@@ -127,6 +128,10 @@ const App = () => {
               <Stocks />
             </Route>
           </StockStateProvider>
+
+          <Route exact path="/analysis">
+            <Analysis />
+          </Route>
 
           <Route exact path="/privacy-policy">
             <PrivacyPolicy />
