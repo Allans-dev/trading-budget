@@ -24,6 +24,7 @@ import "firebase/firestore";
 
 import * as firebaseui from "firebaseui";
 import "firebaseui/dist/firebaseui.css";
+import { AnalysisStateProvider } from "./components/Analysis/analsys-store";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC238mryUvNxq4lScBrGNHL9dAjjHHPs4Q",
@@ -122,16 +123,16 @@ const App = () => {
               <Budget />
             </Route>
           </BudgetStateProvider>
-
           <StockStateProvider>
             <Route exact path="/stocks">
               <Stocks />
             </Route>
           </StockStateProvider>
-
-          <Route exact path="/analysis">
-            <Analysis />
-          </Route>
+          <AnalysisStateProvider>
+            <Route exact path="/analysis">
+              <Analysis />
+            </Route>
+          </AnalysisStateProvider>
 
           <Route exact path="/privacy-policy">
             <PrivacyPolicy />

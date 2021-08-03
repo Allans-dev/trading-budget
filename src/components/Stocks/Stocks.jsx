@@ -209,7 +209,8 @@ const Stocks = () => {
       return item.iProfit;
     });
 
-    const stockTotal = profitArray.reduce((a, b) => a + b);
+    const stockTotal =
+      profitArray.length > 0 ? profitArray.reduce((a, b) => a + b) : 0;
 
     let totalIncome = yearCheck
       ? stockTotal / 2 + Math.round(Number(salary))

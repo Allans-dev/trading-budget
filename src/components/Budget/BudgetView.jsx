@@ -49,7 +49,7 @@ const BudgetView = (props) => {
               <option value="Groceries">Groceries</option>
               <option value="Entertainment">Entertainment</option>
               <option value="Shopping">Shopping</option>
-              <option value="Drinks">Drinks</option>
+              <option value="Rent/Mortgage">Rent/Mortgage</option>
               <option value="Hobby">Hobby</option>
               <option value="Household">Household</option>
               <option value="Transport">Transport</option>

@@ -177,6 +177,7 @@
   border-top: 1px solid #d6d6d6;
   border-top-left-radius: 5px;
   margin-top: 10px;
+  padding-left: 0.5em;
 }
 
 .budget-page .results ul li:first-of-type {
