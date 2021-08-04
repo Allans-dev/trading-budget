@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from "react";
 
 import AnalysisView from "./AnalysisView";
 
-import { store } from "./analsys-store";
+import { store } from "./analysis-store";
 
 import firebase from "firebase/app";
 import "firebase/firestore";
@@ -71,64 +71,34 @@ const Analysis = () => {
     return val !== null;
   });
 
-  const switchBudget = () => {
-    let restaurantArray,
-      groceryArray,
-      rentArray,
-      houseArray = [];
+  const totalObj = {};
+  const arr = [];
 
-    let restaurant = {};
-
-    expenseArray.map((val, index) => {
-      switch (val.category) {
-        case "Restaurant":
-          let restaurantArray = [];
-          restaurant.category = "Restaurant";
-          restaurantArray.push(val.cost);
-          restaurant.totalCost = restaurantArray.reduce((a, b) => a + b);
-          console.log(restaurantArray);
-          break;
-        case "Groceries":
-          // groceryArray.push(val.cost);
-          // groceryArray.reduce((a, b) => a + b);
-          // console.log(groceryArray);
-          break;
-        case "Entertainment":
-          break;
-        case "Shopping":
-          break;
-        case "Rent/Mortgage":
-          // rentArray.push(val.cost);
-          // rentArray.reduce((a, b) => a + b);
-          // console.log(rentArray);
-          break;
-        case "Hobby":
-          break;
-        case "Household":
-          // houseArray.push(val.cost);
-          // houseArray.reduce((a, b) => a + b);
-          // console.log(houseArray);
-          break;
-        case "Transport":
-          break;
-        case "Education":
-          break;
-        case "Health":
-          break;
-        case "Other":
-          break;
-        default:
-          break;
+  const a = filteredExpenseLabel.map((val, index) => {
+    sortedCost.map((val2, index2) => {
+      let temp = {};
+      if (val === val2.category) {
+        temp[val2.category] = val2.cost;
+        arr.push(temp);
       }
-
-      // return { "category" = restaurantArray, ...groceryArray, ...rentArray, ...houseArray };
+      temp = {};
     });
-    return [restaurant];
+
+    return arr;
+  });
+
+  const result = (b) => {
+    b.forEach((list) => {
+      for (let [key, value] of Object.entries(list)) {
+        if (totalObj[key]) {
+          totalObj[key] += value;
+        } else totalObj[key] = value;
+      }
+    });
+    return totalObj;
   };
 
-  console.log(sortedCost);
-
-  console.log(switchBudget());
+  console.log(result(a[0]));
 
   const budgetData =
     sortedCost.length > 0
@@ -157,8 +127,6 @@ const Analysis = () => {
         })
       : 0;
 
-  console.log(budgetLabel);
-
   const sortedStocks = stocksList.sort((a, b) => {
     var nameA = a.stockName.toUpperCase(); // ignore upper and lowercase
     var nameB = b.stockName.toUpperCase(); // ignore upper and lowercase
@@ -186,8 +154,6 @@ const Analysis = () => {
           return { x: val.stockName, y: val.iProfit };
         })
       : 0;
-
-  console.log(sortedCost);
 
   return (
     <AnalysisView

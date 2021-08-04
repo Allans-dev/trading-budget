@@ -24,7 +24,7 @@ import "firebase/firestore";
 
 import * as firebaseui from "firebaseui";
 import "firebaseui/dist/firebaseui.css";
-import { AnalysisStateProvider } from "./components/Analysis/analsys-store";
+import { AnalysisStateProvider } from "./components/Analysis/analysis-store";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC238mryUvNxq4lScBrGNHL9dAjjHHPs4Q",

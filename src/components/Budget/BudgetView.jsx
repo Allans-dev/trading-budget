@@ -97,7 +97,7 @@ const BudgetView = (props) => {
               onChange={(e) =>
                 context.dispatch({
                   type: "updateCost",
-                  payload: e.target.value,
+                  payload: Number(e.target.value),
                 })
               }
             />
