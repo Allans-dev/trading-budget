@@ -59,46 +59,50 @@ const Analysis = () => {
     return 0;
   });
 
-  const singleExpenseLabel = sortedCost.map((val, index) => {
-    const prev = index - 1 >= 0 ? index - 1 : 0;
+  const singleExpenseLabel = sortedCost
+    .map((val, index) => {
+      const prev = index - 1 >= 0 ? index - 1 : 0;
 
-    return val.category !== sortedCost[prev].category || index === 0
-      ? val.category
-      : null;
-  });
-
-  const filteredExpenseLabel = singleExpenseLabel.filter((val, index) => {
-    return val !== null;
-  });
-
-  const totalObj = {};
-  const arr = [];
-
-  const a = filteredExpenseLabel.map((val, index) => {
-    sortedCost.map((val2, index2) => {
-      let temp = {};
-      if (val === val2.category) {
-        temp[val2.category] = val2.cost;
-        arr.push(temp);
-      }
-      temp = {};
+      return val.category !== sortedCost[prev].category || index === 0
+        ? val.category
+        : null;
+    })
+    .filter((val, index) => {
+      return val !== null;
     });
 
-    return arr;
-  });
+  const expenseObj = {};
+  const exArray = [];
 
-  const result = (b) => {
-    b.forEach((list) => {
-      for (let [key, value] of Object.entries(list)) {
-        if (totalObj[key]) {
-          totalObj[key] += value;
-        } else totalObj[key] = value;
-      }
+  const extractKeyValues = (keyList, masterList, array) => {
+    keyList.map((val, index) => {
+      masterList.map((val2, index2) => {
+        let temp = {};
+        if (val === val2.category) {
+          temp[val2.category] = val2.cost;
+          array.push(temp);
+        }
+        temp = {};
+      });
     });
-    return totalObj;
   };
 
-  console.log(result(a[0]));
+  extractKeyValues(singleExpenseLabel, sortedCost, exArray);
+
+  const addValuesInObjectArray = (arr, obj) => {
+    arr.forEach((list) => {
+      for (let [key, value] of Object.entries(list)) {
+        if (obj[key]) {
+          obj[key] += value;
+        } else obj[key] = value;
+      }
+    });
+    return obj;
+  };
+
+  const totalExpenseByCaterory = addValuesInObjectArray(exArray, expenseObj);
+
+  console.log(totalExpenseByCaterory);
 
   const budgetData =
     sortedCost.length > 0
@@ -110,22 +114,17 @@ const Analysis = () => {
         })
       : 0;
 
-  const budgetLabel2 =
-    filteredExpenseLabel.length > 0
-      ? filteredExpenseLabel.map((val, index) => {
-          return { x: val, y: val };
-        })
-      : null;
+  const budgetLabel = [];
 
-  const budgetLabel =
-    sortedCost.length > 0
-      ? sortedCost.map((val, index) => {
-          return {
-            x: val.category,
-            y: val.cost,
-          };
-        })
-      : 0;
+  const keyValueToCoords = (obj) => {
+    for (const key in obj) {
+      budgetLabel.push({ x: key, y: obj[key] });
+    }
+  };
+
+  keyValueToCoords(totalExpenseByCaterory);
+
+  console.log(budgetLabel);
 
   const sortedStocks = stocksList.sort((a, b) => {
     var nameA = a.stockName.toUpperCase(); // ignore upper and lowercase
@@ -161,7 +160,7 @@ const Analysis = () => {
       stocksData={stocksData}
       stocksLabel={stocksLabel}
       budgetData={budgetData}
-      budgetLabel={budgetLabel2}
+      budgetLabel={budgetLabel}
     />
   );
 };
