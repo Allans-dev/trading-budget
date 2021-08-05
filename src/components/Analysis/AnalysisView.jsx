@@ -6,8 +6,7 @@ import { VictoryPie } from "victory";
 import "./analysis_styles.css";
 
 const AnalysisView = (props) => {
-  const { stocksData, budgetData, sampleData, stocksLabel, budgetLabel } =
-    props;
+  const { stocksOuter, stocksInner, budgetInner, budgetOuter } = props;
 
   return (
     <div class="analysis-view">
@@ -16,13 +15,13 @@ const AnalysisView = (props) => {
           radius={140}
           standalone={false}
           innerRadius={80}
-          data={stocksData}
+          data={stocksOuter}
           labelRadius={({ innerRadius }) => innerRadius + 25}
         />
         <VictoryPie
           radius={60}
           standalone={false}
-          data={stocksLabel}
+          data={stocksInner}
           labelRadius={({ innerRadius }) => innerRadius + 25}
         />
       </svg>
@@ -31,13 +30,13 @@ const AnalysisView = (props) => {
           radius={140}
           standalone={false}
           innerRadius={80}
-          data={budgetData}
+          data={budgetOuter}
           labelRadius={({ innerRadius }) => innerRadius + 25}
         />
         <VictoryPie
           radius={60}
           standalone={false}
-          data={budgetLabel}
+          data={budgetInner}
           labelRadius={({ innerRadius }) => innerRadius + 25}
           //   style={{
           //     data: {

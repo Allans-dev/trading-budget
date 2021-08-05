@@ -39,12 +39,6 @@ const Analysis = () => {
     // eslint-disable-next-line
   }, []);
 
-  const sampleData = [
-    { x: "Cats", y: 35 },
-    { x: "Dogs", y: 40 },
-    { x: "Birds", y: 55 },
-  ];
-
   const sortedCost = expenseArray.sort((a, b) => {
     var nameA = a.category.toUpperCase(); // ignore upper and lowercase
     var nameB = b.category.toUpperCase(); // ignore upper and lowercase
@@ -59,7 +53,7 @@ const Analysis = () => {
     return 0;
   });
 
-  const singleExpenseLabel = sortedCost
+  const expenseCategory = sortedCost
     .map((val, index) => {
       const prev = index - 1 >= 0 ? index - 1 : 0;
 
@@ -71,25 +65,30 @@ const Analysis = () => {
       return val !== null;
     });
 
-  const expenseObj = {};
-  const exArray = [];
-
-  const extractKeyValues = (keyList, masterList, array) => {
-    keyList.map((val, index) => {
-      masterList.map((val2, index2) => {
+  const extractKeyValues = (keyList, masterList, keyNameOne, keyNameTwo) => {
+    const array = [];
+    keyList.map((val) => {
+      masterList.map((val2) => {
         let temp = {};
-        if (val === val2.category) {
-          temp[val2.category] = val2.cost;
+        if (val === val2[keyNameOne]) {
+          temp[val2[keyNameOne]] = val2[keyNameTwo];
           array.push(temp);
         }
         temp = {};
       });
     });
+    return array;
   };
 
-  extractKeyValues(singleExpenseLabel, sortedCost, exArray);
+  const budgetKeyValues = extractKeyValues(
+    expenseCategory,
+    sortedCost,
+    "category",
+    "cost"
+  );
 
-  const addValuesInObjectArray = (arr, obj) => {
+  const addValuesInObjectArray = (arr) => {
+    let obj = {};
     arr.forEach((list) => {
       for (let [key, value] of Object.entries(list)) {
         if (obj[key]) {
@@ -100,11 +99,21 @@ const Analysis = () => {
     return obj;
   };
 
-  const totalExpenseByCaterory = addValuesInObjectArray(exArray, expenseObj);
+  const totalExpenseByCaterory = addValuesInObjectArray(budgetKeyValues);
 
-  console.log(totalExpenseByCaterory);
+  const keyValueToCoords = (obj) => {
+    const arr = [];
+    for (const key in obj) {
+      arr.push({ x: key, y: obj[key] });
+    }
+    return arr;
+  };
 
-  const budgetData =
+  //===============================================================
+
+  const budgetInner = keyValueToCoords(totalExpenseByCaterory);
+
+  const budgetOuter =
     sortedCost.length > 0
       ? sortedCost.map((val, index) => {
           return {
@@ -114,17 +123,7 @@ const Analysis = () => {
         })
       : 0;
 
-  const budgetLabel = [];
-
-  const keyValueToCoords = (obj) => {
-    for (const key in obj) {
-      budgetLabel.push({ x: key, y: obj[key] });
-    }
-  };
-
-  keyValueToCoords(totalExpenseByCaterory);
-
-  console.log(budgetLabel);
+  //===============================================================
 
   const sortedStocks = stocksList.sort((a, b) => {
     var nameA = a.stockName.toUpperCase(); // ignore upper and lowercase
@@ -140,14 +139,16 @@ const Analysis = () => {
     return 0;
   });
 
-  const stocksLabel =
+  const StockNameIProfit = () => {};
+
+  const stocksInner =
     sortedStocks.length > 0
       ? sortedStocks.map((val, index) => {
           return { x: val.iProfit, y: val.iProfit };
         })
       : 0;
 
-  const stocksData =
+  const stocksOuter =
     sortedStocks.length > 0
       ? sortedStocks.map((val, index) => {
           return { x: val.stockName, y: val.iProfit };
@@ -156,11 +157,10 @@ const Analysis = () => {
 
   return (
     <AnalysisView
-      sampleData={sampleData}
-      stocksData={stocksData}
-      stocksLabel={stocksLabel}
-      budgetData={budgetData}
-      budgetLabel={budgetLabel}
+      stocksOuter={stocksOuter}
+      stocksInner={stocksInner}
+      budgetOuter={budgetOuter}
+      budgetInner={budgetInner}
     />
   );
 };
