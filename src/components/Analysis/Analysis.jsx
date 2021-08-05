@@ -53,7 +53,7 @@ const Analysis = () => {
     return 0;
   });
 
-  const expenseCategory = sortedCost
+  const categoryArray = sortedCost
     .map((val, index) => {
       const prev = index - 1 >= 0 ? index - 1 : 0;
 
@@ -81,13 +81,13 @@ const Analysis = () => {
   };
 
   const budgetKeyValues = extractKeyValues(
-    expenseCategory,
+    categoryArray,
     sortedCost,
     "category",
     "cost"
   );
 
-  const addValuesInObjectArray = (arr) => {
+  const addValuesIntoObject = (arr) => {
     let obj = {};
     arr.forEach((list) => {
       for (let [key, value] of Object.entries(list)) {
@@ -99,7 +99,7 @@ const Analysis = () => {
     return obj;
   };
 
-  const totalExpenseByCaterory = addValuesInObjectArray(budgetKeyValues);
+  const totalExpenseByCaterory = addValuesIntoObject(budgetKeyValues);
 
   const keyValueToCoords = (obj) => {
     const arr = [];
@@ -126,34 +126,58 @@ const Analysis = () => {
   //===============================================================
 
   const sortedStocks = stocksList.sort((a, b) => {
-    var nameA = a.stockName.toUpperCase(); // ignore upper and lowercase
-    var nameB = b.stockName.toUpperCase(); // ignore upper and lowercase
-    if (nameA < nameB) {
-      return -1;
-    }
-    if (nameA > nameB) {
-      return 1;
-    }
-
-    // names must be equal
-    return 0;
+    return b.iProfit - a.iProfit;
   });
 
-  const StockNameIProfit = () => {};
+  const StockNameArray = stocksList
+    .map((val, index) => {
+      const prev = index - 1 >= 0 ? index - 1 : 0;
 
-  const stocksInner =
-    sortedStocks.length > 0
-      ? sortedStocks.map((val, index) => {
-          return { x: val.iProfit, y: val.iProfit };
-        })
-      : 0;
+      return val.stockName !== stocksList[prev].stockName || index === 0
+        ? val.stockName
+        : null;
+    })
+    .filter((val, index) => {
+      return val !== null;
+    });
+
+  const stocksKeyValues = extractKeyValues(
+    StockNameArray,
+    stocksList,
+    "stockName",
+    "iProfit"
+  );
+
+  const addSelectedValuesIntoObject = (arr) => {
+    let obj = { profit: 0, loss: 0 };
+    arr.forEach((list) => {
+      for (let [key, value] of Object.entries(list)) {
+        if (value >= 0) {
+          obj.profit += value;
+        } else obj.loss += value;
+      }
+    });
+    obj.loss *= -1;
+    return obj;
+  };
+
+  const nameProfitObject = addSelectedValuesIntoObject(stocksKeyValues);
+
+  //===============================================================
+
+  const stocksInner = keyValueToCoords(nameProfitObject);
 
   const stocksOuter =
     sortedStocks.length > 0
       ? sortedStocks.map((val, index) => {
-          return { x: val.stockName, y: val.iProfit };
+          return {
+            x: val.stockName,
+            y: val.iProfit > 0 ? val.iProfit : val.iProfit * -1,
+          };
         })
       : 0;
+
+  //===============================================================
 
   return (
     <AnalysisView
