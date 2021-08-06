@@ -168,7 +168,7 @@ const Analysis = () => {
   const stocksInner = keyValueToCoords(nameProfitObject);
 
   const stocksOuter =
-    sortedStocks.length >= 0
+    sortedStocks.length > 0
       ? sortedStocks.map((val, index) => {
           return {
             x: val.stockName + " " + val.iProfit,
@@ -176,7 +176,7 @@ const Analysis = () => {
             profit: val.iProfit > 0 ? true : false,
           };
         })
-      : 0;
+      : [];
 
   //===============================================================
 
