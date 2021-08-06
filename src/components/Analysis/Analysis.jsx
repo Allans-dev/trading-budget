@@ -171,7 +171,7 @@ const Analysis = () => {
     sortedStocks.length > 0
       ? sortedStocks.map((val, index) => {
           return {
-            x: val.stockName,
+            x: val.stockName + " " + val.iProfit,
             y: val.iProfit > 0 ? val.iProfit : val.iProfit * -1,
             profit: val.iProfit > 0 ? true : false,
           };

@@ -35,7 +35,7 @@ const AnalysisView = (props) => {
           colorScale={profitLossColors}
         />
         <VictoryPie
-          radius={60}
+          radius={70}
           standalone={false}
           data={stocksInner}
           labelRadius={({ innerRadius }) => innerRadius + 25}
@@ -55,25 +55,25 @@ const AnalysisView = (props) => {
           data={budgetOuter}
           labelRadius={({ innerRadius }) => innerRadius + 25}
           colorScale={colors}
-          style={{
-            data: {
-              stroke: "#c43a31",
-              strokeWidth: 1,
-            },
-          }}
+          //   style={{
+          //     data: {
+          //       stroke: "#c43a31",
+          //       strokeWidth: 1,
+          //     },
+          //   }}
         />
         <VictoryPie
-          radius={60}
+          radius={70}
           standalone={false}
           data={budgetInner}
           labelRadius={({ innerRadius }) => innerRadius + 25}
           colorScale={colors}
-          style={{
-            data: {
-              stroke: "#c43a31",
-              strokeWidth: 1,
-            },
-          }}
+          //   style={{
+          //     data: {
+          //       stroke: "#c43a31",
+          //       strokeWidth: 1,
+          //     },
+          //   }}
         />
       </svg>
     </div>
