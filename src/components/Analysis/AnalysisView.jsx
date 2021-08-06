@@ -11,31 +11,17 @@ const AnalysisView = (props) => {
 
   console.log(stocksInner);
 
-  const colors = [
-    "cornflowerblue",
-    "gold",
-    "orange",
-    "turquoise",
-    "tomato",
-    "greenyellow",
-  ];
+  const colors = ["#805B05", "#FFCD57", "#FFB60A", "#80662B", "#CC9108"];
 
-  const theme = {
-    pie: {
-      style: {
-        data: {
-          padding: 10,
-          stroke: "transparent",
-          strokeWidth: 1,
-        },
-        // labels: assign({}, baseLabelStyles, { padding: 20 }),
-      },
-      colorScale: colors,
-      width: 400,
-      height: 400,
-      padding: 50,
-    },
-  };
+  const profitLossColors = stocksOuter.map((val, index) => {
+    if (val.profit) {
+      if (index % 2 === 0) {
+        return "#8AA31F";
+      } else return "#A2B357";
+    } else if (index % 2 === 0) {
+      return "#F06151";
+    } else return "#F2A49B";
+  });
 
   return (
     <div class="analysis-view">
@@ -46,17 +32,17 @@ const AnalysisView = (props) => {
           innerRadius={80}
           data={stocksOuter}
           labelRadius={({ innerRadius }) => innerRadius + 25}
-          colorScale={colors}
+          colorScale={profitLossColors}
         />
         <VictoryPie
           radius={60}
           standalone={false}
           data={stocksInner}
           labelRadius={({ innerRadius }) => innerRadius + 25}
-          colorScale={colors}
           style={{
             data: {
-              fill: ({ datum }) => (datum.x === "profit" ? "green" : "red"),
+              fill: ({ datum }) =>
+                datum.x === "profit" ? "#8AA31F" : "#F06151",
             },
           }}
         />
@@ -69,6 +55,12 @@ const AnalysisView = (props) => {
           data={budgetOuter}
           labelRadius={({ innerRadius }) => innerRadius + 25}
           colorScale={colors}
+          style={{
+            data: {
+              stroke: "#c43a31",
+              strokeWidth: 1,
+            },
+          }}
         />
         <VictoryPie
           radius={60}
@@ -76,18 +68,12 @@ const AnalysisView = (props) => {
           data={budgetInner}
           labelRadius={({ innerRadius }) => innerRadius + 25}
           colorScale={colors}
-
-          //   style={{
-          //     data: {
-          //       fillOpacity: 0.9,
-          //       stroke: "#c43a31",
-          //       strokeWidth: 3,
-          //     },
-          //     labels: {
-          //       fontSize: 25,
-          //       fill: "#c43a31",
-          //     },
-          //   }}
+          style={{
+            data: {
+              stroke: "#c43a31",
+              strokeWidth: 1,
+            },
+          }}
         />
       </svg>
     </div>

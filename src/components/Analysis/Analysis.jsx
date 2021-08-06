@@ -173,6 +173,7 @@ const Analysis = () => {
           return {
             x: val.stockName,
             y: val.iProfit > 0 ? val.iProfit : val.iProfit * -1,
+            profit: val.iProfit > 0 ? true : false,
           };
         })
       : 0;
