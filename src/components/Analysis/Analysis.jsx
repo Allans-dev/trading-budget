@@ -207,7 +207,7 @@ const Analysis = () => {
         color: "#d6d6d6",
         textAlign: "center",
         padding: "15px",
-        borderRadius: "5px",
+        borderRadius: "15px",
         alignSelf: "center",
       }}
     >

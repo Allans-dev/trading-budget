@@ -45,7 +45,7 @@
   grid-template-rows: max-content max-content max-content;
   grid-auto-flow: row;
   column-gap: 2%;
-  padding: 15px;
+  margin: 5px;
 }
 
 .budget-page .add-expense label {
@@ -62,8 +62,10 @@
 
 .budget-page .add-expense select {
   height: 1.5em;
-  width: 50%;
+  width: 135px;
   margin: 5px 2px;
+  border-radius: 5px;
+  background-color: #d6d6d6;
 }
 
 .budget-page .add-expense .category {
@@ -124,10 +126,10 @@
   grid-row: 1/4;
   border: 0;
   width: 1.5em;
-  height: 100%;
+  height: calc(100% - 10px);
   font-size: 18px;
   text-align: center;
-  margin: 0;
+  margin: 5px;
   padding: 0;
   border-radius: 5px;
   background-color: #f0b03a;
