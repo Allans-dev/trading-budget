@@ -150,15 +150,32 @@ const Analysis = () => {
 
   const addSelectedValuesIntoObject = (arr) => {
     let obj = { profit: 0, loss: 0 };
+    console.log(arr);
     arr.forEach((list) => {
       for (let [key, value] of Object.entries(list)) {
         if (value >= 0) {
           obj.profit += value;
-        } else obj.loss += value;
+        } else if (value < 0) {
+          obj.loss += value;
+        }
       }
     });
+
     obj.loss *= -1;
-    return obj;
+
+    if (obj.loss && obj.profit) {
+      return obj;
+    } else if (obj.loss && !obj.profit) {
+      obj = {};
+      obj.loss = 1;
+      return obj;
+    } else if (obj.profit && !obj.loss) {
+      obj = {};
+      obj.profit = 1;
+      return obj;
+    } else {
+      return {};
+    }
   };
 
   const nameProfitObject = addSelectedValuesIntoObject(stocksKeyValues);
@@ -172,15 +189,31 @@ const Analysis = () => {
       ? sortedStocks.map((val, index) => {
           return {
             x: val.stockName + " " + val.iProfit,
-            y: val.iProfit > 0 ? val.iProfit : val.iProfit * -1,
-            profit: val.iProfit > 0 ? true : false,
+            y: val.iProfit >= 0 ? val.iProfit : val.iProfit * -1,
+            profit: val.iProfit >= 0 ? true : false,
           };
         })
       : [];
 
   //===============================================================
 
-  return (
+  return stocksList.length < 1 && expenseArray.length < 1 ? (
+    <div
+      style={{
+        backgroundColor: "rgba(26, 26, 26, 0.5)",
+        width: "300px",
+        height: "55px",
+        margin: "0 auto",
+        color: "#d6d6d6",
+        textAlign: "center",
+        padding: "15px",
+        borderRadius: "5px",
+        alignSelf: "center",
+      }}
+    >
+      Please enter a stock or an expense to see it charted.
+    </div>
+  ) : (
     <AnalysisView
       stocksOuter={stocksOuter}
       stocksInner={stocksInner}
