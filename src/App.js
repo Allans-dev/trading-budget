@@ -9,6 +9,8 @@ import Analysis from "./components/Analysis/Analysis";
 import Footer from "./components/Footer/Footer";
 import Header from "./components/Header/Header";
 
+import Loader from "./components/Loader";
+
 import PrivacyPolicy from "./components/PrivacyPolicy/PrivacyPolicy";
 import Disclaimer from "./components/Disclaimer/Disclaimer";
 
@@ -46,6 +48,7 @@ const db = firebase.firestore();
 
 const App = () => {
   const [authStatus, setAuthStatus] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const ui =
     firebaseui.auth.AuthUI.getInstance() ||
@@ -62,7 +65,6 @@ const App = () => {
       uiShown: function () {
         // The widget is rendered.
         // Hide the loader.
-        document.getElementById("loader").style.display = "none";
       },
     },
     // Will use popup for IDP Providers sign-in flow instead of the default, redirect.
@@ -92,25 +94,48 @@ const App = () => {
     privacyPolicyUrl: "/logged-out-privacy-policy",
   };
 
+  const signInAnon = () => {
+    setIsLoading(true);
+    firebase
+      .auth()
+      .signInAnonymously()
+      .then(() => {
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        console.log(errorCode + ": " + errorMessage);
+        // ...
+      });
+  };
+
   firebase.auth().onAuthStateChanged(async (user) => {
     if (user) {
       // User is signed in.
-      const docRef = db.collection("users").doc(user.uid);
-      await docRef.set(
-        {
-          displayName: user.displayName,
-          email: user.email,
-        },
-        { merge: true }
-      );
+      // const docRef = db.collection("users").doc(user.uid);
+      // await docRef.set(
+      //   {
+      //     displayName: user.displayName,
+      //     email: user.email,
+      //   },
+      //   { merge: true }
+      // );
       setAuthStatus(true);
+      setIsLoading(false);
     } else if (!user) {
       setAuthStatus(false);
-      ui.start("#firebaseui-auth-container", uiConfig);
+      document.getElementById("#firebaseui-auth-container")
+        ? ui.reset()
+        : ui.start("#firebaseui-auth-container", uiConfig);
     } else {
       console.log("error");
     }
   });
+
+  if (isLoading) {
+    return <Loader />;
+  }
 
   return authStatus ? (
     <StateProvider>
@@ -152,9 +177,17 @@ const App = () => {
     </StateProvider>
   ) : (
     <article class="root">
-      <div id="loader">Loading...</div>
       <Router>
-        <div id="firebaseui-auth-container"></div>
+        <div style={styles.authContainer} id="firebaseui-auth-container">
+          <button
+            id="anon-sign-btn"
+            style={styles.anonSignBtn}
+            onClick={signInAnon}
+          >
+            Guest Sign In
+          </button>
+        </div>
+
         <Route exact path="/logged-out-privacy-policy">
           <PrivacyPolicy />
         </Route>
@@ -165,6 +198,15 @@ const App = () => {
       </Router>
     </article>
   );
+};
+
+const styles = {
+  anonSignBtn: {
+    margin: "3em auto",
+    width: "200px",
+    height: "50px",
+    display: "block",
+  },
 };
 
 export default App;
