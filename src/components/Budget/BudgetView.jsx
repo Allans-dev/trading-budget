@@ -23,7 +23,7 @@ const BudgetView = (props) => {
     netProfit,
   } = context.state;
 
-  // console.log(timeFrame);
+  console.log(expenseArray);
 
   const { calcBudget, addExpenses, deleteListItem } = props;
 
@@ -159,7 +159,9 @@ const BudgetView = (props) => {
         </section>
       </form>
 
-      <section class={expenseArray.length > 0 ? "results" : "none"}>
+      <section
+        class={expenseArray && expenseArray.length > 0 ? "results" : "none"}
+      >
         {displayResults === true && netProfit > 0 ? (
           <div class="summary">
             <span>Take-Home Income: </span>

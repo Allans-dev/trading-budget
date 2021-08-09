@@ -32,35 +32,40 @@ const Stocks = () => {
     await listRef
       .get()
       .then((doc) => {
-        context.dispatch({
-          type: "updateStocksList",
-          payload: doc.data().stocksList,
-        });
-        context.dispatch({
-          type: "updateProfitBE",
-          payload: doc.data().profitBE,
-        });
-        context.dispatch({
-          type: "updateTotalIncome",
-          payload: doc.data().totalIncome,
-        });
-        context.dispatch({
-          type: "updateTaxOwed",
-          payload: doc.data().taxOwed,
-        });
-        context.dispatch({
-          type: "updateYearCheck",
-          payload: doc.data().yearCheck,
-        });
-        context.dispatch({
-          type: "updateSalary",
-          payload: doc.data().salary,
-        });
-        context.dispatch({
-          type: "updateTaxBracket",
-          payload: doc.data().taxBracket,
-        });
-        console.log("Document stocks:", doc.data().stocksList);
+        if (doc) {
+          context.dispatch({
+            type: "updateStocksList",
+            payload: doc.data().stocksList ? doc.data().stocksList : stocksList,
+          });
+          context.dispatch({
+            type: "updateProfitBE",
+            payload: doc.data().profitBE ? doc.data().profitBE : profitBE,
+          });
+          context.dispatch({
+            type: "updateTotalIncome",
+            payload: doc.data().totalIncome
+              ? doc.data().totalIncome
+              : totalIncome,
+          });
+          context.dispatch({
+            type: "updateTaxOwed",
+            payload: doc.data().taxOwed ? doc.data().taxOwed : taxOwed,
+          });
+          context.dispatch({
+            type: "updateYearCheck",
+            payload: doc.data().yearCheck ? doc.data().yearCheck : yearCheck,
+          });
+          context.dispatch({
+            type: "updateSalary",
+            payload: doc.data().salary ? doc.data().salary : salary,
+          });
+          context.dispatch({
+            type: "updateTaxBracket",
+            payload: doc.data().taxBracket ? doc.data().taxBracket : taxBracket,
+          });
+        }
+
+        console.log("Document stocks:", stocksList);
       })
       .catch(() => {
         console.log("No such document!");

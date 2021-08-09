@@ -21,13 +21,16 @@ const Analysis = () => {
       .then((doc) => {
         context.dispatch({
           type: "updateStocksList",
-          payload: doc.data().stocksList,
+          payload: doc.data().stocksList ? doc.data().stocksList : stocksList,
         });
         context.dispatch({
           type: "updateExpenses",
-          payload: doc.data().expenseArray,
+          payload: doc.data().expenseArray
+            ? doc.data().expenseArray
+            : expenseArray,
         });
         console.log("Document stocks:", doc.data().stocksList);
+        console.log("Document Expenses:", doc.data().expenseArray);
       })
       .catch(() => {
         console.log("No such document!");
@@ -40,16 +43,14 @@ const Analysis = () => {
   }, []);
 
   const sortedCost = expenseArray.sort((a, b) => {
-    var nameA = a.category.toUpperCase(); // ignore upper and lowercase
-    var nameB = b.category.toUpperCase(); // ignore upper and lowercase
+    var nameA = a.category.toUpperCase();
+    var nameB = b.category.toUpperCase();
     if (nameA < nameB) {
       return -1;
     }
     if (nameA > nameB) {
       return 1;
     }
-
-    // names must be equal
     return 0;
   });
 
@@ -150,7 +151,6 @@ const Analysis = () => {
 
   const addSelectedValuesIntoObject = (arr) => {
     let obj = { profit: 0, loss: 0 };
-    console.log(arr);
     arr.forEach((list) => {
       for (let [key, value] of Object.entries(list)) {
         if (value >= 0) {

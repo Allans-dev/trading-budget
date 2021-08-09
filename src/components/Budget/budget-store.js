@@ -1,7 +1,18 @@
 import { createContext, useReducer } from "react";
 
 const initialState = {
-  expenseArray: [],
+  expenseArray: [
+    {
+      category: "Groceries",
+      description: "food",
+      cost: 40,
+    },
+    {
+      category: "Shopping",
+      description: "shirt",
+      cost: 30,
+    },
+  ],
   totalExpenses: 0,
   totalSavings: 0,
   netProfit: 0,

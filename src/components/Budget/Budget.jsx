@@ -25,7 +25,7 @@ const Budget = () => {
     otherCategory,
   } = context.state;
 
-  console.log(profitBE);
+  console.log(context.state);
   console.log(netProfit);
   console.log("======================");
 
@@ -33,35 +33,42 @@ const Budget = () => {
   const user = firebase.auth().currentUser;
 
   const getBudget = async () => {
-    const budgetRef = db.collection("users").doc(user.uid);
-    await budgetRef
-      .get()
-      .then((doc) => {
-        context.dispatch({
-          type: "updateProfitBE",
-          payload: doc.data().profitBE,
+    if (user.uid) {
+      const budgetRef = db.collection("users").doc(user.uid);
+      await budgetRef
+        .get()
+        .then((doc) => {
+          context.dispatch({
+            type: "updateProfitBE",
+            payload: doc.data().profitBE ? doc.data().profitBE : profitBE,
+          });
+          context.dispatch({
+            type: "updateExpenses",
+            payload: doc.data().expenseArray
+              ? doc.data().expenseArray
+              : expenseArray,
+          });
+          context.dispatch({
+            type: "updateTotalSavings",
+            payload: doc.data().totalSavings
+              ? doc.data().totalSavings
+              : totalSavings,
+          });
+          context.dispatch({
+            type: "updateNetProfit",
+            payload: doc.data().netProfit ? doc.data().netProfit : netProfit,
+          });
+          context.dispatch({
+            type: "updateTotalExpenses",
+            payload: doc.data().totalExpenses
+              ? doc.data().totalExpenses
+              : totalExpenses,
+          });
+        })
+        .catch((error) => {
+          console.log("no doc");
         });
-        context.dispatch({
-          type: "updateExpenses",
-          payload: doc.data().expenseArray,
-        });
-        context.dispatch({
-          type: "updateTotalSavings",
-          payload: doc.data().totalSavings,
-        });
-        context.dispatch({
-          type: "updateNetProfit",
-          payload: doc.data().netProfit,
-        });
-        context.dispatch({
-          type: "updateTotalExpenses",
-          payload: doc.data().totalExpenses,
-        });
-        console.log("Document budget:", doc.data());
-      })
-      .catch((error) => {
-        console.log("no doc");
-      });
+    }
   };
 
   const saveBudget = async () => {
@@ -139,7 +146,7 @@ const Budget = () => {
     // const expenseArray = setExpenseArray();
     console.log(expenseArray);
     const totalExpenses =
-      expenseArray.length > 0
+      expenseArray && expenseArray.length > 0
         ? expenseArray.map((item) => Number(item.cost)).reduce((a, b) => a + b)
         : 0;
 

@@ -1,8 +1,36 @@
 import { createContext, useReducer } from "react";
 
 const initialState = {
-  stocksList: [],
-  expenseArray: [],
+  stocksList: [
+    {
+      stockName: "BHP",
+      buyPrice: 20,
+      sellPrice: 30,
+      volume: 100,
+      yearCheck: true,
+      iProfit: 1000,
+    },
+    {
+      stockName: "CBA",
+      buyPrice: 70,
+      sellPrice: 65,
+      volume: 50,
+      yearCheck: false,
+      iProfit: -250,
+    },
+  ],
+  expenseArray: [
+    {
+      category: "Groceries",
+      description: "food",
+      cost: "40",
+    },
+    {
+      category: "Shopping",
+      description: "shirt",
+      cost: "30",
+    },
+  ],
 };
 
 const store = createContext(initialState);

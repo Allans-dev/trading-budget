@@ -7,9 +7,9 @@ import "./analysis_styles.css";
 const AnalysisView = (props) => {
   const { stocksOuter, stocksInner, budgetInner, budgetOuter } = props;
 
-  console.log(stocksOuter);
+  console.log(budgetOuter);
 
-  console.log(stocksInner);
+  console.log(budgetInner);
 
   const colors = ["#805B05", "#FFCD57", "#FFB60A", "#80662B", "#CC9108"];
 

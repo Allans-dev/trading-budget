@@ -4,7 +4,24 @@ const initialState = {
   taxBracket: 0,
   taxOwed: 0,
   profitBE: 0,
-  stocksList: [],
+  stocksList: [
+    {
+      stockName: "BHP",
+      buyPrice: 20,
+      sellPrice: 30,
+      volume: 100,
+      yearCheck: true,
+      iProfit: 1000,
+    },
+    {
+      stockName: "CBA",
+      buyPrice: 70,
+      sellPrice: 65,
+      volume: 50,
+      yearCheck: false,
+      iProfit: -250,
+    },
+  ],
   totalIncome: 0,
   salary: 0,
   //inputs
