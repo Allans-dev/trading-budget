@@ -128,6 +128,7 @@ const App = () => {
       document.getElementById("#firebaseui-auth-container")
         ? ui.reset()
         : ui.start("#firebaseui-auth-container", uiConfig);
+      setIsLoading(false);
     } else {
       console.log("error");
     }
