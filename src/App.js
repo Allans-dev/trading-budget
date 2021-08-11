@@ -125,10 +125,10 @@ const App = () => {
       setIsLoading(false);
     } else if (!user) {
       setAuthStatus(false);
+      setIsLoading(false);
       document.getElementById("#firebaseui-auth-container")
         ? ui.reset()
         : ui.start("#firebaseui-auth-container", uiConfig);
-      setIsLoading(false);
     } else {
       console.log("error");
     }
@@ -179,16 +179,14 @@ const App = () => {
   ) : (
     <article class="root">
       <Router>
-        <div style={styles.authContainer} id="firebaseui-auth-container">
-          <button
-            id="anon-sign-btn"
-            style={styles.anonSignBtn}
-            onClick={signInAnon}
-          >
-            Guest Sign In
-          </button>
-        </div>
-
+        <button
+          id="anon-sign-btn"
+          style={styles.anonSignBtn}
+          onClick={signInAnon}
+        >
+          Guest Sign In
+        </button>
+        <div id="firebaseui-auth-container"></div>
         <Route exact path="/logged-out-privacy-policy">
           <PrivacyPolicy />
         </Route>
