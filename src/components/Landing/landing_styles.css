@@ -1,3 +1,4 @@
 .landing {
   grid-area: Content;
+  display: flex;
 }

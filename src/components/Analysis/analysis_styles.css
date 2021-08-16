@@ -1,9 +1,8 @@
 .analysis-view {
+  grid-area: Content;
   width: 100%;
   height: 100%;
-  align-items: center;
-  margin-top: -3em;
   display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
+  justify-content: center;
+  justify-items: center;
 }

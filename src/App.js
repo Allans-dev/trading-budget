@@ -18,6 +18,7 @@ import { StateProvider } from "./main-store";
 
 import { StockStateProvider } from "./components/Stocks/stocks-store";
 import { BudgetStateProvider } from "./components/Budget/budget-store";
+import { AnalysisStateProvider } from "./components/Analysis/analysis-store";
 
 import "./App.css";
 
@@ -26,7 +27,6 @@ import "firebase/firestore";
 
 import * as firebaseui from "firebaseui";
 import "firebaseui/dist/firebaseui.css";
-import { AnalysisStateProvider } from "./components/Analysis/analysis-store";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC238mryUvNxq4lScBrGNHL9dAjjHHPs4Q",
@@ -194,7 +194,13 @@ const App = () => {
           </Route>
 
           <Route exact path="/">
-            <Landing />
+            <StockStateProvider>
+              <BudgetStateProvider>
+                <AnalysisStateProvider>
+                  <Landing />
+                </AnalysisStateProvider>
+              </BudgetStateProvider>
+            </StockStateProvider>
           </Route>
 
           <Footer />

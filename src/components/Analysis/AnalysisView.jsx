@@ -2,6 +2,9 @@ import React from "react";
 
 import { VictoryPie } from "victory";
 
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+import { Carousel } from "react-responsive-carousel";
+
 import "./analysis_styles.css";
 
 const AnalysisView = (props) => {
@@ -25,57 +28,47 @@ const AnalysisView = (props) => {
 
   return (
     <div class="analysis-view">
-      <svg width={380} height={380}>
-        <VictoryPie
-          radius={140}
-          standalone={false}
-          innerRadius={80}
-          data={stocksOuter}
-          labelRadius={({ innerRadius }) => innerRadius + 25}
-          colorScale={profitLossColors}
-        />
-        <VictoryPie
-          radius={70}
-          standalone={false}
-          data={stocksInner}
-          labelRadius={({ innerRadius }) => innerRadius + 25}
-          style={{
-            data: {
-              fill: ({ datum }) =>
-                datum.x === "profit" ? "#8AA31F" : "#F06151",
-            },
-          }}
-        />
-      </svg>
-      <svg width={380} height={380}>
-        <VictoryPie
-          radius={140}
-          standalone={false}
-          innerRadius={80}
-          data={budgetOuter}
-          labelRadius={({ innerRadius }) => innerRadius + 25}
-          colorScale={colors}
-          //   style={{
-          //     data: {
-          //       stroke: "#c43a31",
-          //       strokeWidth: 1,
-          //     },
-          //   }}
-        />
-        <VictoryPie
-          radius={70}
-          standalone={false}
-          data={budgetInner}
-          labelRadius={({ innerRadius }) => innerRadius + 25}
-          colorScale={colors}
-          //   style={{
-          //     data: {
-          //       stroke: "#c43a31",
-          //       strokeWidth: 1,
-          //     },
-          //   }}
-        />
-      </svg>
+      <Carousel centerMode={false}>
+        <svg width={380} height={400}>
+          <VictoryPie
+            radius={140}
+            standalone={false}
+            innerRadius={80}
+            data={stocksOuter}
+            labelRadius={({ innerRadius }) => innerRadius + 25}
+            colorScale={profitLossColors}
+          />
+          <VictoryPie
+            radius={70}
+            standalone={false}
+            data={stocksInner}
+            labelRadius={({ innerRadius }) => innerRadius + 25}
+            style={{
+              data: {
+                fill: ({ datum }) =>
+                  datum.x === "profit" ? "#8AA31F" : "#F06151",
+              },
+            }}
+          />
+        </svg>
+        <svg width={380} height={400}>
+          <VictoryPie
+            radius={140}
+            standalone={false}
+            innerRadius={80}
+            data={budgetOuter}
+            labelRadius={({ innerRadius }) => innerRadius + 25}
+            colorScale={colors}
+          />
+          <VictoryPie
+            radius={70}
+            standalone={false}
+            data={budgetInner}
+            labelRadius={({ innerRadius }) => innerRadius + 25}
+            colorScale={colors}
+          />
+        </svg>
+      </Carousel>
     </div>
   );
 };
