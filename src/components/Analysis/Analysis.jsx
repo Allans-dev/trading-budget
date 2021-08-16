@@ -2,7 +2,8 @@ import React, { useContext, useEffect } from "react";
 
 import AnalysisView from "./AnalysisView";
 
-import { store } from "./analysis-store";
+import { store as stockStore } from "../Stocks/stocks-store";
+import { store as budgetStore } from "../Budget/budget-store";
 
 import firebase from "firebase/app";
 import "firebase/firestore";
@@ -11,19 +12,22 @@ const Analysis = () => {
   const db = firebase.firestore();
   const user = firebase.auth().currentUser;
 
-  const context = useContext(store);
-  const { stocksList, expenseArray } = context.state;
+  const sContext = useContext(stockStore);
+  const bContext = useContext(budgetStore);
+
+  const { stocksList } = sContext.state;
+  const { expenseArray } = bContext.state;
 
   const getAnalysisData = async () => {
     const listRef = db.collection("users").doc(user.uid);
     await listRef
       .get()
       .then((doc) => {
-        context.dispatch({
+        sContext.dispatch({
           type: "updateStocksList",
           payload: doc.data().stocksList ? doc.data().stocksList : stocksList,
         });
-        context.dispatch({
+        bContext.dispatch({
           type: "updateExpenses",
           payload: doc.data().expenseArray
             ? doc.data().expenseArray

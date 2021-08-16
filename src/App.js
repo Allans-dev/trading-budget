@@ -174,16 +174,20 @@ const App = () => {
               <Budget />
             </Route>
           </BudgetStateProvider>
+
           <StockStateProvider>
             <Route exact path="/stocks">
               <Stocks />
             </Route>
           </StockStateProvider>
-          <AnalysisStateProvider>
-            <Route exact path="/analysis">
-              <Analysis />
-            </Route>
-          </AnalysisStateProvider>
+
+          <StockStateProvider>
+            <BudgetStateProvider>
+              <Route exact path="/analysis">
+                <Analysis />
+              </Route>
+            </BudgetStateProvider>
+          </StockStateProvider>
 
           <Route exact path="/privacy-policy">
             <PrivacyPolicy />
@@ -196,9 +200,7 @@ const App = () => {
           <Route exact path="/">
             <StockStateProvider>
               <BudgetStateProvider>
-                <AnalysisStateProvider>
-                  <Landing />
-                </AnalysisStateProvider>
+                <Landing />
               </BudgetStateProvider>
             </StockStateProvider>
           </Route>
