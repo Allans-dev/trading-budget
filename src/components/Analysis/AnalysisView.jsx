@@ -29,7 +29,7 @@ const AnalysisView = (props) => {
   return (
     <div class="analysis-view">
       <Carousel centerMode={false}>
-        <svg width={380} height={400}>
+        <svg viewBox="0 0 360 360">
           <VictoryPie
             radius={140}
             standalone={false}
@@ -51,7 +51,7 @@ const AnalysisView = (props) => {
             }}
           />
         </svg>
-        <svg width={380} height={400}>
+        <svg viewBox="0 0 360 360">
           <VictoryPie
             radius={140}
             standalone={false}

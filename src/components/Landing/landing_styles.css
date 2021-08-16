@@ -1,4 +1,6 @@
 .landing {
   grid-area: Content;
   display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
 }
