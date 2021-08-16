@@ -28,7 +28,7 @@ const AnalysisView = (props) => {
 
   return (
     <div class="analysis-view">
-      <Carousel centerMode={false}>
+      <Carousel centerMode={false} width={340}>
         <svg viewBox="0 0 360 360">
           <VictoryPie
             radius={140}
@@ -56,14 +56,14 @@ const AnalysisView = (props) => {
             radius={140}
             standalone={false}
             innerRadius={80}
-            data={budgetOuter}
+            data={budgetInner}
             labelRadius={({ innerRadius }) => innerRadius + 25}
             colorScale={colors}
           />
           <VictoryPie
             radius={70}
             standalone={false}
-            data={budgetInner}
+            data={budgetOuter}
             labelRadius={({ innerRadius }) => innerRadius + 25}
             colorScale={colors}
           />

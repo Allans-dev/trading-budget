@@ -26,7 +26,7 @@ const StocksView = (props) => {
   } = context.state;
 
   return (
-    <article class="article">
+    <article class="stocks-article">
       <section class="stocksFormSection">
         <form>
           <label>

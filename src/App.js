@@ -18,7 +18,6 @@ import { StateProvider } from "./main-store";
 
 import { StockStateProvider } from "./components/Stocks/stocks-store";
 import { BudgetStateProvider } from "./components/Budget/budget-store";
-import { AnalysisStateProvider } from "./components/Analysis/analysis-store";
 
 import "./App.css";
 

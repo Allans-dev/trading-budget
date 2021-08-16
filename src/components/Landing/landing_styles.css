@@ -1,6 +1,17 @@
 .landing {
   grid-area: Content;
   display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
+  justify-content: space-between;
+  flex-basis: 1fr 1fr 1fr;
+}
+.landing .stocks-article {
+  flex: 1;
+}
+
+.landing .budget-page {
+  flex: 1;
+}
+
+.landing .analysis-view {
+  flex: 1;
 }
