@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 
-import Landing from "./components/Landing";
+import Landing from "./components/Landing/Landing";
 import Stocks from "./components/Stocks/Stocks";
 import Budget from "./components/Budget/Budget";
 import Analysis from "./components/Analysis/Analysis";
@@ -9,7 +9,7 @@ import Analysis from "./components/Analysis/Analysis";
 import Footer from "./components/Footer/Footer";
 import Header from "./components/Header/Header";
 
-import Loader from "./components/Loader";
+import RingLoader from "react-spinners/RingLoader";
 
 import PrivacyPolicy from "./components/PrivacyPolicy/PrivacyPolicy";
 import Disclaimer from "./components/Disclaimer/Disclaimer";
@@ -44,7 +44,7 @@ if (!firebase.apps.length) {
   firebase.app(); // if already initialized, use that one
 }
 
-const db = firebase.firestore();
+// const db = firebase.firestore();
 
 const App = () => {
   const [authStatus, setAuthStatus] = useState(false);
@@ -95,7 +95,6 @@ const App = () => {
   };
 
   const signInAnon = () => {
-    setIsLoading(true);
     firebase
       .auth()
       .signInAnonymously()
@@ -129,13 +128,39 @@ const App = () => {
       document.getElementById("#firebaseui-auth-container")
         ? ui.reset()
         : ui.start("#firebaseui-auth-container", uiConfig);
+      // if (document.getElementById("firebaseui-auth-container")) {
+      //   ui.start("#firebaseui-auth-container", uiConfig);
+      //   ui.reset();
+      // } else if (document.getElementById("login")) {
+      //   // document
+      //   //   .getElementById("login")
+      //   //   .insertAdjacentHTML(
+      //   //     "beforeend",
+      //   //     "<div id='firebaseui-auth-container'></div>"
+      //   //   );
+      //   ui.start("#firebaseui-auth-container", uiConfig);
+      // }
     } else {
+      setIsLoading(true);
       console.log("error");
     }
   });
 
   if (isLoading) {
-    return <Loader />;
+    return (
+      <article
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minWidth: "100vw",
+          minHeight: "100vh",
+          backgroundImage: "linear-gradient(#3a89f0, #f0b03a)",
+        }}
+      >
+        <RingLoader color={"#a5cc09"} loading={isLoading} size={100} />
+      </article>
+    );
   }
 
   return authStatus ? (
@@ -177,7 +202,7 @@ const App = () => {
       </article>
     </StateProvider>
   ) : (
-    <article class="root">
+    <article class="root" id="login">
       <Router>
         <button
           id="anon-sign-btn"
