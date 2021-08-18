@@ -3,8 +3,8 @@ import React from "react";
 import "./privacy_policy_styles.css";
 
 const PrivacyPolicy = () => (
-  <article class="privacy-policy-page">
-    <div class="policy-block">
+  <article className="privacy-policy-page">
+    <div className="policy-block">
        <h2>Privacy Policy </h2>
       <p>
         code.allan is committed to providing quality services to you and this

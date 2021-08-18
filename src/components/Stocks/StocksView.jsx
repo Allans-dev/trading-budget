@@ -26,8 +26,8 @@ const StocksView = (props) => {
   } = context.state;
 
   return (
-    <article class="stocks-article">
-      <section class="stocksFormSection">
+    <article className="stocks-article">
+      <section className="stocksFormSection">
         <form>
           <label>
             Share Name:
@@ -89,12 +89,12 @@ const StocksView = (props) => {
               required
             />
           </label>
-          <label class="left">
+          <label className="left">
             Held more than 1 year?{" "}
             <input type="checkbox" id="yearCheckBox" onClick={oneYearCheck} />
           </label>
 
-          <button class="add-shares" onClick={addStocks}>
+          <button className="add-shares" onClick={addStocks}>
             Add Shares
           </button>
 
@@ -112,7 +112,7 @@ const StocksView = (props) => {
             />
           </label>
 
-          <button class="button green" onClick={calculateProfit}>
+          <button className="button green" onClick={calculateProfit}>
             {" "}
             {showTotal ? "Show Stocks" : "Save and Calculate"}
           </button>
@@ -120,9 +120,9 @@ const StocksView = (props) => {
       </section>
 
       {Array.isArray(stocksList) ? (
-        <section class={stocksList.length > 0 ? `result-section` : `none`}>
+        <section className={stocksList.length > 0 ? `result-section` : `none`}>
           {showTotal ? (
-            <section class="summary">
+            <section className="summary">
               <span>Total Taxable Income: </span>
               <span>
                 {new Intl.NumberFormat("en-US", {
@@ -146,8 +146,8 @@ const StocksView = (props) => {
               </span>
             </section>
           ) : (
-            <section class="stocks-display">
-              <div class="stock-header">
+            <section className="stocks-display">
+              <div className="stock-header">
                 <span>Code</span>
                 <span>Buy Price</span>
                 <span>Sell Price</span>

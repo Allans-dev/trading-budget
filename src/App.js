@@ -164,7 +164,7 @@ const App = () => {
 
   return authStatus ? (
     <StateProvider>
-      <article class="root">
+      <article className="root">
         <Router>
           <Header />
 
@@ -209,7 +209,7 @@ const App = () => {
       </article>
     </StateProvider>
   ) : (
-    <article class="root" id="login">
+    <article className="root" id="login">
       <Router>
         <button
           id="anon-sign-btn"

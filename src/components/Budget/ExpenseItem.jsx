@@ -17,7 +17,7 @@ const ExpenseItem = ({
       }).format(Math.round(cost * 100) / 100)}
     </div>
     <button
-      class="button delete"
+      className="button delete"
       onClick={(e) => {
         e.preventDefault();
         deleteListItem(index);

@@ -28,15 +28,15 @@ const BudgetView = (props) => {
   const { calcBudget, addExpenses, deleteListItem } = props;
 
   return (
-    <article class="budget-page">
+    <article className="budget-page">
       <form>
-        <section class="add-expense">
-          <label class="category">
+        <section className="add-expense">
+          <label className="category">
             Category:{" "}
             <select
               required
               id="category"
-              class="category"
+              className="category"
               value={category}
               onChange={(e) => {
                 context.dispatch({
@@ -60,7 +60,7 @@ const BudgetView = (props) => {
             {category !== "Other" ? null : (
               <input
                 required
-                class="other"
+                className="other"
                 type="text"
                 value={otherCategory}
                 onChange={(e) => {
@@ -74,7 +74,7 @@ const BudgetView = (props) => {
             )}
           </label>
 
-          <label class="description">
+          <label className="description">
             Description:
             <input
               type="text"
@@ -88,7 +88,7 @@ const BudgetView = (props) => {
               maxLength="11"
             />
           </label>
-          <label class="cost">
+          <label className="cost">
             Cost:{" "}
             <input
               required
@@ -102,7 +102,7 @@ const BudgetView = (props) => {
               }
             />
           </label>
-          <button class="add-button" onClick={addExpenses}>
+          <button className="add-button" onClick={addExpenses}>
             +
           </button>
         </section>
@@ -131,8 +131,8 @@ const BudgetView = (props) => {
             <option value="year">year</option>
           </select>
         </label> */}
-        <section class="savings">
-          <label class="savings-label">
+        <section className="savings">
+          <label className="savings-label">
             <span style={{ display: "block" }}>Savings Rate:</span>
             <input
               id="savings-rate"
@@ -151,19 +151,19 @@ const BudgetView = (props) => {
                 });
               }}
             ></input>
-            <div class="savings-rate">{savingsRate}%</div>
+            <div className="savings-rate">{savingsRate}%</div>
           </label>
-          <button class="green button" onClick={calcBudget}>
+          <button className="green button" onClick={calcBudget}>
             {displayResults ? "Show Expenses" : "Save and Calculate"}
           </button>
         </section>
       </form>
 
       <section
-        class={expenseArray && expenseArray.length > 0 ? "results" : "none"}
+        className={expenseArray && expenseArray.length > 0 ? "results" : "none"}
       >
         {displayResults === true && netProfit > 0 ? (
-          <div class="summary">
+          <div className="summary">
             <span>Take-Home Income: </span>
             <span>
               {new Intl.NumberFormat("en-US", {
@@ -198,7 +198,7 @@ const BudgetView = (props) => {
             {/* {timeFrame} */}
           </div>
         ) : displayResults === true && totalExpenses > 0 ? (
-          <div class="expenses">
+          <div className="expenses">
             <div>
               Total Expenses:{" "}
               {new Intl.NumberFormat("en-US", {

@@ -26,14 +26,14 @@ const Header = () => {
             <li>Home</li>
           </Link> */}
 
-            <Link class="list-item" to="/stocks">
+            <Link className="list-item" to="/stocks">
               <li>Stocks</li>
             </Link>
 
-            <Link class="list-item" to="/budget">
+            <Link className="list-item" to="/budget">
               <li>Budget</li>
             </Link>
-            <Link class="list-item" to="/analysis">
+            <Link className="list-item" to="/analysis">
               <li>Analysis</li>
             </Link>
           </ul>

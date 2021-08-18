@@ -27,7 +27,7 @@ const AnalysisView = (props) => {
   });
 
   return (
-    <div class="analysis-view">
+    <div className="analysis-view">
       <Carousel centerMode={false} width={340}>
         <svg viewBox="0 0 360 360">
           <VictoryPie

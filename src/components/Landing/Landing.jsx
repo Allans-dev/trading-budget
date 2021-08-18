@@ -10,7 +10,7 @@ const Landing = () => {
   return window.matchMedia("(max-width: 1200px)").matches ? (
     <Stocks />
   ) : (
-    <article class="landing">
+    <article className="landing">
       <Stocks />
       <Budget />
       <Analysis />

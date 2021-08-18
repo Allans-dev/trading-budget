@@ -14,8 +14,8 @@ const StocksListItem = ({
 }) => {
   let id = index + stockName;
   return (
-    <li class="list-item" key={id}>
-      <div class="stock-detail">
+    <li className="list-item" key={id}>
+      <div className="stock-detail">
         <div>{stockName}</div>
         <div>
           {new Intl.NumberFormat("en-US", {
@@ -44,7 +44,7 @@ const StocksListItem = ({
         </div>
 
         <button
-          class="button delete"
+          className="button delete"
           onClick={(e) => {
             e.preventDefault();
             deleteListItem(id);
@@ -53,7 +53,7 @@ const StocksListItem = ({
           X
         </button>
       </div>
-      {yearCheck ? <span class="one-year">Held over one year</span> : null}
+      {yearCheck ? <span className="one-year">Held over one year</span> : null}
     </li>
   );
 };
