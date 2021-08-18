@@ -7,7 +7,9 @@ import Analysis from "../Analysis/Analysis";
 import "./landing_styles.css";
 
 const Landing = () => {
-  return (
+  return window.matchMedia("(max-width: 1200px)").matches ? (
+    <Stocks />
+  ) : (
     <article class="landing">
       <Stocks />
       <Budget />
