@@ -25,10 +25,6 @@ const Budget = () => {
     otherCategory,
   } = context.state;
 
-  console.log(context.state);
-  console.log(netProfit);
-  console.log("======================");
-
   const db = firebase.firestore();
   const user = firebase.auth().currentUser;
 

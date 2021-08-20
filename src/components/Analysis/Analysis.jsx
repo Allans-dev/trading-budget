@@ -72,8 +72,8 @@ const Analysis = () => {
 
   const extractKeyValues = (keyList, masterList, keyNameOne, keyNameTwo) => {
     const array = [];
-    keyList.map((val) => {
-      masterList.map((val2) => {
+    keyList.forEach((val) => {
+      masterList.forEach((val2) => {
         let temp = {};
         if (val === val2[keyNameOne]) {
           temp[val2[keyNameOne]] = val2[keyNameTwo];
@@ -104,9 +104,9 @@ const Analysis = () => {
     return obj;
   };
 
-  const totalExpenseByCaterory = addValuesIntoObject(budgetKeyValues);
+  const totalExpenseByCategory = addValuesIntoObject(budgetKeyValues);
 
-  const keyValueToCoords = (obj) => {
+  const keyLabelToCoords = (obj) => {
     const arr = [];
     for (const key in obj) {
       arr.push({ x: key, y: obj[key] });
@@ -114,19 +114,31 @@ const Analysis = () => {
     return arr;
   };
 
+  const keyValueToCoords = (obj) => {
+    const arr = [];
+    for (const key in obj) {
+      arr.push({ x: obj[key], y: obj[key] });
+    }
+    return arr;
+  };
+
   //===============================================================
 
-  const budgetInner = keyValueToCoords(totalExpenseByCaterory);
+  const budgetOuter = keyLabelToCoords(totalExpenseByCategory);
 
-  const budgetOuter =
-    sortedCost.length > 0
-      ? sortedCost.map((val, index) => {
-          return {
-            x: val.cost,
-            y: val.cost,
-          };
-        })
-      : [];
+  console.log(budgetOuter);
+
+  // const budgetInner =
+  //   sortedCost.length > 0
+  //     ? sortedCost.map((val, index, array) => {
+  //         return {
+  //           x: val.cost,
+  //           y: val.cost,
+  //         };
+  //       })
+  //     : [];
+
+  const budgetInner = keyValueToCoords(totalExpenseByCategory);
 
   //===============================================================
 
@@ -142,7 +154,7 @@ const Analysis = () => {
         ? val.stockName
         : null;
     })
-    .filter((val, index) => {
+    .filter((val) => {
       return val !== null;
     });
 
@@ -186,7 +198,7 @@ const Analysis = () => {
 
   //===============================================================
 
-  const stocksInner = keyValueToCoords(nameProfitObject);
+  const stocksInner = keyLabelToCoords(nameProfitObject);
 
   const stocksOuter =
     sortedStocks.length > 0

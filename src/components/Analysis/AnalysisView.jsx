@@ -56,14 +56,14 @@ const AnalysisView = (props) => {
             radius={140}
             standalone={false}
             innerRadius={80}
-            data={budgetInner}
+            data={budgetOuter}
             labelRadius={({ innerRadius }) => innerRadius + 25}
             colorScale={colors}
           />
           <VictoryPie
             radius={70}
             standalone={false}
-            data={budgetOuter}
+            data={budgetInner}
             labelRadius={({ innerRadius }) => innerRadius + 25}
             colorScale={colors}
           />
