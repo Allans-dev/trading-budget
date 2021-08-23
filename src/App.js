@@ -147,17 +147,8 @@ const App = () => {
 
   if (isLoading) {
     return (
-      <article
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          minWidth: "100vw",
-          minHeight: "100vh",
-          backgroundImage: "linear-gradient(#3a89f0, #f0b03a)",
-        }}
-      >
-        <RingLoader color={"#a5cc09"} loading={isLoading} size={100} />
+      <article className="loader-background">
+        <RingLoader color={"#4e4e4e"} loading={isLoading} size={100} />
       </article>
     );
   }
@@ -211,11 +202,7 @@ const App = () => {
   ) : (
     <article className="root" id="login">
       <Router>
-        <button
-          id="anon-sign-btn"
-          style={styles.anonSignBtn}
-          onClick={signInAnon}
-        >
+        <button className="anon-sign-btn" onClick={signInAnon}>
           Guest Sign In
         </button>
         <div id="firebaseui-auth-container"></div>
@@ -229,15 +216,6 @@ const App = () => {
       </Router>
     </article>
   );
-};
-
-const styles = {
-  anonSignBtn: {
-    margin: "3em auto",
-    width: "200px",
-    height: "50px",
-    display: "block",
-  },
 };
 
 export default App;
