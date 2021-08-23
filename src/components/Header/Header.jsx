@@ -20,24 +20,24 @@ const Header = () => {
   return (
     <section class="header">
       <nav>
-        {window.matchMedia("(max-width: 1200px)").matches ? (
-          <ul class="list-container">
-            {/* <Link class="list-item" to="/">
-            <li>Home</li>
-          </Link> */}
+        <ul class="list-container">
+          {window.matchMedia("(max-width: 1200px)").matches ? null : (
+            <Link class="list-item" to="/">
+              <li>Home</li>
+            </Link>
+          )}
+          <Link className="list-item" to="/stocks">
+            <li>Stocks</li>
+          </Link>
 
-            <Link className="list-item" to="/stocks">
-              <li>Stocks</li>
-            </Link>
+          <Link className="list-item" to="/budget">
+            <li>Budget</li>
+          </Link>
+          <Link className="list-item" to="/analysis">
+            <li>Analysis</li>
+          </Link>
+        </ul>
 
-            <Link className="list-item" to="/budget">
-              <li>Budget</li>
-            </Link>
-            <Link className="list-item" to="/analysis">
-              <li>Analysis</li>
-            </Link>
-          </ul>
-        ) : null}
         <button class="sign-out action button" onClick={signout}>
           Signout
         </button>
