@@ -10,7 +10,22 @@ const initialState = {
     {
       category: "Shopping",
       description: "shirt",
+      cost: 70,
+    },
+    {
+      category: "Hobby",
+      description: "Hearthstone",
       cost: 30,
+    },
+    {
+      category: "Transport",
+      description: "flight",
+      cost: 120,
+    },
+    {
+      category: "Health",
+      description: "Masks",
+      cost: 20,
     },
   ],
   totalExpenses: 0,
