@@ -34,6 +34,7 @@ const AnalysisView = (props) => {
         showStatus={false}
         showIndicators={false}
         autoPlay={false}
+        interval={10000}
       >
         <svg viewBox="0 0 400 400">
           <VictoryPie
