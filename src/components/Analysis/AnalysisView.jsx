@@ -30,9 +30,10 @@ const AnalysisView = (props) => {
     <div className="analysis-view">
       <Carousel
         centerMode={false}
-        width={500}
+        width={window.matchMedia("(max-width: 1200px)").matches ? 370 : 500}
         showStatus={false}
         showIndicators={false}
+        autoPlay={false}
       >
         <svg viewBox="0 0 400 400">
           <VictoryPie

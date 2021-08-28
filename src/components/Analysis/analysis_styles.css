@@ -11,3 +11,10 @@
   width: 500px;
   height: 500px;
 }
+
+@media only screen and (max-width: 1200px) {
+  .analysis-view svg {
+    width: 370px;
+    height: 370px;
+  }
+}
