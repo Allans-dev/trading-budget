@@ -28,7 +28,12 @@ const AnalysisView = (props) => {
 
   return (
     <div className="analysis-view">
-      <Carousel centerMode={false} width={500} showStatus={false}>
+      <Carousel
+        centerMode={false}
+        width={500}
+        showStatus={false}
+        showIndicators={false}
+      >
         <svg viewBox="0 0 400 400">
           <VictoryPie
             radius={140}
@@ -36,19 +41,22 @@ const AnalysisView = (props) => {
             innerRadius={80}
             data={stocksOuter}
             labelRadius={({ innerRadius }) => innerRadius + 20}
+            padAngle={({ datum }) => 2}
+            labelPlacement={({ index }) => "perpendicular"}
             colorScale={profitLossColors}
           />
           <VictoryPie
             radius={70}
             standalone={false}
             data={stocksInner}
-            labelRadius={({ innerRadius }) => innerRadius + 40}
+            labelRadius={({ innerRadius }) => innerRadius + 35}
             style={{
               data: {
                 fill: ({ datum }) =>
                   datum.x === "profit" ? "#8AA31F" : "#F06151",
               },
             }}
+            padAngle={({ datum }) => 5}
           />
         </svg>
         <svg viewBox="0 0 400 400">
@@ -57,14 +65,29 @@ const AnalysisView = (props) => {
             standalone={false}
             innerRadius={80}
             data={budgetOuter}
-            labelRadius={({ innerRadius }) => innerRadius + 15}
+            labelRadius={({ innerRadius }) => innerRadius + 70}
+            style={{
+              data: {
+                fillOpacity: 0.9,
+                stroke: "#e4e4e4",
+                strokeWidth: 0.5,
+              },
+            }}
+            labelPlacement={({ index }) => "perpendicular"}
             colorScale={colors}
           />
           <VictoryPie
             radius={70}
             standalone={false}
             data={budgetInner}
-            labelRadius={({ innerRadius }) => innerRadius + 40}
+            labelRadius={({ innerRadius }) => innerRadius + 100}
+            style={{
+              data: {
+                fillOpacity: 0.9,
+                stroke: "#e4e4e4",
+                strokeWidth: 0.5,
+              },
+            }}
             colorScale={colors}
           />
         </svg>
