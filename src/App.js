@@ -15,7 +15,6 @@ import PrivacyPolicy from "./components/PrivacyPolicy/PrivacyPolicy";
 import Disclaimer from "./components/Disclaimer/Disclaimer";
 
 import { StateProvider } from "./main-store";
-
 import { StockStateProvider } from "./components/Stocks/stocks-store";
 import { BudgetStateProvider } from "./components/Budget/budget-store";
 
@@ -187,13 +186,13 @@ const App = () => {
             <Disclaimer />
           </Route>
 
-          <Route exact path="/">
-            <StockStateProvider>
-              <BudgetStateProvider>
+          <StockStateProvider>
+            <BudgetStateProvider>
+              <Route exact path="/">
                 <Landing />
-              </BudgetStateProvider>
-            </StockStateProvider>
-          </Route>
+              </Route>
+            </BudgetStateProvider>
+          </StockStateProvider>
 
           <Footer />
         </Router>

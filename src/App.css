@@ -6,6 +6,7 @@
   grid-template-areas: "Header" "Content" "Footer";
   grid-row-gap: 2em;
   grid-template-rows: 3em 1fr 45px;
+  align-items: center;
   background-image: linear-gradient(#3a89f0, #f0b03a);
   background-size: cover;
   background-repeat: no-repeat;
@@ -59,15 +60,15 @@
 
 /* ==================================== */
 
-@media only screen and (max-width: 523px) {
+/* @media only screen and (max-width: 523px) {
   .root {
   }
-}
+} */
 
 /* elements */
 
-body {
-}
+/* body {
+} */
 
 input {
   background-color: rgba(255, 255, 255, 0.8);

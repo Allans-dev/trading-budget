@@ -126,18 +126,6 @@ const Analysis = () => {
 
   const budgetOuter = keyLabelToCoords(totalExpenseByCategory);
 
-  console.log(budgetOuter);
-
-  // const budgetInner =
-  //   sortedCost.length > 0
-  //     ? sortedCost.map((val, index, array) => {
-  //         return {
-  //           x: val.cost,
-  //           y: val.cost,
-  //         };
-  //       })
-  //     : [];
-
   const budgetInner = keyValueToCoords(totalExpenseByCategory);
 
   //===============================================================
@@ -204,7 +192,7 @@ const Analysis = () => {
     sortedStocks.length > 0
       ? sortedStocks.map((val, index) => {
           return {
-            x: val.stockName + " " + val.iProfit,
+            x: val.stockName,
             y: val.iProfit >= 0 ? val.iProfit : val.iProfit * -1,
             profit: val.iProfit >= 0 ? true : false,
           };

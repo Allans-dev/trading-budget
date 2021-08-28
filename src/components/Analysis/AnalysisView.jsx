@@ -28,21 +28,21 @@ const AnalysisView = (props) => {
 
   return (
     <div className="analysis-view">
-      <Carousel centerMode={false} width={340}>
-        <svg viewBox="0 0 360 360">
+      <Carousel centerMode={false} width={500} showStatus={false}>
+        <svg viewBox="0 0 400 400">
           <VictoryPie
             radius={140}
             standalone={false}
             innerRadius={80}
             data={stocksOuter}
-            labelRadius={({ innerRadius }) => innerRadius + 25}
+            labelRadius={({ innerRadius }) => innerRadius + 20}
             colorScale={profitLossColors}
           />
           <VictoryPie
             radius={70}
             standalone={false}
             data={stocksInner}
-            labelRadius={({ innerRadius }) => innerRadius + 25}
+            labelRadius={({ innerRadius }) => innerRadius + 40}
             style={{
               data: {
                 fill: ({ datum }) =>
@@ -51,20 +51,20 @@ const AnalysisView = (props) => {
             }}
           />
         </svg>
-        <svg viewBox="0 0 360 360">
+        <svg viewBox="0 0 400 400">
           <VictoryPie
             radius={140}
             standalone={false}
             innerRadius={80}
             data={budgetOuter}
-            labelRadius={({ innerRadius }) => innerRadius + 25}
+            labelRadius={({ innerRadius }) => innerRadius + 15}
             colorScale={colors}
           />
           <VictoryPie
             radius={70}
             standalone={false}
             data={budgetInner}
-            labelRadius={({ innerRadius }) => innerRadius + 25}
+            labelRadius={({ innerRadius }) => innerRadius + 40}
             colorScale={colors}
           />
         </svg>
