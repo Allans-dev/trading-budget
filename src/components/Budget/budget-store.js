@@ -8,9 +8,9 @@ const initialState = {
       cost: 40,
     },
     {
-      category: "Shopping",
-      description: "shirt",
-      cost: 70,
+      category: "Health",
+      description: "Masks",
+      cost: 20,
     },
     {
       category: "Hobby",
@@ -18,14 +18,15 @@ const initialState = {
       cost: 30,
     },
     {
+      category: "Shopping",
+      description: "shirt",
+      cost: 70,
+    },
+
+    {
       category: "Transport",
       description: "flight",
       cost: 120,
-    },
-    {
-      category: "Health",
-      description: "Masks",
-      cost: 20,
     },
   ],
   totalExpenses: 0,
