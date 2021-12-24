@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { BrowserRouter as Router, Route, matchPath } from "react-router-dom";
 
 import Landing from "./components/Landing/Landing";
 import Stocks from "./components/Stocks/Stocks";
@@ -51,6 +51,32 @@ const App = () => {
   const ui =
     firebaseui.auth.AuthUI.getInstance() ||
     new firebaseui.auth.AuthUI(firebase.auth());
+
+  const OAuthUI = document.getElementById("#firebaseui-auth-container");
+
+  const policyMatch = matchPath("/logged-out-privacy-policy", {
+    path: window.location.href,
+    exact: true,
+  });
+
+  const disclaimerMatch = matchPath("/disclaimer", {
+    path: window.location.href,
+    exact: true,
+  });
+
+  const homeMatch = matchPath("/", {
+    path: window.location.href,
+    exact: true,
+  });
+
+  useEffect(() => {
+    if (
+      (policyMatch === null && typeof homeMatch === "object") ||
+      (disclaimerMatch === null && typeof homeMatch === "object")
+    ) {
+      ui.start("#firebaseui-auth-container", uiConfig);
+    } else OAuthUI.innerHTML = null;
+  }, [authStatus]);
 
   const uiConfig = {
     callbacks: {
@@ -123,20 +149,6 @@ const App = () => {
     } else if (!user) {
       setAuthStatus(false);
       setIsLoading(false);
-      document.getElementById("#firebaseui-auth-container")
-        ? ui.reset()
-        : ui.start("#firebaseui-auth-container", uiConfig);
-      // if (document.getElementById("firebaseui-auth-container")) {
-      //   ui.start("#firebaseui-auth-container", uiConfig);
-      //   ui.reset();
-      // } else if (document.getElementById("login")) {
-      //   // document
-      //   //   .getElementById("login")
-      //   //   .insertAdjacentHTML(
-      //   //     "beforeend",
-      //   //     "<div id='firebaseui-auth-container'></div>"
-      //   //   );
-      //   ui.start("#firebaseui-auth-container", uiConfig);
       // }
     } else {
       setIsLoading(true);
