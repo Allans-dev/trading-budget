@@ -1,0 +1,19 @@
+.privacy-policy-page {
+  position: absolute;
+  top: 0;
+  min-height: fit-content;
+  background-image: linear-gradient(#3a89f0, #f0b03a);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.policy-block {
+  width: 80%;
+  margin: 0 auto;
+}
+
+.policy-block span {
+  display: inline-block;
+  margin: 10px 0;
+}

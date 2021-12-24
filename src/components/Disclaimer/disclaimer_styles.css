@@ -1,0 +1,15 @@
+.disclaimer-page {
+  position: absolute;
+  grid-area: content;
+}
+
+.disclaimer-block {
+  width: 65%;
+  margin: 0 auto;
+  padding-bottom: 15px;
+}
+
+.disclaimer-block span {
+  display: inline-block;
+  margin: 10px 0;
+}

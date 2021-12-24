@@ -1,0 +1,20 @@
+.analysis-view {
+  grid-area: Content;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  justify-items: center;
+  /* background-color: rgba(26, 26, 26, 0.5); */
+}
+
+.analysis-view svg {
+  width: 500px;
+  height: 500px;
+}
+
+@media only screen and (max-width: 1200px) {
+  .analysis-view svg {
+    width: 370px;
+    height: 370px;
+  }
+}
