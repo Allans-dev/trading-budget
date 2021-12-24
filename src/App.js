@@ -52,8 +52,6 @@ const App = () => {
     firebaseui.auth.AuthUI.getInstance() ||
     new firebaseui.auth.AuthUI(firebase.auth());
 
-  const OAuthUI = document.getElementById("#firebaseui-auth-container");
-
   const policyMatch = matchPath("/logged-out-privacy-policy", {
     path: window.location.href,
     exact: true,
@@ -71,11 +69,15 @@ const App = () => {
 
   useEffect(() => {
     if (
-      (policyMatch === null && typeof homeMatch === "object") ||
-      (disclaimerMatch === null && typeof homeMatch === "object")
+      (authStatus === false &&
+        policyMatch === null &&
+        typeof homeMatch === "object") ||
+      (authStatus === false &&
+        disclaimerMatch === null &&
+        typeof homeMatch === "object")
     ) {
       ui.start("#firebaseui-auth-container", uiConfig);
-    } else OAuthUI.innerHTML = null;
+    } else ui.reset();
   }, [authStatus]);
 
   const uiConfig = {
