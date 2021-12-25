@@ -69,12 +69,9 @@ const App = () => {
 
   useEffect(() => {
     if (
-      (authStatus === false &&
-        policyMatch === null &&
-        typeof homeMatch === "object") ||
-      (authStatus === false &&
-        disclaimerMatch === null &&
-        typeof homeMatch === "object")
+      authStatus === false &&
+      policyMatch === null &&
+      disclaimerMatch === null
     ) {
       ui.start("#firebaseui-auth-container", uiConfig);
     } else ui.reset();
@@ -215,10 +212,14 @@ const App = () => {
   ) : (
     <article className="root" id="login">
       <Router>
-        <button className="anon-sign-btn" onClick={signInAnon}>
-          Guest Sign In
-        </button>
-        <div id="firebaseui-auth-container"></div>
+        {policyMatch === null && disclaimerMatch === null ? (
+          <>
+            <button className="anon-sign-btn" onClick={signInAnon}>
+              Guest Sign In
+            </button>
+            <div id="firebaseui-auth-container"></div>)
+          </>
+        ) : null}
         <Route exact path="/logged-out-privacy-policy">
           <PrivacyPolicy />
         </Route>
