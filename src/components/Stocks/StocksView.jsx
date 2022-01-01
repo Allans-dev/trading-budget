@@ -1,6 +1,9 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import StocksListItem from "./StocksListItem";
+
+import firebase from "firebase/app";
+import "firebase/firestore";
 
 import { store } from "./stocks-store";
 
@@ -17,13 +20,37 @@ const StocksView = (props) => {
     sellPrice,
     volume,
     salary,
-    stocksList,
     showTotal,
     totalIncome,
     taxOwed,
     profitBE,
     iProfit,
+    stocksList,
   } = context.state;
+
+  const db = firebase.firestore();
+  const user = firebase.auth().currentUser;
+
+  const [stocks, setStocks] = useState([]);
+
+  useEffect(() => {
+    fetchStockData();
+  }, [stocksList]);
+
+  const fetchStockData = async () => {
+    const listRef = db.collection("users").doc(user.uid);
+    await listRef
+      .get()
+      .then((doc) => {
+        if (doc) {
+          return doc.data().stocksList ? doc.data().stocksList : stocksList;
+        }
+      })
+      .then((data) => setStocks(data))
+      .catch(() => {
+        console.log("No such document!");
+      });
+  };
 
   return (
     <article className="stocks-article">
@@ -156,7 +183,7 @@ const StocksView = (props) => {
                 <span></span>
               </div>
               <ul>
-                {stocksList.map((item, index) => (
+                {stocks.map((item, index) => (
                   <StocksListItem
                     key={index}
                     index={index}

@@ -64,8 +64,6 @@ const Stocks = () => {
             payload: doc.data().taxBracket ? doc.data().taxBracket : taxBracket,
           });
         }
-
-        console.log("Document stocks:", stocksList);
       })
       .catch(() => {
         console.log("No such document!");
@@ -75,14 +73,17 @@ const Stocks = () => {
   const saveStocks = async () => {
     const totalsDocRef = db.collection("users").doc(user.uid);
     await totalsDocRef
-      .set({
-        profitBE,
-        taxOwed,
-        stocksList,
-        salary,
-        taxBracket,
-        totalIncome,
-      })
+      .set(
+        {
+          profitBE,
+          taxOwed,
+          stocksList,
+          salary,
+          taxBracket,
+          totalIncome,
+        },
+        { merge: true }
+      )
       .then(() => {
         console.log("Document successfully written!");
       })
@@ -95,8 +96,6 @@ const Stocks = () => {
     getStocks();
     // eslint-disable-next-line
   }, []);
-
-  useEffect(() => () => saveStocks());
 
   function oneYearCheck() {
     yearCheck ? setYearCheck(false) : setYearCheck(true);
@@ -188,6 +187,8 @@ const Stocks = () => {
       payload,
     });
 
+    saveStocks();
+
     context.dispatch({ type: "updateStockName", payload: "" });
     context.dispatch({ type: "updateBuyPrice", payload: 0 });
     context.dispatch({ type: "updateSellPrice", payload: 0 });
@@ -197,7 +198,6 @@ const Stocks = () => {
     document.getElementById("yearCheckBox").checked = false;
 
     context.dispatch({ type: "updateShowTotal", payload: false });
-    saveStocks();
   };
 
   const calcTotal = () => {
@@ -235,6 +235,7 @@ const Stocks = () => {
   const calculateProfit = (e) => {
     e.preventDefault();
     combine();
+    saveStocks();
     context.dispatch({
       type: "updateShowTotal",
       payload: showTotal ? false : true,
