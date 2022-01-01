@@ -4,7 +4,7 @@ import "./privacy_policy_styles.css";
 
 const PrivacyPolicy = () => (
   <article className="privacy-policy-page">
-    <div className="policy-block">
+    <section className="policy-block">
        <h2>Privacy Policy </h2>
       <p>
         code.allan is committed to providing quality services to you and this
@@ -125,7 +125,7 @@ const PrivacyPolicy = () => (
         If you have any queries or complaints about our Privacy Policy please
         contact us at: allanswebdev@gmail.com
       </p>
-    </div>
+    </section>
   </article>
 );
 

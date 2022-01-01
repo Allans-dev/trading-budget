@@ -27,10 +27,6 @@
 
 /* sign in page */
 
-#login {
-  max-height: 100vh;
-}
-
 .anon-sign-btn {
   margin: 45em auto 3em;
   width: 200px;
