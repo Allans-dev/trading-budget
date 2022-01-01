@@ -55,6 +55,7 @@ const { Provider } = store;
 const StockStateProvider = ({ children }) => {
   const [state, dispatch] = useReducer((state, action) => {
     const { type, payload } = action;
+    const { stocksList } = state;
     switch (type) {
       //inputStates
 
@@ -83,11 +84,19 @@ const StockStateProvider = ({ children }) => {
         return { ...state, totalIncome: payload };
       case "updateSalary":
         return { ...state, salary: payload };
+      case "deleteStock":
+        return {
+          ...state,
+          stocksList: stocksList.filter(
+            (item, index) => index + item.stockName !== payload
+          ),
+        };
       case "updateStocksList":
         return {
           ...state,
           stocksList: Array.isArray(payload) ? [...payload] : payload,
         };
+
       default:
         throw new Error();
     }

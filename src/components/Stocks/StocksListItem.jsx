@@ -12,7 +12,7 @@ const StocksListItem = ({
   deleteListItem,
   iProfit,
 }) => {
-  let id = index + stockName;
+  const id = index + stockName;
   return (
     <li className="list-item" key={id}>
       <div className="stock-detail">

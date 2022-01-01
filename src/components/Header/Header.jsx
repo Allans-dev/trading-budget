@@ -18,9 +18,9 @@ const Header = () => {
         console.error("Sign Out Error", error);
       });
   return (
-    <section class="header">
+    <section className="header">
       <nav>
-        <ul class="list-container">
+        <ul className="list-container">
           {window.matchMedia("(max-width: 1200px)").matches ? null : (
             <Link class="list-item" to="/">
               <li>Home</li>
@@ -38,7 +38,7 @@ const Header = () => {
           </Link>
         </ul>
 
-        <button class="sign-out action button" onClick={signout}>
+        <button className="sign-out action button" onClick={signout}>
           Signout
         </button>
       </nav>

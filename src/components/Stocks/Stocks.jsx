@@ -75,17 +75,14 @@ const Stocks = () => {
   const saveStocks = async () => {
     const totalsDocRef = db.collection("users").doc(user.uid);
     await totalsDocRef
-      .set(
-        {
-          profitBE,
-          taxOwed,
-          stocksList,
-          salary,
-          taxBracket,
-          totalIncome,
-        },
-        { merge: true }
-      )
+      .set({
+        profitBE,
+        taxOwed,
+        stocksList,
+        salary,
+        taxBracket,
+        totalIncome,
+      })
       .then(() => {
         console.log("Document successfully written!");
       })
@@ -107,15 +104,9 @@ const Stocks = () => {
 
   const deleteListItem = (id) => {
     if (stocksList.length > 0) {
-      context.dispatch({
-        type: "updateStocksList",
-        payload: stocksList.filter((item, index) => {
-          return index + item.stockName !== id;
-        }),
-      });
+      context.dispatch({ type: "deleteStock", payload: id });
     }
     saveStocks();
-    context.dispatch({ type: "updateShowTotal", payload: false });
   };
 
   const calcTaxBracket = (checkedIncome) => {

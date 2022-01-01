@@ -71,11 +71,13 @@ const App = () => {
     if (
       authStatus === false &&
       policyMatch === null &&
-      disclaimerMatch === null
+      disclaimerMatch === null &&
+      typeof homeMatch === "object" &&
+      isLoading === false
     ) {
       ui.start("#firebaseui-auth-container", uiConfig);
     } else ui.reset();
-  }, [authStatus]);
+  }, [authStatus, isLoading]);
 
   const uiConfig = {
     callbacks: {
@@ -121,37 +123,24 @@ const App = () => {
     firebase
       .auth()
       .signInAnonymously()
-      .then(() => {
-        setIsLoading(false);
-      })
       .catch((error) => {
         var errorCode = error.code;
         var errorMessage = error.message;
-        console.log(errorCode + ": " + errorMessage);
+        throw new Error(errorCode + ": " + errorMessage);
         // ...
       });
   };
 
-  firebase.auth().onAuthStateChanged(async (user) => {
+  firebase.auth().onAuthStateChanged((user) => {
     if (user) {
-      // User is signed in.
-      // const docRef = db.collection("users").doc(user.uid);
-      // await docRef.set(
-      //   {
-      //     displayName: user.displayName,
-      //     email: user.email,
-      //   },
-      //   { merge: true }
-      // );
       setAuthStatus(true);
-      setIsLoading(false);
+      setIsLoading((prev) => false);
     } else if (!user) {
       setAuthStatus(false);
-      setIsLoading(false);
+      setIsLoading((prev) => false);
       // }
     } else {
-      setIsLoading(true);
-      console.log("error");
+      throw new Error("error");
     }
   });
 
@@ -169,26 +158,6 @@ const App = () => {
         <Router>
           <Header />
 
-          <BudgetStateProvider>
-            <Route exact path="/budget">
-              <Budget />
-            </Route>
-          </BudgetStateProvider>
-
-          <StockStateProvider>
-            <Route exact path="/stocks">
-              <Stocks />
-            </Route>
-          </StockStateProvider>
-
-          <StockStateProvider>
-            <BudgetStateProvider>
-              <Route exact path="/analysis">
-                <Analysis />
-              </Route>
-            </BudgetStateProvider>
-          </StockStateProvider>
-
           <Route exact path="/privacy-policy">
             <PrivacyPolicy />
           </Route>
@@ -201,6 +170,15 @@ const App = () => {
             <BudgetStateProvider>
               <Route exact path="/">
                 <Landing />
+              </Route>
+              <Route exact path="/stocks">
+                <Stocks />
+              </Route>
+              <Route exact path="/budget">
+                <Budget />
+              </Route>
+              <Route exact path="/analysis">
+                <Analysis />
               </Route>
             </BudgetStateProvider>
           </StockStateProvider>
@@ -217,9 +195,10 @@ const App = () => {
             <button className="anon-sign-btn" onClick={signInAnon}>
               Guest Sign In
             </button>
-            <div id="firebaseui-auth-container"></div>)
+            <div id="firebaseui-auth-container"></div>
           </>
         ) : null}
+
         <Route exact path="/logged-out-privacy-policy">
           <PrivacyPolicy />
         </Route>

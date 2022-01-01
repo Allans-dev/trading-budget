@@ -25,13 +25,11 @@ const Analysis = () => {
       .then((doc) => {
         sContext.dispatch({
           type: "updateStocksList",
-          payload: doc.data().stocksList ? doc.data().stocksList : stocksList,
+          payload: stocksList ? stocksList : doc.data().stocksList,
         });
         bContext.dispatch({
           type: "updateExpenses",
-          payload: doc.data().expenseArray
-            ? doc.data().expenseArray
-            : expenseArray,
+          payload: expenseArray ? expenseArray : doc.data().expenseArray,
         });
         console.log("Document stocks:", doc.data().stocksList);
         console.log("Document Expenses:", doc.data().expenseArray);
