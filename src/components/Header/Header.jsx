@@ -22,7 +22,7 @@ const Header = () => {
       <nav>
         <ul className="list-container">
           {window.matchMedia("(max-width: 1200px)").matches ? null : (
-            <Link class="list-item" to="/">
+            <Link className="list-item" to="/">
               <li>Home</li>
             </Link>
           )}

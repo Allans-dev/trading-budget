@@ -77,6 +77,7 @@ const App = () => {
     ) {
       ui.start("#firebaseui-auth-container", uiConfig);
     } else ui.reset();
+    // eslint-disable-next-line
   }, [authStatus, isLoading]);
 
   const uiConfig = {
@@ -120,9 +121,11 @@ const App = () => {
   };
 
   const signInAnon = () => {
+    setIsLoading((prev) => true);
     firebase
       .auth()
       .signInAnonymously()
+      .then(() => setIsLoading((prev) => false))
       .catch((error) => {
         var errorCode = error.code;
         var errorMessage = error.message;

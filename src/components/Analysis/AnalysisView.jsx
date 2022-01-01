@@ -10,10 +10,6 @@ import "./analysis_styles.css";
 const AnalysisView = (props) => {
   const { stocksOuter, stocksInner, budgetInner, budgetOuter } = props;
 
-  console.log(budgetOuter);
-
-  console.log(budgetInner);
-
   const colors = ["#805B05", "#FFCD57", "#FFB60A", "#80662B", "#CC9108"];
 
   const profitLossColors = stocksOuter.map((val, index) => {
@@ -35,6 +31,7 @@ const AnalysisView = (props) => {
         showIndicators={false}
         autoPlay={false}
         interval={10000}
+        showThumbs={false}
       >
         <svg viewBox="0 0 400 400">
           <VictoryPie

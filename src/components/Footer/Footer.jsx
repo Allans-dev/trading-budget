@@ -5,8 +5,8 @@ import "./footer_styles.css";
 
 const Footer = () => {
   return (
-    <section class="footer">
-      <div class="footer-top">
+    <section className="footer">
+      <div className="footer-top">
         <span>
           <Link className="privacy-policy" to="/privacy-policy">
             Privacy Policy
