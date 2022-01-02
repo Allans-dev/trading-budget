@@ -74,7 +74,8 @@ const App = () => {
 
   useEffect(() => {
     if (
-      authStatus === false
+      authStatus === false &&
+      isLoading === false
       // &&
       // policyMatch !== null &&
       // disclaimerMatch !== null &&
