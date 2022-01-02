@@ -8,13 +8,23 @@ const Footer = () => {
     <section className="footer">
       <div className="footer-top">
         <span>
-          <Link className="privacy-policy" to="/privacy-policy">
+          <Link
+            className="privacy-policy"
+            to="/privacy-policy"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             Privacy Policy
           </Link>
         </span>
         |
         <span>
-          <Link className="disclaimer" to="/disclaimer">
+          <Link
+            className="disclaimer"
+            to="/disclaimer"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             Disclaimer
           </Link>
         </span>
