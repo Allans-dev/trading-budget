@@ -48,6 +48,7 @@ const { Provider } = store;
 const BudgetStateProvider = ({ children }) => {
   const [state, dispatch] = useReducer((state, action) => {
     const { type, payload } = action;
+    const { expenseArray } = state;
     switch (type) {
       case "updateProfitBE":
         return { ...state, profitBE: payload };
@@ -59,6 +60,11 @@ const BudgetStateProvider = ({ children }) => {
         return {
           ...state,
           expenseArray: Array.isArray(payload) ? [...payload] : payload,
+        };
+      case "deleteExpense":
+        return {
+          ...state,
+          expenseArray: expenseArray.filter((item, index) => index !== payload),
         };
       case "updateTotalExpenses":
         return { ...state, totalExpenses: payload };

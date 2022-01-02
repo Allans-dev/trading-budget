@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import firebase from "firebase/app";
 import "firebase/firestore";
 
@@ -92,7 +92,17 @@ const Budget = () => {
     // eslint-disable-next-line
   }, []);
 
-  useEffect(() => () => saveBudget());
+  const mounted = useRef();
+
+  useEffect(() => {
+    if (!mounted.current) {
+      // do componentDidMount logic
+      mounted.current = true;
+    } else {
+      return saveBudget();
+      // do componentDidUpdate logic
+    }
+  });
 
   const addExpenses = (e) => {
     e.preventDefault();
@@ -124,18 +134,14 @@ const Budget = () => {
     saveBudget();
   };
 
-  const deleteListItem = (id) => {
-    // const expenseArray = setExpenseArray();
-
+  const deleteListItem = (index) => {
     if (expenseArray.length > 0) {
       context.dispatch({
-        type: "updateExpenses",
-        payload: expenseArray.filter((item, index) => {
-          return index !== id;
-        }),
+        type: "deleteExpense",
+        payload: index,
       });
     }
-    // context.dispatch({ type: "updateDisplayResults", payload: false });
+    saveBudget();
   };
 
   const calcTotalExpenses = () => {

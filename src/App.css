@@ -37,6 +37,7 @@
   background-color: rgba(26, 26, 26, 0.5);
   color: #d6d6d6;
   cursor: pointer;
+  z-index: 101;
 }
 
 .anon-sign-btn:hover {

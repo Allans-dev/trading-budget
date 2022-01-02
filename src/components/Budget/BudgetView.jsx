@@ -1,10 +1,13 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import { store } from "./budget-store";
 
 import ExpenseItem from "./ExpenseItem";
 
 import "./budget_style.css";
+
+import firebase from "firebase/app";
+import "firebase/firestore";
 
 const BudgetView = (props) => {
   const context = useContext(store);
@@ -14,18 +17,42 @@ const BudgetView = (props) => {
     category,
     description,
     cost,
-    expenseArray,
     savingsRate,
     displayResults,
     otherCategory,
     totalSavings,
     totalExpenses,
     netProfit,
+    expenseArray,
   } = context.state;
 
-  console.log(expenseArray);
-
   const { calcBudget, addExpenses, deleteListItem } = props;
+
+  // const db = firebase.firestore();
+  // const user = firebase.auth().currentUser;
+
+  // const [budget, setBudget] = useState([]);
+
+  // useEffect(() => {
+  //   fetchBudgetData();
+  // }, [expenseArray]);
+
+  // const fetchBudgetData = async () => {
+  //   const listRef = db.collection("users").doc(user.uid);
+  //   await listRef
+  //     .get()
+  //     .then((doc) => {
+  //       if (doc) {
+  //         return doc.data().expenseArray
+  //           ? doc.data().expenseArray
+  //           : expenseArray;
+  //       }
+  //     })
+  //     .then((data) => setBudget(data))
+  //     .catch(() => {
+  //       console.log("No such document!");
+  //     });
+  // };
 
   return (
     <article className="budget-page">

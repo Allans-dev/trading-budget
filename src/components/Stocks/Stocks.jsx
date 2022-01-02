@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 
 import firebase from "firebase/app";
 import "firebase/firestore";
@@ -9,9 +9,8 @@ import StocksView from "./StocksView";
 
 const Stocks = () => {
   const context = useContext(store);
-  const [yearCheck, setYearCheck] = useState(false);
+
   const {
-    stocksList,
     profitBE,
     taxOwed,
     taxBracket,
@@ -22,10 +21,31 @@ const Stocks = () => {
     volume,
     showTotal,
     totalIncome,
+    stocksList,
   } = context.state;
+
+  const [yearCheck, setYearCheck] = useState(false);
+  // let stocksLength = stocksList.length;
 
   const db = firebase.firestore();
   const user = firebase.auth().currentUser;
+
+  const mounted = useRef();
+
+  useEffect(() => {
+    if (!mounted.current) {
+      // do componentDidMount logic
+      mounted.current = true;
+    } else {
+      return saveStocks();
+      // do componentDidUpdate logic
+    }
+  });
+
+  useEffect(() => {
+    getStocks();
+    // eslint-disable-next-line
+  }, []);
 
   const getStocks = async () => {
     const listRef = db.collection("users").doc(user.uid);
@@ -90,12 +110,11 @@ const Stocks = () => {
       .catch((error) => {
         console.error("Error writing document: ", error);
       });
-  };
 
-  useEffect(() => {
-    getStocks();
-    // eslint-disable-next-line
-  }, []);
+    console.log("SAVING");
+    console.log(stocksList);
+    console.log("======");
+  };
 
   function oneYearCheck() {
     yearCheck ? setYearCheck(false) : setYearCheck(true);
@@ -103,7 +122,12 @@ const Stocks = () => {
 
   const deleteListItem = (id) => {
     if (stocksList.length > 0) {
-      context.dispatch({ type: "deleteStock", payload: id });
+      context.dispatch({
+        type: "deleteStock",
+        payload: stocksList.filter(
+          (item, index) => index + item.stockName !== id
+        ),
+      });
     }
     saveStocks();
   };
@@ -151,7 +175,7 @@ const Stocks = () => {
     return taxOwed;
   };
 
-  const addStocks = async (e) => {
+  const addStocks = (e) => {
     e.preventDefault();
 
     const calcIProfit =
@@ -159,35 +183,34 @@ const Stocks = () => {
         ? Number((sellPrice - buyPrice) * volume) / 2
         : Number((sellPrice - buyPrice) * volume);
 
-    const payload = Array.isArray(stocksList)
-      ? [
-          ...stocksList,
-          {
-            stockName,
-            buyPrice,
-            sellPrice,
-            volume,
-            yearCheck,
-            iProfit: calcIProfit,
-          },
-        ]
-      : [
-          {
-            stockName,
-            buyPrice,
-            sellPrice,
-            volume,
-            yearCheck,
-            iProfit: calcIProfit,
-          },
-        ];
+    const payload =
+      Array.isArray(stocksList) && stocksList.length > 0
+        ? [
+            ...stocksList,
+            {
+              stockName,
+              buyPrice,
+              sellPrice,
+              volume,
+              yearCheck,
+              iProfit: calcIProfit,
+            },
+          ]
+        : [
+            {
+              stockName,
+              buyPrice,
+              sellPrice,
+              volume,
+              yearCheck,
+              iProfit: calcIProfit,
+            },
+          ];
 
     context.dispatch({
       type: "updateStocksList",
       payload,
     });
-
-    saveStocks();
 
     context.dispatch({ type: "updateStockName", payload: "" });
     context.dispatch({ type: "updateBuyPrice", payload: 0 });
@@ -198,6 +221,8 @@ const Stocks = () => {
     document.getElementById("yearCheckBox").checked = false;
 
     context.dispatch({ type: "updateShowTotal", payload: false });
+
+    saveStocks();
   };
 
   const calcTotal = () => {

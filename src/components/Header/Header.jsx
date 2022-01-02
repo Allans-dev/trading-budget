@@ -6,26 +6,25 @@ import firebase from "firebase/app";
 import "./header_styles.css";
 
 const Header = () => {
-  const signout = () =>
+  const signout = () => {
     firebase
       .auth()
       .signOut()
-      .then(() => {
-        <Redirect to="/" />;
-        console.log("Signed Out");
-      })
+      .then(() => <Redirect to="/" />)
       .catch((error) => {
         console.error("Sign Out Error", error);
       });
+  };
+
   return (
     <section className="header">
       <nav>
         <ul className="list-container">
-          {window.matchMedia("(max-width: 1200px)").matches ? null : (
+          {/* {window.matchMedia("(max-width: 1200px)").matches ? null : (
             <Link className="list-item" to="/">
               <li>Home</li>
             </Link>
-          )}
+          )} */}
           <Link className="list-item" to="/stocks">
             <li>Stocks</li>
           </Link>
@@ -38,7 +37,13 @@ const Header = () => {
           </Link>
         </ul>
 
-        <button className="sign-out action button" onClick={signout}>
+        <button
+          className="sign-out action button"
+          onClick={(e) => {
+            signout();
+            // return <Redirect to="/" />;
+          }}
+        >
           Signout
         </button>
       </nav>

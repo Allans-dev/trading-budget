@@ -53,27 +53,37 @@ const App = () => {
     new firebaseui.auth.AuthUI(firebase.auth());
 
   const policyMatch = matchPath("/logged-out-privacy-policy", {
-    path: window.location.href,
-    exact: true,
+    path: window.location.pathname,
   });
 
-  const disclaimerMatch = matchPath("/disclaimer", {
-    path: window.location.href,
-    exact: true,
+  const disclaimerMatch = matchPath("/logged-out-disclaimer", {
+    path: window.location.pathname,
   });
 
-  const homeMatch = matchPath("/", {
-    path: window.location.href,
-    exact: true,
+  const stocksMatch = matchPath("/stocks", {
+    path: window.location.pathname,
   });
+  const budgetMatch = matchPath("/budget", {
+    path: window.location.pathname,
+  });
+  const analysisMatch = matchPath("/analysis", {
+    path: window.location.pathname,
+  });
+
+  console.log(policyMatch);
 
   useEffect(() => {
     if (
-      authStatus === false &&
-      policyMatch === null &&
-      disclaimerMatch === null &&
-      typeof homeMatch === "object" &&
-      isLoading === false
+      authStatus === false
+      // &&
+      // policyMatch !== null &&
+      // disclaimerMatch !== null &&
+      // policyMatch.isExact === false &&
+      // disclaimerMatch.isExact === false
+      // &&
+      // (stocksMatch.isExact === true ||
+      //   budgetMatch.isExact === true ||
+      //   analysisMatch.isExact === true)
     ) {
       ui.start("#firebaseui-auth-container", uiConfig);
     } else ui.reset();
@@ -169,11 +179,12 @@ const App = () => {
             <Disclaimer />
           </Route>
 
+          <Route exact path="/">
+            <Landing />
+          </Route>
+
           <StockStateProvider>
             <BudgetStateProvider>
-              <Route exact path="/">
-                <Landing />
-              </Route>
               <Route exact path="/stocks">
                 <Stocks />
               </Route>
@@ -192,16 +203,19 @@ const App = () => {
     </StateProvider>
   ) : (
     <article className="root" id="login">
+      <section
+        style={{
+          display:
+            policyMatch !== null && policyMatch.isExact === true
+              ? "none"
+              : "block",
+        }}
+      >
+        <button className="anon-sign-btn" onClick={signInAnon}>
+          Guest Sign In
+        </button>
+      </section>
       <Router>
-        {policyMatch === null && disclaimerMatch === null ? (
-          <>
-            <button className="anon-sign-btn" onClick={signInAnon}>
-              Guest Sign In
-            </button>
-            <div id="firebaseui-auth-container"></div>
-          </>
-        ) : null}
-
         <Route exact path="/logged-out-privacy-policy">
           <PrivacyPolicy />
         </Route>
