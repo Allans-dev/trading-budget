@@ -215,6 +215,7 @@ const App = () => {
         <button className="anon-sign-btn" onClick={signInAnon}>
           Guest Sign In
         </button>
+        <div id="firebaseui-auth-container"></div>
       </section>
       <Router>
         <Route exact path="/logged-out-privacy-policy">
