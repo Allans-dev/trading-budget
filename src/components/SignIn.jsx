@@ -8,8 +8,8 @@ import { useEffect } from "react";
 const SignIn = ({
   policyMatch,
   signInAnon,
-  authStatus,
   uiConfig,
+  authStatus,
   isLoading,
 }) => {
   const ui =

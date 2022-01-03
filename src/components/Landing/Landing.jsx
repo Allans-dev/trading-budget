@@ -1,13 +1,3 @@
-import React from "react";
-
-import Stocks from "../Stocks/Stocks";
-import Budget from "../Budget/Budget";
-import Analysis from "../Analysis/Analysis";
-
-import { StateProvider } from "../../main-store";
-import { StockStateProvider } from "../Stocks/stocks-store";
-import { BudgetStateProvider } from "../Budget/budget-store";
-
 import "./landing_styles.css";
 
 const Landing = () => (

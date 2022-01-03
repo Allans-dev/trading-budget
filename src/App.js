@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { BrowserRouter as Router, Route, matchPath } from "react-router-dom";
 
 import Landing from "./components/Landing/Landing";
@@ -25,9 +25,6 @@ import "./App.css";
 import firebase from "firebase/app";
 import "firebase/firestore";
 
-import * as firebaseui from "firebaseui";
-import "firebaseui/dist/firebaseui.css";
-
 const firebaseConfig = {
   apiKey: "AIzaSyC238mryUvNxq4lScBrGNHL9dAjjHHPs4Q",
   authDomain: "tradingbudget.firebaseapp.com",
@@ -44,54 +41,13 @@ if (!firebase.apps.length) {
   firebase.app(); // if already initialized, use that one
 }
 
-// const db = firebase.firestore();
-
 const App = () => {
   const [authStatus, setAuthStatus] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  // const ui =
-  //   firebaseui.auth.AuthUI.getInstance() ||
-  //   new firebaseui.auth.AuthUI(firebase.auth());
-
   const policyMatch = matchPath("/logged-out-privacy-policy", {
     path: window.location.pathname,
   });
-
-  // const disclaimerMatch = matchPath("/logged-out-disclaimer", {
-  //   path: window.location.pathname,
-  // });
-
-  // const stocksMatch = matchPath("/stocks", {
-  //   path: window.location.pathname,
-  // });
-  // const budgetMatch = matchPath("/budget", {
-  //   path: window.location.pathname,
-  // });
-  // const analysisMatch = matchPath("/analysis", {
-  //   path: window.location.pathname,
-  // });
-
-  // console.log(policyMatch);
-
-  // useEffect(() => {
-  //   if (
-  //     authStatus === false &&
-  //     isLoading === false
-  //     // &&
-  //     // policyMatch !== null &&
-  //     // disclaimerMatch !== null &&
-  //     // policyMatch.isExact === false &&
-  //     // disclaimerMatch.isExact === false
-  //     // &&
-  //     // (stocksMatch.isExact === true ||
-  //     //   budgetMatch.isExact === true ||
-  //     //   analysisMatch.isExact === true)
-  //   ) {
-  //     ui.start("#firebaseui-auth-container", uiConfig);
-  //   } else ui.reset();
-  //   // eslint-disable-next-line
-  // }, [authStatus, isLoading]);
 
   const uiConfig = {
     callbacks: {
