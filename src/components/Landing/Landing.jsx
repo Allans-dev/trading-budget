@@ -1,3 +1,5 @@
+import React from "react";
+
 import "./landing_styles.css";
 
 const Landing = () => (

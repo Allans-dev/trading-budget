@@ -11,7 +11,7 @@ import Header from "./components/Header/Header";
 
 import RingLoader from "react-spinners/RingLoader";
 
-import SignIn from "./components/SignIn";
+import SignIn from "./components/SignIn/SignIn";
 
 import PrivacyPolicy from "./components/PrivacyPolicy/PrivacyPolicy";
 import Disclaimer from "./components/Disclaimer/Disclaimer";
@@ -161,8 +161,8 @@ const App = () => {
       </article>
     </StateProvider>
   ) : (
-    <article className="root" id="login">
-      <Router>
+    <Router>
+      <article className="root" id="login">
         <Route path="/">
           <SignIn
             policyMatch={policyMatch}
@@ -180,8 +180,8 @@ const App = () => {
         <Route exact path="/logged-out-disclaimer">
           <Disclaimer />
         </Route>
-      </Router>
-    </article>
+      </article>
+    </Router>
   );
 };
 
