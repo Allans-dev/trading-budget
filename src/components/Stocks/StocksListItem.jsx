@@ -21,14 +21,14 @@ const StocksListItem = ({
           {new Intl.NumberFormat("en-US", {
             style: "currency",
             currency: "USD",
-            maximumFractionDigits: 0,
-          }).format((Math.round(buyPrice) * 100) / 100)}
+            maximumFractionDigits: 2,
+          }).format(Math.round(buyPrice * 100) / 100)}
         </div>
         <div>
           {new Intl.NumberFormat("en-US", {
             style: "currency",
             currency: "USD",
-            maximumFractionDigits: 0,
+            maximumFractionDigits: 2,
           }).format(Math.round(sellPrice * 100) / 100)}
         </div>
         <div>{new Intl.NumberFormat().format(volume)}</div>
@@ -37,7 +37,7 @@ const StocksListItem = ({
           {new Intl.NumberFormat("en-US", {
             style: "currency",
             currency: "USD",
-            maximumFractionDigits: 0,
+            maximumFractionDigits: 2,
           }).format(
             Math.round(Number((sellPrice - buyPrice) * volume) * 100) / 100
           )}
