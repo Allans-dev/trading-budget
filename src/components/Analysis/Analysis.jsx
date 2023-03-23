@@ -154,6 +154,7 @@ const Analysis = () => {
   const addSelectedValuesIntoObject = (arr) => {
     let obj = { profit: 0, loss: 0 };
     arr.forEach((list) => {
+      // eslint-disable-next-line
       for (let [key, value] of Object.entries(list)) {
         if (value >= 0) {
           obj.profit += value;

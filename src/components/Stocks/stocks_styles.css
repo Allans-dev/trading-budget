@@ -68,10 +68,6 @@
   border: 0;
 }
 
-.left {
-  text-align: left;
-}
-
 .result-section {
   grid-area: stocks;
   background-color: rgba(26, 26, 26, 0.5);
@@ -88,78 +84,20 @@
   grid-template-rows: minmax(1em 2em) minmax(1em 2em);
 }
 
-.stocks-display .stock-header {
-  display: grid;
-  grid-template-columns: 0.5fr 2fr 2fr 2fr 2fr 0.65fr;
-  column-gap: 1.5%;
-  text-align: center;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
 @media only screen and (max-width: 523px) {
   .stocks-display {
     font-size: 12px;
   }
 }
 
-.stock-header span {
-  font-weight: 500;
-  width: 100%;
-}
-
-.stock-header span:first-of-type {
-  width: 45px;
-  text-align: left;
-}
-
-.stock-header span:last-of-type {
-  min-width: 100%;
-}
-
 /* Stocks List Item Styles */
 
-.stocks-display .list-item {
-  grid-area: stocks;
-  margin-top: 10px;
-  line-height: 25px;
-  margin: 10px 0;
+.stocks-display td {
+  padding: 0.4rem;
 }
 
-/* delete */
-
-.stocks-display .list-item .button {
-  max-width: 25px;
-  max-height: 25px;
-  color: #d6d6d6;
-  align-self: center;
-  line-height: 12px;
-  margin: 0.5em;
-  padding: 0.5em;
-}
-
-.stock-detail {
-  display: grid;
-  grid-template-columns: 0.5fr 2fr 2fr 2fr 2fr 0.5fr;
-  column-gap: 1.5%;
-  border-left: 1px solid #d6d6d6;
-  max-height: 25px;
-  border-top: 1px solid #d6d6d6;
-  border-top-left-radius: 5px;
-}
-
-.stock-detail div:first-of-type {
-  text-align: left;
-  width: 45px;
-  padding-left: 5px;
-}
-
-.one-year {
-  display: block;
-  width: max-content;
-  text-align: left;
-  border-left: 1px solid #d6d6d6;
-  padding: 0 5px;
+tr:nth-child(even) {
+  background-color: rgba(26, 26, 26, 0.3);
 }
 
 .none {
@@ -176,7 +114,3 @@
 #yearCheckBox {
   margin: auto 2em;
 }
-/* .aside {
-  text-align: center;
-  margin: 10px;
-} */

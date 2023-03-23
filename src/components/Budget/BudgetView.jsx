@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 
 import { store } from "./budget-store";
 
@@ -6,7 +6,6 @@ import ExpenseItem from "./ExpenseItem";
 
 import "./budget_style.css";
 
-import firebase from "firebase/app";
 import "firebase/firestore";
 
 const BudgetView = (props) => {

@@ -150,15 +150,15 @@ const StocksView = (props) => {
             </section>
           ) : (
             <section className="stocks-display">
-              <div className="stock-header">
-                <span>Code</span>
-                <span>Buy Price</span>
-                <span>Sell Price</span>
-                <span>Volume</span>
-                <span>Profit/Loss</span>
-                <span></span>
-              </div>
-              <ul>
+              <table>
+                <tr>
+                  <th>Code</th>
+                  <th>Buy</th>
+                  <th>Sell</th>
+                  <th>Volume</th>
+                  <th>Profit</th>
+                  <th> &gt;year</th>
+                </tr>
                 {stocksList.map((item, index) => (
                   <StocksListItem
                     key={index}
@@ -172,7 +172,7 @@ const StocksView = (props) => {
                     iProfit={iProfit}
                   />
                 ))}
-              </ul>
+              </table>
             </section>
           )}
         </section>
