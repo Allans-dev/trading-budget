@@ -92,9 +92,22 @@
 
 /* Stocks List Item Styles */
 
-.stocks-display td {
-  padding: 0.4rem;
+.stocks-display table {
+  padding: 0 0.1rem 0.1rem 0.1rem;
 }
+
+.stocks-display td {
+  line-height: 2rem;
+  padding: 0.1rem;
+}
+
+.stocks-display .delete {
+  line-height: 2rem;
+  width: 2rem;
+}
+
+/* .stocks-display tr td:last-child {
+} */
 
 tr:nth-child(even) {
   background-color: rgba(26, 26, 26, 0.3);

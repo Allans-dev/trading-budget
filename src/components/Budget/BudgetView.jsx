@@ -234,7 +234,7 @@ const BudgetView = (props) => {
             </div>
           </div>
         ) : Array.isArray(expenseArray) ? (
-          <ul>
+          <table className="expense-table">
             {expenseArray.map((item, index) => (
               <ExpenseItem
                 key={index}
@@ -246,7 +246,7 @@ const BudgetView = (props) => {
                 otherCategory={otherCategory}
               />
             ))}
-          </ul>
+          </table>
         ) : null}
       </section>
     </article>

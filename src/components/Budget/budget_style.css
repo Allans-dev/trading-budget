@@ -104,6 +104,11 @@
   padding: 0.5em;
 }
 
+.budget-page .delete {
+  line-height: 2rem;
+  width: 2rem;
+}
+
 .savings .button {
   margin: 0 auto;
 }
@@ -158,42 +163,8 @@
   background-color: rgba(26, 26, 26, 0.5);
   color: #d6d6d6;
   border-radius: 15px;
-  padding: 15px;
-}
-
-.budget-page .results ul {
-  display: grid;
-  column-gap: 1.5%;
-  align-items: center;
-  text-align: center;
-}
-
-.budget-page .results ul li {
-  display: grid;
-  grid-template-columns:
-    minmax(max-content, 1fr)
-    minmax(max-content, 1fr)
-    minmax(max-content, 1fr)
-    minmax(max-content, 0.5fr);
-  align-items: center;
-  border-left: 1px solid #d6d6d6;
-  border-top: 1px solid #d6d6d6;
-  border-top-left-radius: 5px;
-  margin-top: 10px;
-  padding-left: 0.5em;
-}
-
-.budget-page .results ul li:first-of-type {
-  margin-top: 0;
-}
-
-.budget-page .results ul li button {
-  max-width: 25px;
-  max-height: 25px;
-  border: none;
-  color: #d6d6d6;
-  margin: 0.5em;
-  padding: 0.5em;
+  padding: 0.5rem;
+  justify-content: space-evenly;
 }
 
 .none {
@@ -206,4 +177,21 @@
   grid-template-columns: 3fr 1fr;
   /* grid-area: ; */
   text-align: left;
+}
+
+/* Expense Table Styling */
+
+.budget-page .expense-table {
+  width: 100%;
+}
+
+.budget-page .expense-table tr {
+  max-height: fit-content;
+  line-height: 2rem;
+  padding: 0.1rem;
+}
+
+.budget-page .expense-table .delete {
+  max-height: 2rem;
+  padding: 0.1rem;
 }

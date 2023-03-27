@@ -7,25 +7,27 @@ const ExpenseItem = ({
   cost,
   deleteListItem,
 }) => (
-  <li key={index}>
-    <div>{category}</div>
-    {description ? <div>{description}</div> : <div />}
-    <div>
+  <tr key={index}>
+    <td>{category}</td>
+    {description ? <td>{description}</td> : <td />}
+    <td>
       {new Intl.NumberFormat("en-US", {
         style: "currency",
         currency: "USD",
       }).format(Math.round(cost * 100) / 100)}
-    </div>
-    <button
-      className="button delete"
-      onClick={(e) => {
-        e.preventDefault();
-        deleteListItem(index);
-      }}
-    >
-      X
-    </button>
-  </li>
+    </td>
+    <td>
+      <button
+        className="button delete"
+        onClick={(e) => {
+          e.preventDefault();
+          deleteListItem(index);
+        }}
+      >
+        X
+      </button>
+    </td>
+  </tr>
 );
 
 export default ExpenseItem;
