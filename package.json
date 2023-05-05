@@ -7,7 +7,7 @@
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "firebase": "^8.2.4",
-    "firebase-tools": "^10.0.1",
+    "firebase-tools": "^11.30.0",
     "firebaseui": "^4.7.1",
     "immer": "9.0.6",
     "react": "^17.0.1",
@@ -20,7 +20,7 @@
     "web-vitals": "^0.2.4"
   },
   "scripts": {
-    "start": "react-scripts start NODE_OPTIONS=--openssl-legacy-provider",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
