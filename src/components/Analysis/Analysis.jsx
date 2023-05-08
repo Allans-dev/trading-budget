@@ -1,48 +1,44 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect } from 'react';
 
-import AnalysisView from "./AnalysisView";
+import AnalysisView from './AnalysisView';
 
-import { store as stockStore } from "../Stocks/stocks-store";
-import { store as budgetStore } from "../Budget/budget-store";
+import { store as mainStore } from '../../main-store';
+import { store as stockStore } from '../Stocks/stocks-store';
+import { store as budgetStore } from '../Budget/budget-store';
 
-import firebase from "firebase/app";
-import "firebase/firestore";
+import firebase from 'firebase/app';
+import 'firebase/firestore';
 
 const Analysis = () => {
   const db = firebase.firestore();
   const user = firebase.auth().currentUser;
+  const analysisCollectionDoc = db.collection('users').doc(user.uid);
 
   const sContext = useContext(stockStore);
   const bContext = useContext(budgetStore);
+  const mContext = useContext(mainStore);
 
   const { stocksList } = sContext.state;
   const { expenseArray } = bContext.state;
 
-  const getAnalysisData = async () => {
-    const listRef = db.collection("users").doc(user.uid);
-    await listRef
-      .get()
-      .then((doc) => {
-        sContext.dispatch({
-          type: "updateStocksList",
-          payload: stocksList ? stocksList : doc.data().stocksList,
-        });
-        bContext.dispatch({
-          type: "updateExpenses",
-          payload: expenseArray ? expenseArray : doc.data().expenseArray,
-        });
-        console.log("Document stocks:", doc.data().stocksList);
-        console.log("Document Expenses:", doc.data().expenseArray);
-      })
-      .catch(() => {
-        console.log("No such document!");
-      });
-  };
-
   useEffect(() => {
-    getAnalysisData();
+    mContext.dispatch({
+      type: 'isLoading',
+      payload: true,
+    });
+    getAnalysisData(analysisCollectionDoc);
+    mContext.dispatch({
+      type: 'isLoading',
+      payload: false,
+    });
     // eslint-disable-next-line
-  }, []);
+  }, [stocksList, expenseArray]);
+
+  const getAnalysisData = async (analysisCollectionDoc) => {
+    await analysisCollectionDoc.get().catch(() => {
+      console.log('No such document!');
+    });
+  };
 
   const sortedCost = expenseArray.sort((a, b) => {
     var nameA = a.category.toUpperCase();
@@ -86,8 +82,8 @@ const Analysis = () => {
   const budgetKeyValues = extractKeyValues(
     categoryArray,
     sortedCost,
-    "category",
-    "cost"
+    'category',
+    'cost'
   );
 
   const addValuesIntoObject = (arr) => {
@@ -147,8 +143,8 @@ const Analysis = () => {
   const stocksKeyValues = extractKeyValues(
     StockNameArray,
     stocksList,
-    "stockName",
-    "iProfit"
+    'stockName',
+    'iProfit'
   );
 
   const addSelectedValuesIntoObject = (arr) => {
@@ -203,15 +199,15 @@ const Analysis = () => {
   return stocksList.length < 1 && expenseArray.length < 1 ? (
     <div
       style={{
-        backgroundColor: "rgba(26, 26, 26, 0.5)",
-        width: "300px",
-        height: "55px",
-        margin: "0 auto",
-        color: "#d6d6d6",
-        textAlign: "center",
-        padding: "15px",
-        borderRadius: "15px",
-        alignSelf: "center",
+        backgroundColor: 'rgba(26, 26, 26, 0.5)',
+        width: '300px',
+        height: '55px',
+        margin: '0 auto',
+        color: '#d6d6d6',
+        textAlign: 'center',
+        padding: '15px',
+        borderRadius: '15px',
+        alignSelf: 'center',
       }}
     >
       Please enter a stock or an expense to see it charted.

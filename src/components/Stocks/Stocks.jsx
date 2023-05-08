@@ -1,13 +1,16 @@
-import React, { useContext, useEffect, useState, useRef } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 
 import { store } from './stocks-store';
+import { store as mainStore } from '../../main-store';
 
 import StocksView from './StocksView';
 
 const Stocks = () => {
+  const mContext = useContext(mainStore);
+
   const context = useContext(store);
 
   const {
@@ -28,27 +31,23 @@ const Stocks = () => {
 
   const db = firebase.firestore();
   const user = firebase.auth().currentUser;
-
-  const mounted = useRef();
-
-  useEffect(() => {
-    if (!mounted.current) {
-      // do componentDidMount logic
-      mounted.current = true;
-    } else {
-      return saveStocks();
-      // do componentDidUpdate logic
-    }
-  });
+  const stocksCollectionDoc = db.collection('users').doc(user.uid);
 
   useEffect(() => {
-    getStocks();
-    // eslint-disable-next-line
-  }, []);
+    mContext.dispatch({
+      type: 'isLoading',
+      payload: true,
+    });
+    getStocks(stocksCollectionDoc);
+    mContext.dispatch({
+      type: 'isLoading',
+      payload: false,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user.uid]);
 
-  const getStocks = async () => {
-    const listRef = db.collection('users').doc(user.uid);
-    await listRef
+  const getStocks = async (stocksCollectionDoc) => {
+    await stocksCollectionDoc
       .get()
       .then((doc) => {
         if (doc) {
@@ -89,9 +88,21 @@ const Stocks = () => {
       });
   };
 
-  const saveStocks = async () => {
-    const totalsDocRef = db.collection('users').doc(user.uid);
-    await totalsDocRef
+  useEffect(() => {
+    mContext.dispatch({
+      type: 'isLoading',
+      payload: true,
+    });
+    saveStocks(stocksCollectionDoc);
+    mContext.dispatch({
+      type: 'isLoading',
+      payload: false,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [context.state]);
+
+  const saveStocks = async (stocksCollectionDoc) => {
+    await stocksCollectionDoc
       .set(
         {
           profitBE,
@@ -103,19 +114,16 @@ const Stocks = () => {
         },
         { merge: true }
       )
-      .then(() => {
-        console.log('Document successfully written!');
-      })
       .catch((error) => {
         console.error('Error writing document: ', error);
       });
   };
 
-  function oneYearCheck() {
+  const oneYearCheck = () => {
     yearCheck ? setYearCheck(false) : setYearCheck(true);
-  }
+  };
 
-  const deleteListItem = (id) => {
+  const deleteListItem = async (id) => {
     if (stocksList.length > 0) {
       context.dispatch({
         type: 'deleteStock',
@@ -124,7 +132,6 @@ const Stocks = () => {
         ),
       });
     }
-    saveStocks();
   };
 
   const calcTaxBracket = (checkedIncome) => {
@@ -216,8 +223,6 @@ const Stocks = () => {
     document.getElementById('yearCheckBox').checked = false;
 
     context.dispatch({ type: 'updateShowTotal', payload: false });
-
-    saveStocks();
   };
 
   const calcTotal = () => {

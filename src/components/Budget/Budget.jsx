@@ -1,14 +1,15 @@
-import React, { useContext, useEffect, useRef } from "react";
-import firebase from "firebase/app";
-import "firebase/firestore";
+import React, { useContext, useEffect } from 'react';
+import firebase from 'firebase/app';
+import 'firebase/firestore';
 
-import { store } from "./budget-store";
+import { store as mainStore } from '../../main-store';
+import { store } from './budget-store';
 
-// import { store as Sstore } from "../stocksPage/stocks-store";
-
-import BudgetView from "./BudgetView";
+import BudgetView from './BudgetView';
 
 const Budget = () => {
+  const mContext = useContext(mainStore);
+
   const context = useContext(store);
   const {
     expenseArray,
@@ -17,7 +18,6 @@ const Budget = () => {
     totalExpenses,
     totalSavings,
     netProfit,
-    // timeFrame,
     category,
     description,
     cost,
@@ -27,49 +27,74 @@ const Budget = () => {
 
   const db = firebase.firestore();
   const user = firebase.auth().currentUser;
+  const budgetCollectionDoc = db.collection('users').doc(user.uid);
 
-  const getBudget = async () => {
+  useEffect(() => {
+    mContext.dispatch({
+      type: 'isLoading',
+      payload: true,
+    });
+    getBudget(budgetCollectionDoc);
+    mContext.dispatch({
+      type: 'isLoading',
+      payload: false,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user.uid]);
+
+  const getBudget = async (budgetCollectionDoc) => {
     if (user.uid) {
-      const budgetRef = db.collection("users").doc(user.uid);
-      await budgetRef
+      await budgetCollectionDoc
         .get()
         .then((doc) => {
           context.dispatch({
-            type: "updateProfitBE",
+            type: 'updateProfitBE',
             payload: doc.data().profitBE ? doc.data().profitBE : profitBE,
           });
           context.dispatch({
-            type: "updateExpenses",
+            type: 'updateExpenses',
             payload: doc.data().expenseArray
               ? doc.data().expenseArray
               : expenseArray,
           });
           context.dispatch({
-            type: "updateTotalSavings",
+            type: 'updateTotalSavings',
             payload: doc.data().totalSavings
               ? doc.data().totalSavings
               : totalSavings,
           });
           context.dispatch({
-            type: "updateNetProfit",
+            type: 'updateNetProfit',
             payload: doc.data().netProfit ? doc.data().netProfit : netProfit,
           });
           context.dispatch({
-            type: "updateTotalExpenses",
+            type: 'updateTotalExpenses',
             payload: doc.data().totalExpenses
               ? doc.data().totalExpenses
               : totalExpenses,
           });
         })
         .catch((error) => {
-          console.log("no doc");
+          console.log('no doc');
         });
     }
   };
 
-  const saveBudget = async () => {
-    const budgetDocRef = db.collection("users").doc(user.uid);
-    await budgetDocRef
+  useEffect(() => {
+    mContext.dispatch({
+      type: 'isLoading',
+      payload: true,
+    });
+    saveBudget(budgetCollectionDoc);
+    mContext.dispatch({
+      type: 'isLoading',
+      payload: false,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [context.state]);
+
+  const saveBudget = async (budgetCollectionDoc) => {
+    await budgetCollectionDoc
       .set(
         {
           expenseArray,
@@ -79,81 +104,54 @@ const Budget = () => {
         },
         { merge: true }
       )
-      .then(() => {
-        console.log("Document successfully written!");
-      })
       .catch((error) => {
-        console.error("Error writing document: ", error);
+        console.error('Error writing document: ', error);
       });
   };
 
-  useEffect(() => {
-    getBudget();
-    // eslint-disable-next-line
-  }, []);
-
-  const mounted = useRef();
-
-  useEffect(() => {
-    if (!mounted.current) {
-      // do componentDidMount logic
-      mounted.current = true;
-    } else {
-      return saveBudget();
-      // do componentDidUpdate logic
-    }
-  });
-
   const addExpenses = (e) => {
     e.preventDefault();
-    // const eArray = setExpenseArray();
-    console.log(expenseArray);
     context.dispatch({
-      type: "updateExpenses",
+      type: 'updateExpenses',
       payload: Array.isArray(expenseArray)
         ? [
             ...expenseArray,
             {
-              category: category !== "Other" ? category : otherCategory,
+              category: category !== 'Other' ? category : otherCategory,
               description,
               cost,
             },
           ]
         : [
             {
-              category: category !== "Other" ? category : otherCategory,
+              category: category !== 'Other' ? category : otherCategory,
               description,
               cost,
             },
           ],
     });
-
-    // context.dispatch({ type: "updateDisplayResults", payload: true });
-    context.dispatch({ type: "updateDescription", payload: "" });
-    context.dispatch({ type: "updateOtherCategory", payload: "" });
-    saveBudget();
+    context.dispatch({ type: 'updateDescription', payload: '' });
+    context.dispatch({ type: 'updateOtherCategory', payload: '' });
+    context.dispatch({ type: 'updateCost', payload: '' });
   };
 
   const deleteListItem = (index) => {
     if (expenseArray.length > 0) {
       context.dispatch({
-        type: "deleteExpense",
+        type: 'deleteExpense',
         payload: index,
       });
     }
-    saveBudget();
   };
 
   const calcTotalExpenses = () => {
-    // const expenseArray = setExpenseArray();
-    console.log(expenseArray);
     const totalExpenses =
       expenseArray && expenseArray.length > 0
         ? expenseArray.map((item) => Number(item.cost)).reduce((a, b) => a + b)
         : 0;
 
     context.dispatch({
-      type: "updateTotalExpenses",
+      type: 'updateTotalExpenses',
       payload: totalExpenses,
     });
 
@@ -164,7 +162,7 @@ const Budget = () => {
     const totalSavings = ((profitBE - totalE) * savingsRate) / 100;
 
     context.dispatch({
-      type: "updateTotalSavings",
+      type: 'updateTotalSavings',
       payload: totalSavings,
     });
     return totalSavings;
@@ -172,11 +170,8 @@ const Budget = () => {
 
   const calcNetProfits = (totalE, totalS) => {
     const netProfit = profitBE - totalE - totalS;
-
-    console.log(profitBE, totalExpenses, totalSavings);
-
     context.dispatch({
-      type: "updateNetProfit",
+      type: 'updateNetProfit',
       payload: netProfit,
     });
 
@@ -194,7 +189,7 @@ const Budget = () => {
     combine();
 
     context.dispatch({
-      type: "updateDisplayResults",
+      type: 'updateDisplayResults',
       payload: displayResults ? false : true,
     });
   };
@@ -207,71 +202,5 @@ const Budget = () => {
     />
   );
 };
-
-// const setNetProfitAndTotalSavings = () => {
-//   switch (timeFrame) {
-//     case "day":
-//       context.dispatch({
-//         type: "updateTotalSavings",
-//         payload: ((profitBE - totalExpenses) * savingsRate) / 100 / 365,
-//       });
-//       context.dispatch({
-//         type: "updateNetProfit",
-//         payload: ((profitBE - totalExpenses) * (1 - savingsRate / 100)) / 365,
-//       });
-//       break;
-//     case "week":
-//       context.dispatch({
-//         type: "updateTotalSavings",
-//         payload: ((profitBE - totalExpenses) * savingsRate) / 100 / 52,
-//       });
-//       context.dispatch({
-//         type: "updateNetProfit",
-//         payload: ((profitBE - totalExpenses) * (1 - savingsRate / 100)) / 52,
-//       });
-//       break;
-//     case "fortnight":
-//       context.dispatch({
-//         type: "updateTotalSavings",
-//         payload: ((profitBE - totalExpenses) * savingsRate) / 100 / 26,
-//       });
-//       context.dispatch({
-//         type: "updateNetProfit",
-//         payload: ((profitBE - totalExpenses) * (1 - savingsRate / 100)) / 26,
-//       });
-//       break;
-//     case "month":
-//       context.dispatch({
-//         type: "updateTotalSavings",
-//         payload: ((profitBE - totalExpenses) * savingsRate) / 100 / 12,
-//       });
-//       context.dispatch({
-//         type: "updateNetProfit",
-//         payload: ((profitBE - totalExpenses) * (1 - savingsRate / 100)) / 12,
-//       });
-//       break;
-//     case "year":
-//       context.dispatch({
-//         type: "updateTotalSavings",
-//         payload: ((profitBE - totalExpenses) * savingsRate) / 100,
-//       });
-//       context.dispatch({
-//         type: "updateNetProfit",
-//         payload: (profitBE - totalExpenses) * (1 - savingsRate / 100),
-//       });
-//       // console.log(totalSavings);
-//       break;
-//     default:
-//       context.dispatch({
-//         type: "updateTotalSavings",
-//         payload: ((profitBE - totalExpenses) * savingsRate) / 100,
-//       });
-//       context.dispatch({
-//         type: "updateNetProfit",
-//         payload: profitBE - totalExpenses - totalSavings,
-//       });
-//       break;
-//   }
-// };
 
 export default Budget;
