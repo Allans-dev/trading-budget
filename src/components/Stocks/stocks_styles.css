@@ -78,7 +78,6 @@
 }
 
 .stocks-display {
-  margin-top: 5px;
   display: grid;
   grid-template-rows: minmax(1em 2em) minmax(1em 2em);
 }
@@ -95,18 +94,19 @@
   padding: 0 0.1rem 0.1rem 0.1rem;
 }
 
+.stocks-display th {
+  padding-bottom: 0.4rem;
+}
+
 .stocks-display td {
   line-height: 2rem;
-  padding: 0.1rem;
+  padding: 0.2rem 0.4rem;
 }
 
 .stocks-display .delete {
   line-height: 2rem;
   width: 2rem;
 }
-
-/* .stocks-display tr td:last-child {
-} */
 
 tr:nth-child(even) {
   background-color: rgba(26, 26, 26, 0.3);
@@ -125,4 +125,12 @@ tr:nth-child(even) {
 
 #yearCheckBox {
   margin: auto 2em;
+}
+
+.loading-component {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
 }

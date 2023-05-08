@@ -236,6 +236,11 @@ const BudgetView = (props) => {
         ) : Array.isArray(expenseArray) ? (
           <table className='expense-table'>
             <tbody>
+              <tr>
+                <th>Category</th>
+                <th>Description</th>
+                <th>Cost</th>
+              </tr>
               {expenseArray.map((item, index) => (
                 <ExpenseItem
                   key={index}

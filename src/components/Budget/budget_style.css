@@ -1,9 +1,9 @@
 .budget-page {
-  grid-area: "Content";
+  grid-area: 'Content';
   display: grid;
   grid-template-areas:
-    "left middle right"
-    ". exp .";
+    'left middle right'
+    '. exp .';
   grid-template-columns: 1fr max-content 1fr;
   grid-template-rows: max-content max-content;
   text-align: center;
@@ -13,8 +13,8 @@
 @media only screen and (max-width: 523px) {
   .budget-page {
     grid-template-areas:
-      ". middle ."
-      ". exp .";
+      '. middle .'
+      '. exp .';
     grid-template-columns: 0.1fr 8fr 0.1fr;
   }
 
@@ -26,7 +26,7 @@
 
 .budget-page li div {
   flex: 1;
-  align-items: "left";
+  align-items: 'left';
 }
 
 .budget-page form {
@@ -185,10 +185,17 @@
   width: 100%;
 }
 
-.budget-page .expense-table tr {
-  max-height: fit-content;
+.budget-page table {
+  padding: 0 0.1rem 0.1rem 0.1rem;
+}
+
+.budget-page th {
+  padding-bottom: 0.4rem;
+}
+
+.budget-page td {
   line-height: 2rem;
-  padding: 0.1rem;
+  padding: 0.2rem 0.4rem;
 }
 
 .budget-page .expense-table .delete {
