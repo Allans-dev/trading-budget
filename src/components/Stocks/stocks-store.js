@@ -1,4 +1,4 @@
-import { createContext, useReducer } from "react";
+import { createContext, useReducer } from 'react';
 
 const initialState = {
   taxBracket: 0,
@@ -6,15 +6,7 @@ const initialState = {
   profitBE: 0,
   stocksList: [
     {
-      stockName: "ZIP",
-      buyPrice: 4.35,
-      sellPrice: 6.2,
-      volume: 1000,
-      yearCheck: true,
-      iProfit: 1850,
-    },
-    {
-      stockName: "AMP",
+      stockName: 'AMP',
       buyPrice: 4,
       sellPrice: 10,
       volume: 1000,
@@ -22,7 +14,16 @@ const initialState = {
       iProfit: 6000,
     },
     {
-      stockName: "BHP",
+      stockName: 'ZIP',
+      buyPrice: 4.35,
+      sellPrice: 6.2,
+      volume: 1000,
+      yearCheck: true,
+      iProfit: 1850,
+    },
+
+    {
+      stockName: 'BHP',
       buyPrice: 20,
       sellPrice: 30,
       volume: 100,
@@ -30,7 +31,7 @@ const initialState = {
       iProfit: 1000,
     },
     {
-      stockName: "A2M",
+      stockName: 'A2M',
       buyPrice: 16,
       sellPrice: 11,
       volume: 200,
@@ -38,7 +39,7 @@ const initialState = {
       iProfit: -1000,
     },
     {
-      stockName: "CBA",
+      stockName: 'CBA',
       buyPrice: 70,
       sellPrice: 65,
       volume: 500,
@@ -50,7 +51,7 @@ const initialState = {
   salary: 0,
   //inputs
   showTotal: false,
-  stockName: "",
+  stockName: '',
   buyPrice: 0,
   sellPrice: 0,
   volume: 0,
@@ -66,37 +67,37 @@ const StockStateProvider = ({ children }) => {
     switch (type) {
       //inputStates
 
-      case "updateStockName":
+      case 'updateStockName':
         return { ...state, stockName: payload };
-      case "updateBuyPrice":
+      case 'updateBuyPrice':
         return { ...state, buyPrice: payload };
-      case "updateSellPrice":
+      case 'updateSellPrice':
         return { ...state, sellPrice: payload };
-      case "updateVolume":
+      case 'updateVolume':
         return { ...state, volume: payload };
-      case "updateShowTotal":
+      case 'updateShowTotal':
         return { ...state, showTotal: payload };
 
       //logicStates
 
-      case "updateProfitBE":
+      case 'updateProfitBE':
         return { ...state, profitBE: payload };
-      case "updateYearCheck":
+      case 'updateYearCheck':
         return { ...state, yearCheck: payload };
-      case "updateTaxBracket":
+      case 'updateTaxBracket':
         return { ...state, taxBracket: payload };
-      case "updateTaxOwed":
+      case 'updateTaxOwed':
         return { ...state, taxOwed: payload };
-      case "updateTotalIncome":
+      case 'updateTotalIncome':
         return { ...state, totalIncome: payload };
-      case "updateSalary":
+      case 'updateSalary':
         return { ...state, salary: payload };
-      case "deleteStock":
+      case 'deleteStock':
         return {
           ...state,
           stocksList: payload,
         };
-      case "updateStocksList":
+      case 'updateStocksList':
         return {
           ...state,
           stocksList: payload,
