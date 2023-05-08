@@ -16,6 +16,7 @@ import SignIn from './components/SignIn/SignIn';
 import PrivacyPolicy from './components/PrivacyPolicy/PrivacyPolicy';
 import Disclaimer from './components/Disclaimer/Disclaimer';
 
+import { StateProvider } from './main-store';
 import { StockStateProvider } from './components/Stocks/stocks-store';
 import { BudgetStateProvider } from './components/Budget/budget-store';
 
@@ -135,23 +136,24 @@ const App = () => {
         <Route exact path='/disclaimer'>
           <Disclaimer />
         </Route>
-
-        <StockStateProvider>
-          <BudgetStateProvider>
-            <Route exact path='/'>
-              <Landing />
-            </Route>
-            <Route exact path='/stocks'>
-              <Stocks />
-            </Route>
-            <Route exact path='/budget'>
-              <Budget />
-            </Route>
-            <Route exact path='/analysis'>
-              <Analysis />
-            </Route>
-          </BudgetStateProvider>
-        </StockStateProvider>
+        <StateProvider>
+          <StockStateProvider>
+            <BudgetStateProvider>
+              <Route exact path='/'>
+                <Landing />
+              </Route>
+              <Route exact path='/stocks'>
+                <Stocks />
+              </Route>
+              <Route exact path='/budget'>
+                <Budget />
+              </Route>
+              <Route exact path='/analysis'>
+                <Analysis />
+              </Route>
+            </BudgetStateProvider>
+          </StockStateProvider>
+        </StateProvider>
 
         <Footer />
       </Router>
