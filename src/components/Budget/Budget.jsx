@@ -1,6 +1,7 @@
 import React, { useContext, useEffect } from 'react';
-import firebase from 'firebase/app';
-import 'firebase/firestore';
+
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/firestore';
 
 import { store as mainStore } from '../../main-store';
 import { store } from './budget-store';
