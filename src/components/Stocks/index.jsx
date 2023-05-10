@@ -44,7 +44,7 @@ const Stocks = () => {
       payload: false,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user.uid]);
+  }, []);
 
   const getStocks = async (stocksCollectionDoc) => {
     await stocksCollectionDoc

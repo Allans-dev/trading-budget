@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, matchPath } from 'react-router-dom';
 
-import Landing from './components/Landing/Landing';
-import Stocks from './components/Stocks/Stocks';
-import Budget from './components/Budget/Budget';
-import Analysis from './components/Analysis/Analysis';
+import Landing from './components/Landing';
+import Stocks from './components/Stocks';
+import Budget from './components/Budget';
+import Analysis from './components/Analysis';
 
-import Footer from './components/Footer/Footer';
-import Header from './components/Header/Header';
+import Footer from './components/Footer';
+import Header from './components/Header';
 
 import RingLoader from 'react-spinners/RingLoader';
 
-import SignIn from './components/SignIn/SignIn';
+import SignIn from './components/SignIn';
 
 import PrivacyPolicy from './components/PrivacyPolicy/PrivacyPolicy';
 import Disclaimer from './components/Disclaimer/Disclaimer';
