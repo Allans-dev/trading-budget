@@ -1,18 +1,20 @@
 import React, { useContext } from 'react';
 
-import { store as mainStore } from '../../main-store';
+import { store as mainStore } from '../../App/main-store';
 
-import Stocks from '../Stocks/Stocks';
-import Budget from '../Budget/Budget';
-import Analysis from '../Analysis/Analysis';
+import Stocks from '../Stocks';
+import Budget from '../Budget';
+import Analysis from '../Analysis';
 
 import { RingLoader } from 'react-spinners';
 
 import './landing_styles.css';
 
-const Landing = () => {
+const Landing = (props) => {
   const mContext = useContext(mainStore);
   const { isLoading } = mContext.state;
+
+  const { authStatus } = props;
 
   if (isLoading) {
     return (
@@ -45,8 +47,8 @@ const Landing = () => {
     </article>
   ) : (
     <article className='landing'>
-      <Stocks />
-      <Budget />
+      <Stocks authStatus={authStatus} />
+      <Budget authStatus={authStatus} />
       <Analysis />
     </article>
   );

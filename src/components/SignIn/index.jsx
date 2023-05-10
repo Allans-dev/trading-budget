@@ -1,20 +1,6 @@
-import firebase from 'firebase/compat/app';
+import { googleAuth } from '../../App/firebase-model';
 
-import * as firebaseui from 'firebaseui';
-import 'firebaseui/dist/firebaseui.css';
-import { useEffect } from 'react';
-
-const SignIn = ({ policyMatch, signInAnon, uiConfig }) => {
-  const ui =
-    firebaseui.auth.AuthUI.getInstance() ||
-    new firebaseui.auth.AuthUI(firebase.auth());
-
-  useEffect(() => {
-    document.getElementById('firebaseui-auth-container')
-      ? ui.start('#firebaseui-auth-container', uiConfig)
-      : ui.reset();
-  });
-
+const SignIn = ({ policyMatch }) => {
   return (
     <section
       id='signInSection'
@@ -25,10 +11,12 @@ const SignIn = ({ policyMatch, signInAnon, uiConfig }) => {
             : 'block',
       }}
     >
-      <button className='anon-sign-btn' onClick={signInAnon}>
+      {/* <button className='anon-sign-btn' onClick={signInAnon}>
         Guest Sign In
+      </button> */}
+      <button className='anon-sign-btn' onClick={googleAuth}>
+        Google Sign In
       </button>
-      <div id='firebaseui-auth-container'></div>
     </section>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, matchPath } from 'react-router-dom';
 
 import Landing from '../components/Landing';
@@ -20,16 +20,21 @@ import { StateProvider } from './main-store';
 import { StockStateProvider } from '../components/Stocks/stocks-store';
 import { BudgetStateProvider } from '../components/Budget/budget-store';
 
-import { firebaseModel, uiConfig, signInAnon } from './firebase-model';
+import { boolUser } from './firebase-model';
 
 import './App.css';
 
 const App = () => {
   const [authStatus, setAuthStatus] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const signOut = () => setAuthStatus((current) => false);
+  const [isLoading, setIsLoading] = useState(false);
+  const toggleAuthStatus = () => setAuthStatus(() => false);
 
-  firebaseModel(setAuthStatus, setIsLoading);
+  useEffect(() => {
+    setIsLoading(() => true);
+    boolUser ? setAuthStatus(() => true) : setAuthStatus(() => false);
+    setIsLoading(() => false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [boolUser]);
 
   const policyMatch = matchPath('/logged-out-privacy-policy', {
     path: window.location.pathname,
@@ -46,7 +51,7 @@ const App = () => {
   return authStatus ? (
     <article className='root'>
       <Router>
-        <Header stateSignOut={signOut} />
+        <Header toggleAuthStatus={toggleAuthStatus} />
 
         <Route exact path='/privacy-policy'>
           <PrivacyPolicy />
@@ -81,13 +86,7 @@ const App = () => {
     <Router>
       <article className='root' id='login'>
         <Route path='/'>
-          <SignIn
-            policyMatch={policyMatch}
-            signInAnon={signInAnon}
-            authStatus={authStatus}
-            uiConfig={uiConfig}
-            isLoading={isLoading}
-          />
+          <SignIn policyMatch={policyMatch} />
         </Route>
 
         <Route exact path='/logged-out-privacy-policy'>

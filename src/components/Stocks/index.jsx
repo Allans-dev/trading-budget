@@ -1,14 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react';
 
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/firestore';
-
 import { store } from './stocks-store';
-import { store as mainStore } from '../../main-store';
+import { store as mainStore } from '../../App/main-store';
+
+import { readFromDb, writeToDb } from '../../App/firebase-model';
 
 import StocksView from './StocksView';
 
-const Stocks = () => {
+const Stocks = ({ authStatus }) => {
   const mContext = useContext(mainStore);
 
   const context = useContext(store);
@@ -29,95 +28,42 @@ const Stocks = () => {
 
   const [yearCheck, setYearCheck] = useState(false);
 
-  const db = firebase.firestore();
-  const user = firebase.auth().currentUser;
-  const stocksCollectionDoc = db.collection('users').doc(user.uid);
-
   useEffect(() => {
-    mContext.dispatch({
-      type: 'isLoading',
-      payload: true,
-    });
-    getStocks(stocksCollectionDoc);
-    mContext.dispatch({
-      type: 'isLoading',
-      payload: false,
-    });
+    const dbState = readFromDb();
+
+    if (dbState) {
+      context.dispatch({
+        type: 'updateStocksList',
+        payload: dbState.stocksList,
+      });
+      context.dispatch({
+        type: 'updateProfitBE',
+        payload: dbState.profitBE,
+      });
+      context.dispatch({
+        type: 'updateTotalIncome',
+        payload: dbState.totalIncome,
+      });
+      context.dispatch({
+        type: 'updateTaxOwed',
+        payload: dbState.taxOwed,
+      });
+      context.dispatch({
+        type: 'updateYearCheck',
+        payload: dbState.yearCheck,
+      });
+      context.dispatch({
+        type: 'updateSalary',
+        payload: dbState.salary,
+      });
+      context.dispatch({
+        type: 'updateTaxBracket',
+        payload: dbState.taxBracket,
+      });
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const getStocks = async (stocksCollectionDoc) => {
-    await stocksCollectionDoc
-      .get()
-      .then((doc) => {
-        if (doc) {
-          context.dispatch({
-            type: 'updateStocksList',
-            payload: doc.data().stocksList ? doc.data().stocksList : stocksList,
-          });
-          context.dispatch({
-            type: 'updateProfitBE',
-            payload: doc.data().profitBE ? doc.data().profitBE : profitBE,
-          });
-          context.dispatch({
-            type: 'updateTotalIncome',
-            payload: doc.data().totalIncome
-              ? doc.data().totalIncome
-              : totalIncome,
-          });
-          context.dispatch({
-            type: 'updateTaxOwed',
-            payload: doc.data().taxOwed ? doc.data().taxOwed : taxOwed,
-          });
-          context.dispatch({
-            type: 'updateYearCheck',
-            payload: doc.data().yearCheck ? doc.data().yearCheck : yearCheck,
-          });
-          context.dispatch({
-            type: 'updateSalary',
-            payload: doc.data().salary ? doc.data().salary : salary,
-          });
-          context.dispatch({
-            type: 'updateTaxBracket',
-            payload: doc.data().taxBracket ? doc.data().taxBracket : taxBracket,
-          });
-        }
-      })
-      .catch(() => {
-        console.log('No such document!');
-      });
-  };
-
-  useEffect(() => {
-    mContext.dispatch({
-      type: 'isLoading',
-      payload: true,
-    });
-    saveStocks(stocksCollectionDoc);
-    mContext.dispatch({
-      type: 'isLoading',
-      payload: false,
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [context.state]);
-
-  const saveStocks = async (stocksCollectionDoc) => {
-    await stocksCollectionDoc
-      .set(
-        {
-          profitBE,
-          taxOwed,
-          stocksList,
-          salary,
-          taxBracket,
-          totalIncome,
-        },
-        { merge: true }
-      )
-      .catch((error) => {
-        console.error('Error writing document: ', error);
-      });
-  };
 
   const oneYearCheck = () => {
     yearCheck ? setYearCheck(false) : setYearCheck(true);
@@ -132,6 +78,15 @@ const Stocks = () => {
         ),
       });
     }
+    mContext.dispatch({
+      type: 'isLoading',
+      payload: true,
+    });
+    writeToDb(context.state);
+    mContext.dispatch({
+      type: 'isLoading',
+      payload: false,
+    });
   };
 
   const calcTaxBracket = (checkedIncome) => {
@@ -223,6 +178,17 @@ const Stocks = () => {
     document.getElementById('yearCheckBox').checked = false;
 
     context.dispatch({ type: 'updateShowTotal', payload: false });
+
+    mContext.dispatch({
+      type: 'isLoading',
+      payload: true,
+    });
+    writeToDb(stocksList);
+    console.log(`saved state`);
+    mContext.dispatch({
+      type: 'isLoading',
+      payload: false,
+    });
   };
 
   const calcTotal = () => {
@@ -260,7 +226,7 @@ const Stocks = () => {
   const calculateProfit = (e) => {
     e.preventDefault();
     combine();
-    saveStocks();
+    writeToDb(context.state);
     context.dispatch({
       type: 'updateShowTotal',
       payload: showTotal ? false : true,

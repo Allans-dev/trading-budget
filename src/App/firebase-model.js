@@ -1,81 +1,85 @@
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/auth';
-import 'firebase/compat/firestore';
-
 import { firebaseConfig } from '../firebase.config';
 
-export const firebaseModel = (setAuthStatus, setIsLoading) => {
-  if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-  } else {
-    firebase.app(); // if already initialized, use that one
-  }
-  firebase.auth().useDeviceLanguage();
+import { initializeApp } from 'firebase/app';
+import { getFirestore, getDoc, setDoc, doc } from 'firebase/firestore';
+import {
+  getAuth,
+  GoogleAuthProvider,
+  signInWithRedirect,
+  getRedirectResult,
+  signOut,
+} from 'firebase/auth';
 
-  firebase.auth().onAuthStateChanged((user) => {
-    if (user) {
-      setAuthStatus(true);
-      setIsLoading((prev) => false);
-    } else if (!user) {
-      setAuthStatus(false);
-      setIsLoading((prev) => false);
-      // }
-    } else {
-      throw new Error('error');
-    }
-  });
-};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
-export const uiConfig = {
-  callbacks: {
-    signInSuccessWithAuthResult: function (authResult, redirectUrl) {
-      // User successfully signed in.
-      // Return type determines whether we continue the redirect automatically
-      // or whether we leave that to developer to handle.
-      return true;
-    },
-    uiShown: function () {
-      // The widget is rendered.
-      // Hide the loader.
-    },
-  },
-  // Will use popup for IDP Providers sign-in flow instead of the default, redirect.
-  signInFlow: 'popup',
-  signInSuccessUrl: '/',
-  signInOptions: [
-    // Leave the lines as is for the providers you want to offer your users.
-    firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-    {
-      provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
-      requireDisplayName: false,
-      signInMethod: firebase.auth.EmailAuthProvider.EMAIL_LINK_SIGN_IN_METHOD,
-    },
-    {
-      provider: firebase.auth.PhoneAuthProvider.PROVIDER_ID,
-      recaptchaParameters: {
-        type: 'image', // 'audio'
-        size: 'normal', // 'invisible' or 'compact'
-        badge: 'bottomleft', //' bottomright' or 'inline' applies to invisible.
-      },
-      defaultCountry: 'AU',
-    },
-  ],
-  // Terms of service url.
-  tosUrl: '/logged-out-disclaimer',
-  // Privacy policy url.
-  privacyPolicyUrl: '/logged-out-privacy-policy',
-};
+let currentUser;
 
-export const signInAnon = (setIsLoading) => {
-  setIsLoading((prev) => true);
-  firebase
-    .auth()
-    .signInAnonymously()
-    .then(() => setIsLoading((prev) => false))
-    .catch((error) => {
-      var errorCode = error.code;
-      var errorMessage = error.message;
-      throw new Error(errorCode + ': ' + errorMessage);
+export const googleAuth = () => {
+  auth.useDeviceLanguage();
+  const googleProvider = new GoogleAuthProvider();
+
+  signInWithRedirect(auth, googleProvider);
+
+  getRedirectResult(auth)
+    .then((result) => {
+      // This gives you a Google Access Token. You can use it to access Google APIs.
+      const credential = GoogleAuthProvider.credentialFromResult(result);
+      const token = credential.accessToken;
+
+      // The signed-in user info.
+      currentUser = result.user.uid;
+      // IdP data available using getAdditionalUserInfo(result)
       // ...
+      console.log('signed in');
+    })
+    .catch((error) => {
+      // Handle Errors here.
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      // The email of the user's account used.
+      const email = error.customData.email;
+      // The AuthCredential type that was used.
+      const credential = GoogleAuthProvider.credentialFromError(error);
+      // ...
+
+      console.log(errorMessage);
     });
+};
+
+export const boolUser = () => {
+  return currentUser ? true : false;
+};
+
+export const authSignOut = () => {
+  signOut(auth)
+    .then(() => {
+      // Sign-out successful.
+      console.log('signed out');
+    })
+    .catch((error) => {
+      // An error happened.
+    });
+};
+
+export const readFromDb = async () => {
+  try {
+    const databaseState = await getDoc(doc(db, 'user', currentUser)).data;
+    console.log(`read state`);
+    return databaseState;
+  } catch (e) {
+    console.error('Error reading document: ', e);
+  }
+};
+
+export const writeToDb = async (state) => {
+  try {
+    await setDoc(doc(db, 'user', currentUser), state, {
+      merge: true,
+    });
+    console.log(`saved state`);
+  } catch (e) {
+    console.error('Error adding document: ', e);
+  }
 };

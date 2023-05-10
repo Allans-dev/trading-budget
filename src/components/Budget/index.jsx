@@ -3,12 +3,12 @@ import React, { useContext, useEffect } from 'react';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
 
-import { store as mainStore } from '../../main-store';
+import { store as mainStore } from '../../App/main-store';
 import { store } from './budget-store';
 
 import BudgetView from './BudgetView';
 
-const Budget = () => {
+const Budget = ({ authStatus }) => {
   const mContext = useContext(mainStore);
 
   const context = useContext(store);
@@ -41,7 +41,7 @@ const Budget = () => {
       payload: false,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user.uid]);
+  }, []);
 
   const getBudget = async (budgetCollectionDoc) => {
     if (user.uid) {
@@ -92,7 +92,7 @@ const Budget = () => {
       payload: false,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [context.state]);
+  }, [authStatus]);
 
   const saveBudget = async (budgetCollectionDoc) => {
     await budgetCollectionDoc

@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from 'react';
 
 import AnalysisView from './AnalysisView';
 
-import { store as mainStore } from '../../main-store';
+import { store as mainStore } from '../../App/main-store';
 import { store as stockStore } from '../Stocks/stocks-store';
 import { store as budgetStore } from '../Budget/budget-store';
 

@@ -1,21 +1,11 @@
 import React from 'react';
-import { Link, Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
-import firebase from 'firebase/compat/app';
+import { authSignOut } from '../../App/firebase-model';
 
 import './header_styles.css';
 
-const Header = () => {
-  const signout = () => {
-    firebase
-      .auth()
-      .signOut()
-      .then(() => <Redirect to='/' />)
-      .catch((error) => {
-        console.error('Sign Out Error', error);
-      });
-  };
-
+const Header = ({ toggleAuthStatus }) => {
   return (
     <section className='header'>
       <nav>
@@ -40,7 +30,8 @@ const Header = () => {
         <button
           className='sign-out action button'
           onClick={(e) => {
-            signout();
+            authSignOut();
+            toggleAuthStatus();
           }}
         >
           Signout

@@ -1,54 +1,57 @@
 import { createContext, useReducer } from 'react';
 
+const demoStocks = [
+  {
+    stockName: 'AMP',
+    buyPrice: 4,
+    sellPrice: 10,
+    volume: 1000,
+    yearCheck: true,
+    iProfit: 6000,
+  },
+  {
+    stockName: 'ZIP',
+    buyPrice: 4.35,
+    sellPrice: 6.2,
+    volume: 1000,
+    yearCheck: true,
+    iProfit: 1850,
+  },
+
+  {
+    stockName: 'BHP',
+    buyPrice: 20,
+    sellPrice: 30,
+    volume: 100,
+    yearCheck: false,
+    iProfit: 1000,
+  },
+  {
+    stockName: 'A2M',
+    buyPrice: 16,
+    sellPrice: 11,
+    volume: 200,
+    yearCheck: true,
+    iProfit: -1000,
+  },
+  {
+    stockName: 'CBA',
+    buyPrice: 70,
+    sellPrice: 65,
+    volume: 500,
+    yearCheck: false,
+    iProfit: -2500,
+  },
+];
+
 const initialState = {
   taxBracket: 0,
   taxOwed: 0,
   profitBE: 0,
-  stocksList: [
-    {
-      stockName: 'AMP',
-      buyPrice: 4,
-      sellPrice: 10,
-      volume: 1000,
-      yearCheck: true,
-      iProfit: 6000,
-    },
-    {
-      stockName: 'ZIP',
-      buyPrice: 4.35,
-      sellPrice: 6.2,
-      volume: 1000,
-      yearCheck: true,
-      iProfit: 1850,
-    },
-
-    {
-      stockName: 'BHP',
-      buyPrice: 20,
-      sellPrice: 30,
-      volume: 100,
-      yearCheck: false,
-      iProfit: 1000,
-    },
-    {
-      stockName: 'A2M',
-      buyPrice: 16,
-      sellPrice: 11,
-      volume: 200,
-      yearCheck: true,
-      iProfit: -1000,
-    },
-    {
-      stockName: 'CBA',
-      buyPrice: 70,
-      sellPrice: 65,
-      volume: 500,
-      yearCheck: false,
-      iProfit: -2500,
-    },
-  ],
+  stocksList: demoStocks,
   totalIncome: 0,
   salary: 0,
+  yearCheck: false,
   //inputs
   showTotal: false,
   stockName: '',
