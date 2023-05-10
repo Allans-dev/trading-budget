@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 
-import firebase from 'firebase/app';
-import 'firebase/firestore';
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/firestore';
 
 import { store } from './stocks-store';
 import { store as mainStore } from '../../main-store';

@@ -22,18 +22,11 @@ import { BudgetStateProvider } from './components/Budget/budget-store';
 
 import './App.css';
 
-import firebase from 'firebase/app';
-import 'firebase/firestore';
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
+import 'firebase/compat/firestore';
 
-const firebaseConfig = {
-  apiKey: 'AIzaSyC238mryUvNxq4lScBrGNHL9dAjjHHPs4Q',
-  authDomain: 'tradingbudget.firebaseapp.com',
-  projectId: 'tradingbudget',
-  storageBucket: 'tradingbudget.appspot.com',
-  messagingSenderId: '480429604058',
-  appId: '1:480429604058:web:7806497078f4244bff39e3',
-  measurementId: 'G-555NFL2FQE',
-};
+import { firebaseConfig } from './firebase.config';
 
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
@@ -44,6 +37,9 @@ if (!firebase.apps.length) {
 const App = () => {
   const [authStatus, setAuthStatus] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const signOut = () => setAuthStatus((current) => false);
+
+  firebase.auth().useDeviceLanguage();
 
   const policyMatch = matchPath('/logged-out-privacy-policy', {
     path: window.location.pathname,
@@ -68,20 +64,20 @@ const App = () => {
     signInOptions: [
       // Leave the lines as is for the providers you want to offer your users.
       firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-      // firebase.auth.FacebookAuthProvider.PROVIDER_ID,
-      // {
-      //   provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
-      //   signInMethod: firebase.auth.EmailAuthProvider.EMAIL_LINK_SIGN_IN_METHOD,
-      // },
-      // {
-      //   provider: firebase.auth.PhoneAuthProvider.PROVIDER_ID,
-      //   recaptchaParameters: {
-      //     type: "image", // 'audio'
-      //     size: "normal", // 'invisible' or 'compact'
-      //     badge: "bottomleft", //' bottomright' or 'inline' applies to invisible.
-      //   },
-      //   defaultCountry: "AU",
-      // },
+      {
+        provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
+        requireDisplayName: false,
+        signInMethod: firebase.auth.EmailAuthProvider.EMAIL_LINK_SIGN_IN_METHOD,
+      },
+      {
+        provider: firebase.auth.PhoneAuthProvider.PROVIDER_ID,
+        recaptchaParameters: {
+          type: 'image', // 'audio'
+          size: 'normal', // 'invisible' or 'compact'
+          badge: 'bottomleft', //' bottomright' or 'inline' applies to invisible.
+        },
+        defaultCountry: 'AU',
+      },
     ],
     // Terms of service url.
     tosUrl: '/logged-out-disclaimer',
@@ -127,7 +123,7 @@ const App = () => {
   return authStatus ? (
     <article className='root'>
       <Router>
-        <Header />
+        <Header signOut={signOut} />
 
         <Route exact path='/privacy-policy'>
           <PrivacyPolicy />

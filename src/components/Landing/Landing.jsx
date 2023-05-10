@@ -24,7 +24,6 @@ const Landing = () => {
 
   return window.matchMedia('(max-width: 1200px)').matches ? (
     <article className='landing'>
-      {console.log('landing')}
       <section className='intro'>
         <div>
           <h1 style={{ width: '100%', textAlign: 'center' }}>Trading Budget</h1>

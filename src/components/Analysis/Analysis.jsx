@@ -6,8 +6,8 @@ import { store as mainStore } from '../../main-store';
 import { store as stockStore } from '../Stocks/stocks-store';
 import { store as budgetStore } from '../Budget/budget-store';
 
-import firebase from 'firebase/app';
-import 'firebase/firestore';
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/firestore';
 
 const Analysis = () => {
   const db = firebase.firestore();
