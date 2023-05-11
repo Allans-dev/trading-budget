@@ -117,6 +117,9 @@ const Stocks = () => {
           iProfit: calcIProfit,
         },
       ];
+      payload = payload.sort((a, b) => {
+        return b.iProfit - a.iProfit;
+      });
     } else {
       payload = [
         {
@@ -128,6 +131,9 @@ const Stocks = () => {
           iProfit: calcIProfit,
         },
       ];
+      payload = payload.sort((a, b) => {
+        return b.iProfit - a.iProfit;
+      });
     }
 
     stocksContext.dispatch({

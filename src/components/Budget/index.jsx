@@ -37,6 +37,17 @@ const Budget = () => {
           cost,
         },
       ];
+      payload = payload.sort((a, b) => {
+        var nameA = a.category.toUpperCase();
+        var nameB = b.category.toUpperCase();
+        if (nameA < nameB) {
+          return -1;
+        }
+        if (nameA > nameB) {
+          return 1;
+        }
+        return 0;
+      });
     } else {
       payload = [
         {
@@ -45,6 +56,17 @@ const Budget = () => {
           cost,
         },
       ];
+      payload = payload.sort((a, b) => {
+        var nameA = a.category.toUpperCase();
+        var nameB = b.category.toUpperCase();
+        if (nameA < nameB) {
+          return -1;
+        }
+        if (nameA > nameB) {
+          return 1;
+        }
+        return 0;
+      });
     }
 
     budgetContext.dispatch({

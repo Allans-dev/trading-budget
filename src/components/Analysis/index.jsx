@@ -12,17 +12,7 @@ const Analysis = () => {
   const { stocksList } = stocksContext.state;
   const { expenseArray } = budgetContext.state;
 
-  const sortedCost = expenseArray.sort((a, b) => {
-    var nameA = a.category.toUpperCase();
-    var nameB = b.category.toUpperCase();
-    if (nameA < nameB) {
-      return -1;
-    }
-    if (nameA > nameB) {
-      return 1;
-    }
-    return 0;
-  });
+  const sortedCost = expenseArray;
 
   const categoryArray = sortedCost
     .map((val, index) => {
@@ -96,9 +86,7 @@ const Analysis = () => {
 
   //===============================================================
 
-  const sortedStocks = stocksList.sort((a, b) => {
-    return b.iProfit - a.iProfit;
-  });
+  const sortedStocks = stocksList;
 
   const StockNameArray = stocksList
     .map((val, index) => {
