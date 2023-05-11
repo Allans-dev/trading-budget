@@ -2,11 +2,20 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
+import { StateProvider } from './main-store';
+import { StockStateProvider } from './components/Stocks/stocks-store';
+import { BudgetStateProvider } from './components/Budget/budget-store';
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <StateProvider>
+      <StockStateProvider>
+        <BudgetStateProvider>
+          <App />
+        </BudgetStateProvider>
+      </StockStateProvider>
+    </StateProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

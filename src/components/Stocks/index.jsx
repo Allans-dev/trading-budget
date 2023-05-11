@@ -1,16 +1,16 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 
-import { store } from './stocks-store';
-import { store as mainStore } from '../../App/main-store';
+import { store as stocksStore } from './stocks-store';
+import { store as mainStore } from '../../main-store';
 
-import { readFromDb, writeToDb } from '../../App/firebase-model';
+import { writeToDb } from '../../App/firebase-model';
 
 import StocksView from './StocksView';
 
 const Stocks = () => {
-  const mContext = useContext(mainStore);
+  const mainContext = useContext(mainStore);
 
-  const context = useContext(store);
+  const stocksContext = useContext(stocksStore);
 
   const {
     salary,
@@ -20,75 +20,10 @@ const Stocks = () => {
     volume,
     showTotal,
     stocksList,
-  } = context.state;
-
-  const { initialize } = mContext.state;
+    profitBE,
+  } = stocksContext.state;
 
   const [yearCheck, setYearCheck] = useState(false);
-
-  const accessReadFromDb = async () => {
-    try {
-      const dbState = await readFromDb();
-
-      if (dbState.stocksList) {
-        context.dispatch({
-          type: 'updateStocksList',
-          payload: dbState.stocksList,
-        });
-        context.dispatch({
-          type: 'updateProfitBE',
-          payload: dbState.profitBE,
-        });
-        context.dispatch({
-          type: 'updateTotalIncome',
-          payload: dbState.totalIncome,
-        });
-        context.dispatch({
-          type: 'updateTaxOwed',
-          payload: dbState.taxOwed,
-        });
-        context.dispatch({
-          type: 'updateYearCheck',
-          payload: dbState.yearCheck,
-        });
-        context.dispatch({
-          type: 'updateSalary',
-          payload: dbState.salary,
-        });
-        context.dispatch({
-          type: 'updateTaxBracket',
-          payload: dbState.taxBracket,
-        });
-      }
-    } catch {
-      console.log('error db read');
-    }
-  };
-
-  useEffect(() => {
-    accessReadFromDb();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    if (initialize) {
-      mContext.dispatch({
-        type: 'toggleFirstRender',
-      });
-      console.log('initial render');
-    } else {
-      mContext.dispatch({
-        type: 'isLoading',
-        payload: true,
-      });
-      writeToDb(context.state);
-      mContext.dispatch({
-        type: 'isLoading',
-        payload: false,
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [context.state]);
 
   const oneYearCheck = () => {
     yearCheck ? setYearCheck(false) : setYearCheck(true);
@@ -96,11 +31,20 @@ const Stocks = () => {
 
   const deleteListItem = (id) => {
     if (stocksList.length > 0) {
-      context.dispatch({
+      stocksContext.dispatch({
         type: 'deleteStock',
         payload: stocksList.filter(
           (item, index) => index + item.stockName !== id
         ),
+      });
+      mainContext.dispatch({
+        type: 'isLoading',
+        payload: true,
+      });
+      writeToDb({ stocksList });
+      mainContext.dispatch({
+        type: 'isLoading',
+        payload: false,
       });
     }
   };
@@ -119,7 +63,7 @@ const Stocks = () => {
         ? 0
         : 0;
 
-    context.dispatch({
+    stocksContext.dispatch({
       type: 'updateTaxBracket',
       payload: taxBracket,
     });
@@ -140,7 +84,7 @@ const Stocks = () => {
         ? 0
         : 0;
 
-    context.dispatch({
+    stocksContext.dispatch({
       type: 'updateTaxOwed',
       payload: taxOwed,
     });
@@ -150,50 +94,63 @@ const Stocks = () => {
 
   const addStocks = (e) => {
     e.preventDefault();
-
+    mainContext.dispatch({
+      type: 'isLoading',
+      payload: true,
+    });
     const calcIProfit =
       yearCheck && Number((sellPrice - buyPrice) * volume) > 0
         ? Number((sellPrice - buyPrice) * volume) / 2
         : Number((sellPrice - buyPrice) * volume);
 
-    const payload =
-      Array.isArray(stocksList) && stocksList.length > 0
-        ? [
-            ...stocksList,
-            {
-              stockName,
-              buyPrice,
-              sellPrice,
-              volume,
-              yearCheck,
-              iProfit: calcIProfit,
-            },
-          ]
-        : [
-            {
-              stockName,
-              buyPrice,
-              sellPrice,
-              volume,
-              yearCheck,
-              iProfit: calcIProfit,
-            },
-          ];
+    let payload;
 
-    context.dispatch({
+    if (Array.isArray(stocksList) && stocksList.length > 0) {
+      payload = [
+        ...stocksList,
+        {
+          stockName,
+          buyPrice,
+          sellPrice,
+          volume,
+          yearCheck,
+          iProfit: calcIProfit,
+        },
+      ];
+    } else {
+      payload = [
+        {
+          stockName,
+          buyPrice,
+          sellPrice,
+          volume,
+          yearCheck,
+          iProfit: calcIProfit,
+        },
+      ];
+    }
+
+    stocksContext.dispatch({
       type: 'updateStocksList',
       payload,
     });
 
-    context.dispatch({ type: 'updateStockName', payload: '' });
-    context.dispatch({ type: 'updateBuyPrice', payload: 0 });
-    context.dispatch({ type: 'updateSellPrice', payload: 0 });
-    context.dispatch({ type: 'updateVolume', payload: 0 });
+    writeToDb({ stocksList: payload });
+
+    stocksContext.dispatch({ type: 'updateStockName', payload: '' });
+    stocksContext.dispatch({ type: 'updateBuyPrice', payload: 0 });
+    stocksContext.dispatch({ type: 'updateSellPrice', payload: 0 });
+    stocksContext.dispatch({ type: 'updateVolume', payload: 0 });
     setYearCheck(false);
 
     document.getElementById('yearCheckBox').checked = false;
 
-    context.dispatch({ type: 'updateShowTotal', payload: false });
+    stocksContext.dispatch({ type: 'updateShowTotal', payload: false });
+
+    mainContext.dispatch({
+      type: 'isLoading',
+      payload: false,
+    });
   };
 
   const calcTotal = () => {
@@ -207,11 +164,11 @@ const Stocks = () => {
     let totalIncome = yearCheck
       ? stockTotal / 2 + Math.round(Number(salary))
       : stockTotal + Math.round(Number(salary));
-    context.dispatch({
+    stocksContext.dispatch({
       type: 'updateTotalIncome',
       payload: totalIncome,
     });
-
+    writeToDb(totalIncome);
     return totalIncome;
   };
 
@@ -222,17 +179,19 @@ const Stocks = () => {
 
     const taxOwed = calcTaxOwed(checkedIncome, taxBracket);
 
-    context.dispatch({
+    stocksContext.dispatch({
       type: 'updateProfitBE',
       payload: checkedIncome - taxOwed,
     });
+
+    writeToDb(profitBE);
   };
 
   const calculateProfit = (e) => {
     e.preventDefault();
     combine();
-    writeToDb(context.state);
-    context.dispatch({
+
+    stocksContext.dispatch({
       type: 'updateShowTotal',
       payload: showTotal ? false : true,
     });

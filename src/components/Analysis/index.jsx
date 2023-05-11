@@ -2,17 +2,17 @@ import React, { useContext, useEffect } from 'react';
 
 import AnalysisView from './AnalysisView';
 
-import { store as mainStore } from '../../App/main-store';
+import { store as mainStore } from '../../main-store';
 import { store as stockStore } from '../Stocks/stocks-store';
 import { store as budgetStore } from '../Budget/budget-store';
 
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/firestore';
+// import firebase from 'firebase/compat/app';
+// import 'firebase/compat/firestore';
 
 const Analysis = () => {
-  const db = firebase.firestore();
-  const user = firebase.auth().currentUser;
-  const analysisCollectionDoc = db.collection('users').doc(user.uid);
+  // const db = firebase.firestore();
+  // const user = firebase.auth().currentUser;
+  // const analysisCollectionDoc = db.collection('users').doc(user.uid);
 
   const sContext = useContext(stockStore);
   const bContext = useContext(budgetStore);
@@ -21,24 +21,24 @@ const Analysis = () => {
   const { stocksList } = sContext.state;
   const { expenseArray } = bContext.state;
 
-  useEffect(() => {
-    mContext.dispatch({
-      type: 'isLoading',
-      payload: true,
-    });
-    getAnalysisData(analysisCollectionDoc);
-    mContext.dispatch({
-      type: 'isLoading',
-      payload: false,
-    });
-    // eslint-disable-next-line
-  }, [stocksList, expenseArray]);
+  // useEffect(() => {
+  //   mContext.dispatch({
+  //     type: 'isLoading',
+  //     payload: true,
+  //   });
+  //   getAnalysisData(analysisCollectionDoc);
+  //   mContext.dispatch({
+  //     type: 'isLoading',
+  //     payload: false,
+  //   });
+  //   // eslint-disable-next-line
+  // }, [stocksList, expenseArray]);
 
-  const getAnalysisData = async (analysisCollectionDoc) => {
-    await analysisCollectionDoc.get().catch(() => {
-      console.log('No such document!');
-    });
-  };
+  // const getAnalysisData = async (analysisCollectionDoc) => {
+  //   await analysisCollectionDoc.get().catch(() => {
+  //     console.log('No such document!');
+  //   });
+  // };
 
   const sortedCost = expenseArray.sort((a, b) => {
     var nameA = a.category.toUpperCase();

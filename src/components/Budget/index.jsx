@@ -1,24 +1,20 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/firestore';
-
-import { store as mainStore } from '../../App/main-store';
+import { store as mainStore } from '../../main-store';
 import { store } from './budget-store';
+
+import { writeToDb } from '../../App/firebase-model';
 
 import BudgetView from './BudgetView';
 
-const Budget = ({ authStatus }) => {
-  const mContext = useContext(mainStore);
+const Budget = () => {
+  const mainContext = useContext(mainStore);
 
   const context = useContext(store);
   const {
     expenseArray,
     profitBE,
     savingsRate,
-    totalExpenses,
-    totalSavings,
-    netProfit,
     category,
     description,
     cost,
@@ -26,123 +22,69 @@ const Budget = ({ authStatus }) => {
     otherCategory,
   } = context.state;
 
-  const db = firebase.firestore();
-  const user = firebase.auth().currentUser;
-  const budgetCollectionDoc = db.collection('users').doc(user.uid);
-
-  useEffect(() => {
-    mContext.dispatch({
-      type: 'isLoading',
-      payload: true,
-    });
-    getBudget(budgetCollectionDoc);
-    mContext.dispatch({
-      type: 'isLoading',
-      payload: false,
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const getBudget = async (budgetCollectionDoc) => {
-    if (user.uid) {
-      await budgetCollectionDoc
-        .get()
-        .then((doc) => {
-          context.dispatch({
-            type: 'updateProfitBE',
-            payload: doc.data().profitBE ? doc.data().profitBE : profitBE,
-          });
-          context.dispatch({
-            type: 'updateExpenses',
-            payload: doc.data().expenseArray
-              ? doc.data().expenseArray
-              : expenseArray,
-          });
-          context.dispatch({
-            type: 'updateTotalSavings',
-            payload: doc.data().totalSavings
-              ? doc.data().totalSavings
-              : totalSavings,
-          });
-          context.dispatch({
-            type: 'updateNetProfit',
-            payload: doc.data().netProfit ? doc.data().netProfit : netProfit,
-          });
-          context.dispatch({
-            type: 'updateTotalExpenses',
-            payload: doc.data().totalExpenses
-              ? doc.data().totalExpenses
-              : totalExpenses,
-          });
-        })
-        .catch((error) => {
-          console.log('no doc');
-        });
-    }
-  };
-
-  useEffect(() => {
-    mContext.dispatch({
-      type: 'isLoading',
-      payload: true,
-    });
-    saveBudget(budgetCollectionDoc);
-    mContext.dispatch({
-      type: 'isLoading',
-      payload: false,
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [authStatus]);
-
-  const saveBudget = async (budgetCollectionDoc) => {
-    await budgetCollectionDoc
-      .set(
-        {
-          expenseArray,
-          totalExpenses,
-          totalSavings,
-          netProfit,
-        },
-        { merge: true }
-      )
-      .catch((error) => {
-        console.error('Error writing document: ', error);
-      });
-  };
-
   const addExpenses = (e) => {
     e.preventDefault();
+
+    let payload;
+    if (Array.isArray(expenseArray)) {
+      payload = [
+        ...expenseArray,
+        {
+          category: category !== 'Other' ? category : otherCategory,
+          description,
+          cost,
+        },
+      ];
+    } else {
+      payload = [
+        {
+          category: category !== 'Other' ? category : otherCategory,
+          description,
+          cost,
+        },
+      ];
+    }
+
     context.dispatch({
       type: 'updateExpenses',
-      payload: Array.isArray(expenseArray)
-        ? [
-            ...expenseArray,
-            {
-              category: category !== 'Other' ? category : otherCategory,
-              description,
-              cost,
-            },
-          ]
-        : [
-            {
-              category: category !== 'Other' ? category : otherCategory,
-              description,
-              cost,
-            },
-          ],
+      payload,
     });
+
+    mainContext.dispatch({
+      type: 'isLoading',
+      payload: true,
+    });
+    writeToDb({ expenseArray: payload });
+    mainContext.dispatch({
+      type: 'isLoading',
+      payload: false,
+    });
+
     context.dispatch({ type: 'updateDescription', payload: '' });
     context.dispatch({ type: 'updateOtherCategory', payload: '' });
     context.dispatch({ type: 'updateCost', payload: '' });
   };
 
-  const deleteListItem = (index) => {
+  const deleteListItem = (id) => {
+    let payload = expenseArray.filter(
+      (item, index) => index + item.description !== id
+    );
+
     if (expenseArray.length > 0) {
       context.dispatch({
         type: 'deleteExpense',
-        payload: index,
+        payload,
       });
     }
+    mainContext.dispatch({
+      type: 'isLoading',
+      payload: true,
+    });
+    writeToDb({ expenseArray: payload });
+    mainContext.dispatch({
+      type: 'isLoading',
+      payload: false,
+    });
   };
 
   const calcTotalExpenses = () => {
@@ -155,6 +97,7 @@ const Budget = ({ authStatus }) => {
       type: 'updateTotalExpenses',
       payload: totalExpenses,
     });
+    writeToDb(totalExpenses);
 
     return totalExpenses;
   };
@@ -166,6 +109,9 @@ const Budget = ({ authStatus }) => {
       type: 'updateTotalSavings',
       payload: totalSavings,
     });
+
+    writeToDb(totalSavings);
+
     return totalSavings;
   };
 
@@ -175,7 +121,7 @@ const Budget = ({ authStatus }) => {
       type: 'updateNetProfit',
       payload: netProfit,
     });
-
+    writeToDb(netProfit);
     return netProfit;
   };
 

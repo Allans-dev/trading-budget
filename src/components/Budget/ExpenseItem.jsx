@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 const ExpenseItem = ({
   index,
@@ -7,21 +7,21 @@ const ExpenseItem = ({
   cost,
   deleteListItem,
 }) => (
-  <tr key={index}>
+  <tr key={index + description}>
     <td>{category}</td>
     {description ? <td>{description}</td> : <td />}
     <td>
-      {new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
+      {new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
       }).format(Math.round(cost * 100) / 100)}
     </td>
     <td>
       <button
-        className="button delete"
+        className='button delete'
         onClick={(e) => {
           e.preventDefault();
-          deleteListItem(index);
+          deleteListItem(index + description);
         }}
       >
         X

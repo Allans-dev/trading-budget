@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { BrowserRouter as Router, Route, matchPath } from 'react-router-dom';
 
 import Landing from '../components/Landing';
@@ -16,23 +16,98 @@ import SignIn from '../components/SignIn';
 import PrivacyPolicy from '../components/PrivacyPolicy';
 import Disclaimer from '../components/Disclaimer';
 
-import { StateProvider } from './main-store';
-import { StockStateProvider } from '../components/Stocks/stocks-store';
-import { BudgetStateProvider } from '../components/Budget/budget-store';
+import { store as mainStore } from '../main-store';
+import { store as stocksStore } from '../components/Stocks/stocks-store';
+import { store as budgetStore } from '../components/Budget/budget-store';
 
-// import { googleRedirectResults } from './firebase-model';
+import { readFromDb } from './firebase-model';
 
 import './App.css';
 
 const App = () => {
   const [authStatus, setAuthStatus] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const signOutAuth = () => setAuthStatus(() => false);
   const signInAuth = () => setAuthStatus(() => true);
+
+  const mainContext = useContext(mainStore);
+  const stocksContext = useContext(stocksStore);
+  const budgetContext = useContext(budgetStore);
+
+  const { isLoading } = mainContext.state;
 
   const policyMatch = matchPath('/logged-out-privacy-policy', {
     path: window.location.pathname,
   });
+
+  const accessReadFromDb = async () => {
+    mainContext.dispatch({
+      type: 'isLoading',
+      payload: true,
+    });
+    try {
+      const dbState = await readFromDb();
+
+      if (dbState.stocksList) {
+        stocksContext.dispatch({
+          type: 'updateStocksList',
+          payload: dbState.stocksList,
+        });
+        stocksContext.dispatch({
+          type: 'updateProfitBE',
+          payload: dbState.profitBE,
+        });
+        stocksContext.dispatch({
+          type: 'updateTotalIncome',
+          payload: dbState.totalIncome,
+        });
+        stocksContext.dispatch({
+          type: 'updateTaxOwed',
+          payload: dbState.taxOwed,
+        });
+        stocksContext.dispatch({
+          type: 'updateYearCheck',
+          payload: dbState.yearCheck,
+        });
+        stocksContext.dispatch({
+          type: 'updateSalary',
+          payload: dbState.salary,
+        });
+        stocksContext.dispatch({
+          type: 'updateTaxBracket',
+          payload: dbState.taxBracket,
+        });
+      }
+
+      if (dbState.expenseArray) {
+        budgetContext.dispatch({
+          type: 'updateProfitBE',
+          payload: dbState.profitBE,
+        });
+        budgetContext.dispatch({
+          type: 'updateExpenses',
+          payload: dbState.expenseArray,
+        });
+        budgetContext.dispatch({
+          type: 'updateTotalSavings',
+          payload: dbState.totalSavings,
+        });
+        budgetContext.dispatch({
+          type: 'updateNetProfit',
+          payload: dbState.netProfit,
+        });
+        budgetContext.dispatch({
+          type: 'updateTotalExpenses',
+          payload: dbState.totalExpenses,
+        });
+      }
+      mainContext.dispatch({
+        type: 'isLoading',
+        payload: false,
+      });
+    } catch {
+      console.log('error db read');
+    }
+  };
 
   if (isLoading) {
     return (
@@ -54,24 +129,19 @@ const App = () => {
         <Route exact path='/disclaimer'>
           <Disclaimer />
         </Route>
-        <StateProvider>
-          <StockStateProvider>
-            <BudgetStateProvider>
-              <Route exact path='/'>
-                <Landing />
-              </Route>
-              <Route exact path='/stocks'>
-                <Stocks />
-              </Route>
-              <Route exact path='/budget'>
-                <Budget />
-              </Route>
-              <Route exact path='/analysis'>
-                <Analysis />
-              </Route>
-            </BudgetStateProvider>
-          </StockStateProvider>
-        </StateProvider>
+
+        <Route exact path='/'>
+          <Landing />
+        </Route>
+        <Route exact path='/stocks'>
+          <Stocks />
+        </Route>
+        <Route exact path='/budget'>
+          <Budget />
+        </Route>
+        <Route exact path='/analysis'>
+          <Analysis />
+        </Route>
 
         <Footer />
       </Router>
@@ -80,7 +150,11 @@ const App = () => {
     <Router>
       <article className='root' id='login'>
         <Route path='/'>
-          <SignIn policyMatch={policyMatch} signInAuth={signInAuth} />
+          <SignIn
+            policyMatch={policyMatch}
+            signInAuth={signInAuth}
+            accessReadFromDb={accessReadFromDb}
+          />
         </Route>
 
         <Route exact path='/logged-out-privacy-policy'>

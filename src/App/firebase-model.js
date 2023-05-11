@@ -61,11 +61,12 @@ export const googleAuthSignIn = (signInAuth) => {
 //     });
 // };
 
-export const anonAuth = (signInAuth) => {
+export const anonAuth = (signInAuth, accessReadFromDb) => {
   signInAnonymously(auth)
     .then((result) => {
       console.log(result.user.uid);
       signInAuth();
+      accessReadFromDb();
     })
     .catch((error) => {
       const errorCode = error.code;

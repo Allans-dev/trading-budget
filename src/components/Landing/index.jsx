@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 
-import { store as mainStore } from '../../App/main-store';
+import { store as mainStore } from '../../main-store';
 
 import Stocks from '../Stocks';
 import Budget from '../Budget';

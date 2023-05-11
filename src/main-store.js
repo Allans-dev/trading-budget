@@ -2,7 +2,6 @@ import { createContext, useReducer } from 'react';
 
 const initialState = {
   isLoading: false,
-  initialize: true,
 };
 
 const store = createContext(initialState);
@@ -14,9 +13,7 @@ const StateProvider = ({ children }) => {
     switch (type) {
       case 'isLoading':
         return { ...state, isLoading: payload };
-      //toggle first render
-      case 'toggleFirstRender':
-        return { ...state, initialize: false };
+
       default:
         throw new Error();
     }

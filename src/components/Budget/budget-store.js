@@ -1,31 +1,31 @@
-import { createContext, useReducer } from "react";
+import { createContext, useReducer } from 'react';
 
 const initialState = {
   expenseArray: [
     {
-      category: "Groceries",
-      description: "food",
+      category: 'Groceries',
+      description: 'food',
       cost: 40,
     },
     {
-      category: "Health",
-      description: "Masks",
+      category: 'Health',
+      description: 'Masks',
       cost: 20,
     },
     {
-      category: "Hobby",
-      description: "Hearthstone",
+      category: 'Hobby',
+      description: 'Hearthstone',
       cost: 30,
     },
     {
-      category: "Shopping",
-      description: "shirt",
+      category: 'Shopping',
+      description: 'shirt',
       cost: 70,
     },
 
     {
-      category: "Transport",
-      description: "flight",
+      category: 'Transport',
+      description: 'flight',
       cost: 120,
     },
   ],
@@ -35,10 +35,10 @@ const initialState = {
 
   savingsRate: 20,
   profitBE: 0,
-  description: "",
-  timeFrame: "",
+  description: '',
+  timeFrame: '',
   displayResults: false,
-  category: "Groceries",
+  category: 'Groceries',
   cost: 0,
 };
 
@@ -48,42 +48,41 @@ const { Provider } = store;
 const BudgetStateProvider = ({ children }) => {
   const [state, dispatch] = useReducer((state, action) => {
     const { type, payload } = action;
-    const { expenseArray } = state;
     switch (type) {
-      case "updateProfitBE":
+      case 'updateProfitBE':
         return { ...state, profitBE: payload };
-      case "updateNetProfit":
+      case 'updateNetProfit':
         return { ...state, netProfit: payload };
-      case "updateTotalSavings":
+      case 'updateTotalSavings':
         return { ...state, totalSavings: payload };
-      case "updateExpenses":
+      case 'updateExpenses':
         return {
           ...state,
           expenseArray: Array.isArray(payload) ? [...payload] : payload,
         };
-      case "deleteExpense":
+      case 'deleteExpense':
         return {
           ...state,
-          expenseArray: expenseArray.filter((item, index) => index !== payload),
+          expenseArray: payload,
         };
-      case "updateTotalExpenses":
+      case 'updateTotalExpenses':
         return { ...state, totalExpenses: payload };
-      case "updateSavingsRate":
+      case 'updateSavingsRate':
         return { ...state, savingsRate: payload };
 
       // previously useState Hooks
 
-      case "updateDisplayResults":
+      case 'updateDisplayResults':
         return { ...state, displayResults: payload };
-      case "updateTimeFrame":
+      case 'updateTimeFrame':
         return { ...state, timeFrame: payload };
-      case "updateCategory":
+      case 'updateCategory':
         return { ...state, category: payload };
-      case "updateOtherCategory":
+      case 'updateOtherCategory':
         return { ...state, otherCategory: payload };
-      case "updateDescription":
+      case 'updateDescription':
         return { ...state, description: payload };
-      case "updateCost":
+      case 'updateCost':
         return { ...state, cost: payload };
       default:
         throw new Error();
