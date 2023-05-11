@@ -80,10 +80,6 @@ const App = () => {
 
       if (dbState.expenseArray) {
         budgetContext.dispatch({
-          type: 'updateProfitBE',
-          payload: dbState.profitBE,
-        });
-        budgetContext.dispatch({
           type: 'updateExpenses',
           payload: dbState.expenseArray,
         });

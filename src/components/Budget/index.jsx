@@ -1,7 +1,8 @@
 import React, { useContext } from 'react';
 
 import { store as mainStore } from '../../main-store';
-import { store } from './budget-store';
+import { store as budgetStore } from './budget-store';
+import { store as stocksStore } from '../Stocks/stocks-store';
 
 import { writeToDb } from '../../App/firebase-model';
 
@@ -9,18 +10,19 @@ import BudgetView from './BudgetView';
 
 const Budget = () => {
   const mainContext = useContext(mainStore);
-
-  const context = useContext(store);
+  const budgetContext = useContext(budgetStore);
+  const stocksContext = useContext(stocksStore);
   const {
     expenseArray,
-    profitBE,
     savingsRate,
     category,
     description,
     cost,
     displayResults,
     otherCategory,
-  } = context.state;
+  } = budgetContext.state;
+
+  const { profitBE } = stocksContext.state;
 
   const addExpenses = (e) => {
     e.preventDefault();
@@ -45,7 +47,7 @@ const Budget = () => {
       ];
     }
 
-    context.dispatch({
+    budgetContext.dispatch({
       type: 'updateExpenses',
       payload,
     });
@@ -60,9 +62,9 @@ const Budget = () => {
       payload: false,
     });
 
-    context.dispatch({ type: 'updateDescription', payload: '' });
-    context.dispatch({ type: 'updateOtherCategory', payload: '' });
-    context.dispatch({ type: 'updateCost', payload: '' });
+    budgetContext.dispatch({ type: 'updateDescription', payload: '' });
+    budgetContext.dispatch({ type: 'updateOtherCategory', payload: '' });
+    budgetContext.dispatch({ type: 'updateCost', payload: '' });
   };
 
   const deleteListItem = (id) => {
@@ -71,7 +73,7 @@ const Budget = () => {
     );
 
     if (expenseArray.length > 0) {
-      context.dispatch({
+      budgetContext.dispatch({
         type: 'deleteExpense',
         payload,
       });
@@ -93,11 +95,10 @@ const Budget = () => {
         ? expenseArray.map((item) => Number(item.cost)).reduce((a, b) => a + b)
         : 0;
 
-    context.dispatch({
+    budgetContext.dispatch({
       type: 'updateTotalExpenses',
       payload: totalExpenses,
     });
-    writeToDb(totalExpenses);
 
     return totalExpenses;
   };
@@ -105,23 +106,20 @@ const Budget = () => {
   const calcTotalSavings = (totalE) => {
     const totalSavings = ((profitBE - totalE) * savingsRate) / 100;
 
-    context.dispatch({
+    budgetContext.dispatch({
       type: 'updateTotalSavings',
       payload: totalSavings,
     });
-
-    writeToDb(totalSavings);
 
     return totalSavings;
   };
 
   const calcNetProfits = (totalE, totalS) => {
     const netProfit = profitBE - totalE - totalS;
-    context.dispatch({
+    budgetContext.dispatch({
       type: 'updateNetProfit',
       payload: netProfit,
     });
-    writeToDb(netProfit);
     return netProfit;
   };
 
@@ -135,7 +133,7 @@ const Budget = () => {
     e.preventDefault();
     combine();
 
-    context.dispatch({
+    budgetContext.dispatch({
       type: 'updateDisplayResults',
       payload: displayResults ? false : true,
     });

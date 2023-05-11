@@ -32,9 +32,7 @@ const initialState = {
   totalExpenses: 0,
   totalSavings: 0,
   netProfit: 0,
-
   savingsRate: 20,
-  profitBE: 0,
   description: '',
   timeFrame: '',
   displayResults: false,
@@ -49,8 +47,6 @@ const BudgetStateProvider = ({ children }) => {
   const [state, dispatch] = useReducer((state, action) => {
     const { type, payload } = action;
     switch (type) {
-      case 'updateProfitBE':
-        return { ...state, profitBE: payload };
       case 'updateNetProfit':
         return { ...state, netProfit: payload };
       case 'updateTotalSavings':

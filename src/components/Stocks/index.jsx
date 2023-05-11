@@ -20,7 +20,6 @@ const Stocks = () => {
     volume,
     showTotal,
     stocksList,
-    profitBE,
   } = stocksContext.state;
 
   const [yearCheck, setYearCheck] = useState(false);
@@ -67,6 +66,7 @@ const Stocks = () => {
       type: 'updateTaxBracket',
       payload: taxBracket,
     });
+
     return taxBracket;
   };
 
@@ -168,23 +168,21 @@ const Stocks = () => {
       type: 'updateTotalIncome',
       payload: totalIncome,
     });
-    writeToDb(totalIncome);
     return totalIncome;
   };
 
   const combine = () => {
     const checkedIncome = calcTotal();
-
     const taxBracket = calcTaxBracket(checkedIncome);
-
     const taxOwed = calcTaxOwed(checkedIncome, taxBracket);
+    const profitBE = checkedIncome - taxOwed;
 
     stocksContext.dispatch({
       type: 'updateProfitBE',
-      payload: checkedIncome - taxOwed,
+      payload: profitBE,
     });
 
-    writeToDb(profitBE);
+    writeToDb({ profitBE });
   };
 
   const calculateProfit = (e) => {

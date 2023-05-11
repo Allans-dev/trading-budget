@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 
-import { store } from './budget-store';
+import { store as budgetStore } from './budget-store';
+import { store as stocksStore } from '../Stocks/stocks-store';
 
 import ExpenseItem from './ExpenseItem';
 
@@ -9,10 +10,10 @@ import './budget_style.css';
 import 'firebase/firestore';
 
 const BudgetView = (props) => {
-  const context = useContext(store);
+  const budgetContext = useContext(budgetStore);
+  const stocksContext = useContext(stocksStore);
+
   const {
-    // timeFrame,
-    profitBE,
     category,
     description,
     cost,
@@ -23,35 +24,10 @@ const BudgetView = (props) => {
     totalExpenses,
     netProfit,
     expenseArray,
-  } = context.state;
+  } = budgetContext.state;
+  const { profitBE } = stocksContext.state;
 
   const { calcBudget, addExpenses, deleteListItem } = props;
-
-  // const db = firebase.firestore();
-  // const user = firebase.auth().currentUser;
-
-  // const [budget, setBudget] = useState([]);
-
-  // useEffect(() => {
-  //   fetchBudgetData();
-  // }, [expenseArray]);
-
-  // const fetchBudgetData = async () => {
-  //   const listRef = db.collection("users").doc(user.uid);
-  //   await listRef
-  //     .get()
-  //     .then((doc) => {
-  //       if (doc) {
-  //         return doc.data().expenseArray
-  //           ? doc.data().expenseArray
-  //           : expenseArray;
-  //       }
-  //     })
-  //     .then((data) => setBudget(data))
-  //     .catch(() => {
-  //       console.log("No such document!");
-  //     });
-  // };
 
   return (
     <article className='budget-page'>
@@ -65,7 +41,7 @@ const BudgetView = (props) => {
               className='category'
               value={category}
               onChange={(e) => {
-                context.dispatch({
+                budgetContext.dispatch({
                   type: 'updateCategory',
                   payload: e.target.value,
                 });
@@ -90,7 +66,7 @@ const BudgetView = (props) => {
                 type='text'
                 value={otherCategory}
                 onChange={(e) => {
-                  context.dispatch({
+                  budgetContext.dispatch({
                     type: 'updateOtherCategory',
                     payload: e.target.value,
                   });
@@ -106,7 +82,7 @@ const BudgetView = (props) => {
               type='text'
               value={description}
               onChange={(e) =>
-                context.dispatch({
+                budgetContext.dispatch({
                   type: 'updateDescription',
                   payload: e.target.value,
                 })
@@ -121,7 +97,7 @@ const BudgetView = (props) => {
               type='number'
               value={cost}
               onChange={(e) =>
-                context.dispatch({
+                budgetContext.dispatch({
                   type: 'updateCost',
                   payload: Number(e.target.value),
                 })
@@ -140,7 +116,7 @@ const BudgetView = (props) => {
             style={styles.timeFrame}
             value={timeFrame}
             onChange={(e) => {
-              context.dispatch({
+              budgetContext.dispatch({
                 type: "updateTimeFrame",
                 payload: e.target.value,
               });
@@ -167,11 +143,11 @@ const BudgetView = (props) => {
               max={100}
               value={savingsRate}
               onChange={(e) => {
-                context.dispatch({
+                budgetContext.dispatch({
                   type: 'updateSavingsRate',
                   payload: e.target.value,
                 });
-                context.dispatch({
+                budgetContext.dispatch({
                   type: 'updateDisplayResults',
                   payload: false,
                 });
