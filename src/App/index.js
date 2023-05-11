@@ -65,12 +65,8 @@ const App = () => {
           payload: dbState.taxOwed,
         });
         stocksContext.dispatch({
-          type: 'updateYearCheck',
-          payload: dbState.yearCheck,
-        });
-        stocksContext.dispatch({
           type: 'updateSalary',
-          payload: dbState.salary,
+          payload: dbState.salary || 0,
         });
         stocksContext.dispatch({
           type: 'updateTaxBracket',
@@ -96,13 +92,14 @@ const App = () => {
           payload: dbState.totalExpenses,
         });
       }
-      mainContext.dispatch({
-        type: 'isLoading',
-        payload: false,
-      });
     } catch {
       console.log('error db read');
     }
+
+    mainContext.dispatch({
+      type: 'isLoading',
+      payload: false,
+    });
   };
 
   if (isLoading) {

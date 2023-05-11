@@ -109,7 +109,7 @@ const StocksView = ({
               onChange={(e) =>
                 context.dispatch({
                   type: 'updateSalary',
-                  payload: Number(e.target.value),
+                  payload: e.target.value,
                 })
               }
             />

@@ -29,18 +29,20 @@ const Stocks = () => {
   };
 
   const deleteListItem = (id) => {
+    let payload = stocksList.filter(
+      (item, index) => index + item.stockName !== id
+    );
+
     if (stocksList.length > 0) {
       stocksContext.dispatch({
         type: 'deleteStock',
-        payload: stocksList.filter(
-          (item, index) => index + item.stockName !== id
-        ),
+        payload,
       });
       mainContext.dispatch({
         type: 'isLoading',
         payload: true,
       });
-      writeToDb({ stocksList });
+      writeToDb({ stocksList: payload });
       mainContext.dispatch({
         type: 'isLoading',
         payload: false,
@@ -174,6 +176,9 @@ const Stocks = () => {
       type: 'updateTotalIncome',
       payload: totalIncome,
     });
+
+    writeToDb({ totalIncome });
+
     return totalIncome;
   };
 
@@ -188,7 +193,7 @@ const Stocks = () => {
       payload: profitBE,
     });
 
-    writeToDb({ profitBE });
+    writeToDb({ profitBE, salary, taxBracket });
   };
 
   const calculateProfit = (e) => {
