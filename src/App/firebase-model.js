@@ -1,10 +1,17 @@
 import { firebaseConfig } from '../firebase.config';
 
 import { initializeApp } from 'firebase/app';
-import { getFirestore, getDoc, setDoc, doc } from 'firebase/firestore';
+import {
+  getFirestore,
+  getDoc,
+  setDoc,
+  doc,
+  collection,
+} from 'firebase/firestore';
 import {
   getAuth,
   GoogleAuthProvider,
+  signInAnonymously,
   signInWithRedirect,
   getRedirectResult,
   signOut,
@@ -14,48 +21,65 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-let currentUser;
-
-export const googleAuth = () => {
+export const googleAuthSignIn = (signInAuth) => {
   auth.useDeviceLanguage();
   const googleProvider = new GoogleAuthProvider();
 
-  signInWithRedirect(auth, googleProvider);
-
-  getRedirectResult(auth)
+  signInWithRedirect(auth, googleProvider)
     .then((result) => {
-      // This gives you a Google Access Token. You can use it to access Google APIs.
-      const credential = GoogleAuthProvider.credentialFromResult(result);
-      const token = credential.accessToken;
-
-      // The signed-in user info.
-      currentUser = result.user.uid;
-      // IdP data available using getAdditionalUserInfo(result)
-      // ...
-      console.log('signed in');
+      signInAuth();
     })
     .catch((error) => {
-      // Handle Errors here.
       const errorCode = error.code;
       const errorMessage = error.message;
-      // The email of the user's account used.
       const email = error.customData.email;
-      // The AuthCredential type that was used.
       const credential = GoogleAuthProvider.credentialFromError(error);
-      // ...
-
       console.log(errorMessage);
     });
 };
 
-export const boolUser = () => {
-  return currentUser ? true : false;
+// export const googleRedirectResults = () => {
+//   getRedirectResult(auth)
+//     .then((result) => {
+//       const credential = GoogleAuthProvider.credentialFromResult(result);
+//       const token = credential.accessToken;
+//       const user = result.user;
+//       console.log(result.user.uid);
+//       return user.uid;
+//     })
+//     .catch((error) => {
+//       // Handle Errors here.
+//       // const errorCode = error.code;
+//       const errorMessage = error.message;
+//       // The email of the user's account used.
+//       // const email = error.customData.email;
+//       // The AuthCredential type that was used.
+//       // const credential = GoogleAuthProvider.credentialFromError(error);
+//       // ...
+
+//       console.log(errorMessage);
+//     });
+// };
+
+export const anonAuth = (signInAuth) => {
+  signInAnonymously(auth)
+    .then((result) => {
+      console.log(result.user.uid);
+      signInAuth();
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.log(errorMessage);
+      // ...
+    });
 };
 
-export const authSignOut = () => {
+export const firebaseSignOut = (signOutAuth) => {
   signOut(auth)
-    .then(() => {
+    .then((result) => {
       // Sign-out successful.
+      signOutAuth();
       console.log('signed out');
     })
     .catch((error) => {
@@ -65,9 +89,16 @@ export const authSignOut = () => {
 
 export const readFromDb = async () => {
   try {
-    const databaseState = await getDoc(doc(db, 'user', currentUser)).data;
-    console.log(`read state`);
-    return databaseState;
+    const docRef = doc(db, 'users', auth.currentUser.uid);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      const databaseState = docSnap.data();
+      console.log('Document data:', databaseState);
+      return databaseState;
+    } else {
+      console.log('No such document!');
+    }
   } catch (e) {
     console.error('Error reading document: ', e);
   }
@@ -75,9 +106,9 @@ export const readFromDb = async () => {
 
 export const writeToDb = async (state) => {
   try {
-    await setDoc(doc(db, 'user', currentUser), state, {
-      merge: true,
-    });
+    const usersRef = collection(db, 'users');
+    await setDoc(doc(usersRef, auth.currentUser.uid), state, { merge: true });
+
     console.log(`saved state`);
   } catch (e) {
     console.error('Error adding document: ', e);

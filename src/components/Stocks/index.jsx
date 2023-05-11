@@ -7,69 +7,103 @@ import { readFromDb, writeToDb } from '../../App/firebase-model';
 
 import StocksView from './StocksView';
 
-const Stocks = ({ authStatus }) => {
+const Stocks = () => {
   const mContext = useContext(mainStore);
 
   const context = useContext(store);
 
   const {
-    profitBE,
-    taxOwed,
-    taxBracket,
     salary,
     stockName,
     sellPrice,
     buyPrice,
     volume,
     showTotal,
-    totalIncome,
     stocksList,
+    initial,
   } = context.state;
 
   const [yearCheck, setYearCheck] = useState(false);
 
-  useEffect(() => {
-    const dbState = readFromDb();
+  const dataAccess = async () => {
+    try {
+      const dbState = await readFromDb();
 
-    if (dbState) {
-      context.dispatch({
-        type: 'updateStocksList',
-        payload: dbState.stocksList,
-      });
-      context.dispatch({
-        type: 'updateProfitBE',
-        payload: dbState.profitBE,
-      });
-      context.dispatch({
-        type: 'updateTotalIncome',
-        payload: dbState.totalIncome,
-      });
-      context.dispatch({
-        type: 'updateTaxOwed',
-        payload: dbState.taxOwed,
-      });
-      context.dispatch({
-        type: 'updateYearCheck',
-        payload: dbState.yearCheck,
-      });
-      context.dispatch({
-        type: 'updateSalary',
-        payload: dbState.salary,
-      });
-      context.dispatch({
-        type: 'updateTaxBracket',
-        payload: dbState.taxBracket,
-      });
+      if (dbState.stocksList) {
+        context.dispatch({
+          type: 'updateStocksList',
+          payload: dbState.stocksList,
+        });
+        context.dispatch({
+          type: 'updateProfitBE',
+          payload: dbState.profitBE,
+        });
+        context.dispatch({
+          type: 'updateTotalIncome',
+          payload: dbState.totalIncome,
+        });
+        context.dispatch({
+          type: 'updateTaxOwed',
+          payload: dbState.taxOwed,
+        });
+        context.dispatch({
+          type: 'updateYearCheck',
+          payload: dbState.yearCheck,
+        });
+        context.dispatch({
+          type: 'updateSalary',
+          payload: dbState.salary,
+        });
+        context.dispatch({
+          type: 'updateTaxBracket',
+          payload: dbState.taxBracket,
+        });
+      }
+
+      console.log(`db state: ${dbState}`);
+    } catch {
+      console.log('error db read');
     }
+  };
 
+  useEffect(() => {
+    dataAccess();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (initial) {
+      context.dispatch({
+        type: 'toggleFirstRender',
+      });
+      console.log('initial render');
+    } else {
+      mContext.dispatch({
+        type: 'isLoading',
+        payload: true,
+      });
+      writeToDb({
+        salary,
+        stockName,
+        sellPrice,
+        buyPrice,
+        volume,
+        showTotal,
+        stocksList,
+      });
+      mContext.dispatch({
+        type: 'isLoading',
+        payload: false,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [salary, stockName, sellPrice, buyPrice, volume, showTotal, stocksList]);
 
   const oneYearCheck = () => {
     yearCheck ? setYearCheck(false) : setYearCheck(true);
   };
 
-  const deleteListItem = async (id) => {
+  const deleteListItem = (id) => {
     if (stocksList.length > 0) {
       context.dispatch({
         type: 'deleteStock',
@@ -78,15 +112,6 @@ const Stocks = ({ authStatus }) => {
         ),
       });
     }
-    mContext.dispatch({
-      type: 'isLoading',
-      payload: true,
-    });
-    writeToDb(context.state);
-    mContext.dispatch({
-      type: 'isLoading',
-      payload: false,
-    });
   };
 
   const calcTaxBracket = (checkedIncome) => {

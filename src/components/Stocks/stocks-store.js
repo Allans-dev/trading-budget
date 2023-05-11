@@ -59,6 +59,8 @@ const initialState = {
   sellPrice: 0,
   volume: 0,
   income: 0,
+  //initial
+  initial: true,
 };
 
 const store = createContext(initialState);
@@ -105,6 +107,9 @@ const StockStateProvider = ({ children }) => {
           ...state,
           stocksList: payload,
         };
+      //toggle first render
+      case 'toggleFirstRender':
+        return { ...state, initial: false };
 
       default:
         throw new Error();

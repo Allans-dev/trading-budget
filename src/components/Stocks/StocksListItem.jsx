@@ -1,6 +1,6 @@
-import React from "react";
+import React from 'react';
 
-import "./stocks_styles.css";
+import './stocks_styles.css';
 
 const StocksListItem = ({
   index,
@@ -17,33 +17,33 @@ const StocksListItem = ({
     <tr>
       <td>{stockName}</td>
       <td>
-        {new Intl.NumberFormat("en-US", {
-          style: "currency",
-          currency: "USD",
+        {new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: 'USD',
           maximumFractionDigits: 2,
         }).format(Math.round(buyPrice * 100) / 100)}
       </td>
       <td>
-        {new Intl.NumberFormat("en-US", {
-          style: "currency",
-          currency: "USD",
+        {new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: 'USD',
           maximumFractionDigits: 2,
         }).format(Math.round(sellPrice * 100) / 100)}
       </td>
       <td>{new Intl.NumberFormat().format(volume)}</td>
       <td>
-        {new Intl.NumberFormat("en-US", {
-          style: "currency",
-          currency: "USD",
+        {new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: 'USD',
           maximumFractionDigits: 0,
         }).format(
           Math.round(Number((sellPrice - buyPrice) * volume) * 100) / 100
         )}
       </td>
-      <td>{yearCheck ? "✓" : "⛌"}</td>
+      <td>{yearCheck ? '✓' : '⛌'}</td>
       <td>
         <button
-          className="button delete"
+          className='button delete'
           onClick={(e) => {
             e.preventDefault();
             deleteListItem(id);

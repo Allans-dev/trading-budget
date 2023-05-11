@@ -1,11 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import { authSignOut } from '../../App/firebase-model';
+import { firebaseSignOut } from '../../App/firebase-model';
 
 import './header_styles.css';
 
-const Header = ({ toggleAuthStatus }) => {
+const Header = ({ signOutAuth }) => {
   return (
     <section className='header'>
       <nav>
@@ -30,8 +30,7 @@ const Header = ({ toggleAuthStatus }) => {
         <button
           className='sign-out action button'
           onClick={(e) => {
-            authSignOut();
-            toggleAuthStatus();
+            firebaseSignOut(signOutAuth);
           }}
         >
           Signout

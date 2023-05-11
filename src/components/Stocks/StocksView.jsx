@@ -2,17 +2,17 @@ import React, { useContext } from 'react';
 
 import StocksListItem from './StocksListItem';
 
-// import firebase from "firebase/app";
-// import "firebase/firestore";
-
 import { store } from './stocks-store';
 
 import './stocks_styles.css';
 
-const StocksView = (props) => {
+const StocksView = ({
+  calculateProfit,
+  addStocks,
+  oneYearCheck,
+  deleteListItem,
+}) => {
   const context = useContext(store);
-
-  const { calculateProfit, addStocks, oneYearCheck, deleteListItem } = props;
 
   const {
     stockName,

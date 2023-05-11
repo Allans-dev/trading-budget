@@ -1,6 +1,6 @@
-import { googleAuth } from '../../App/firebase-model';
+import { googleAuthSignIn, anonAuth } from '../../App/firebase-model';
 
-const SignIn = ({ policyMatch }) => {
+const SignIn = ({ policyMatch, signInAuth }) => {
   return (
     <section
       id='signInSection'
@@ -11,11 +11,21 @@ const SignIn = ({ policyMatch }) => {
             : 'block',
       }}
     >
-      {/* <button className='anon-sign-btn' onClick={signInAnon}>
-        Guest Sign In
-      </button> */}
-      <button className='anon-sign-btn' onClick={googleAuth}>
+      <button
+        className='anon-sign-btn'
+        onClick={() => {
+          googleAuthSignIn(signInAuth);
+        }}
+      >
         Google Sign In
+      </button>
+      <button
+        className='anon-sign-btn'
+        onClick={() => {
+          anonAuth(signInAuth);
+        }}
+      >
+        Guest Sign In
       </button>
     </section>
   );

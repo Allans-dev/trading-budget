@@ -20,21 +20,15 @@ import { StateProvider } from './main-store';
 import { StockStateProvider } from '../components/Stocks/stocks-store';
 import { BudgetStateProvider } from '../components/Budget/budget-store';
 
-import { boolUser } from './firebase-model';
+// import { googleRedirectResults } from './firebase-model';
 
 import './App.css';
 
 const App = () => {
   const [authStatus, setAuthStatus] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const toggleAuthStatus = () => setAuthStatus(() => false);
-
-  useEffect(() => {
-    setIsLoading(() => true);
-    boolUser ? setAuthStatus(() => true) : setAuthStatus(() => false);
-    setIsLoading(() => false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [boolUser]);
+  const signOutAuth = () => setAuthStatus(() => false);
+  const signInAuth = () => setAuthStatus(() => true);
 
   const policyMatch = matchPath('/logged-out-privacy-policy', {
     path: window.location.pathname,
@@ -51,7 +45,7 @@ const App = () => {
   return authStatus ? (
     <article className='root'>
       <Router>
-        <Header toggleAuthStatus={toggleAuthStatus} />
+        <Header signOutAuth={signOutAuth} />
 
         <Route exact path='/privacy-policy'>
           <PrivacyPolicy />
@@ -64,13 +58,13 @@ const App = () => {
           <StockStateProvider>
             <BudgetStateProvider>
               <Route exact path='/'>
-                <Landing authStatus={authStatus} />
+                <Landing />
               </Route>
               <Route exact path='/stocks'>
-                <Stocks authStatus={authStatus} />
+                <Stocks />
               </Route>
               <Route exact path='/budget'>
-                <Budget authStatus={authStatus} />
+                <Budget />
               </Route>
               <Route exact path='/analysis'>
                 <Analysis />
@@ -86,7 +80,7 @@ const App = () => {
     <Router>
       <article className='root' id='login'>
         <Route path='/'>
-          <SignIn policyMatch={policyMatch} />
+          <SignIn policyMatch={policyMatch} signInAuth={signInAuth} />
         </Route>
 
         <Route exact path='/logged-out-privacy-policy'>
