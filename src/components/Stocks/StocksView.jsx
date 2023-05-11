@@ -97,7 +97,7 @@ const StocksView = ({
             <input type='checkbox' id='yearCheckBox' onClick={oneYearCheck} />
           </label>
 
-          <button className='add-shares' onClick={addStocks}>
+          <button className='add-shares button' onClick={addStocks}>
             Add Shares
           </button>
 

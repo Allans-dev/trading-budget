@@ -104,7 +104,7 @@ const BudgetView = (props) => {
               }
             />
           </label>
-          <button className='add-button' onClick={addExpenses}>
+          <button className='add-button button' onClick={addExpenses}>
             +
           </button>
         </section>

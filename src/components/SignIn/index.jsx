@@ -1,9 +1,11 @@
 import { googleAuthSignIn, anonAuth } from '../../App/firebase-model';
 
+import './signin_style.css';
+
 const SignIn = ({ policyMatch, signInAuth, accessReadFromDb }) => {
   return (
-    <section
-      id='signInSection'
+    <article
+      className='signInComponent'
       style={{
         display:
           policyMatch !== null && policyMatch.isExact === true
@@ -27,7 +29,7 @@ const SignIn = ({ policyMatch, signInAuth, accessReadFromDb }) => {
       >
         Guest Sign In
       </button>
-    </section>
+    </article>
   );
 };
 
