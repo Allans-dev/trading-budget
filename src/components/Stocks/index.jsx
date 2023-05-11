@@ -20,12 +20,13 @@ const Stocks = () => {
     volume,
     showTotal,
     stocksList,
-    initial,
   } = context.state;
+
+  const { initialize } = mContext.state;
 
   const [yearCheck, setYearCheck] = useState(false);
 
-  const dataAccess = async () => {
+  const accessReadFromDb = async () => {
     try {
       const dbState = await readFromDb();
 
@@ -59,21 +60,19 @@ const Stocks = () => {
           payload: dbState.taxBracket,
         });
       }
-
-      console.log(`db state: ${dbState}`);
     } catch {
       console.log('error db read');
     }
   };
 
   useEffect(() => {
-    dataAccess();
+    accessReadFromDb();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    if (initial) {
-      context.dispatch({
+    if (initialize) {
+      mContext.dispatch({
         type: 'toggleFirstRender',
       });
       console.log('initial render');
@@ -82,22 +81,14 @@ const Stocks = () => {
         type: 'isLoading',
         payload: true,
       });
-      writeToDb({
-        salary,
-        stockName,
-        sellPrice,
-        buyPrice,
-        volume,
-        showTotal,
-        stocksList,
-      });
+      writeToDb(context.state);
       mContext.dispatch({
         type: 'isLoading',
         payload: false,
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [salary, stockName, sellPrice, buyPrice, volume, showTotal, stocksList]);
+  }, [context.state]);
 
   const oneYearCheck = () => {
     yearCheck ? setYearCheck(false) : setYearCheck(true);
@@ -203,17 +194,6 @@ const Stocks = () => {
     document.getElementById('yearCheckBox').checked = false;
 
     context.dispatch({ type: 'updateShowTotal', payload: false });
-
-    mContext.dispatch({
-      type: 'isLoading',
-      payload: true,
-    });
-    writeToDb(stocksList);
-    console.log(`saved state`);
-    mContext.dispatch({
-      type: 'isLoading',
-      payload: false,
-    });
   };
 
   const calcTotal = () => {

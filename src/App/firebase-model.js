@@ -108,7 +108,6 @@ export const writeToDb = async (state) => {
   try {
     const usersRef = collection(db, 'users');
     await setDoc(doc(usersRef, auth.currentUser.uid), state, { merge: true });
-
     console.log(`saved state`);
   } catch (e) {
     console.error('Error adding document: ', e);
