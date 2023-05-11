@@ -1,44 +1,16 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 
 import AnalysisView from './AnalysisView';
 
-import { store as mainStore } from '../../main-store';
 import { store as stockStore } from '../Stocks/stocks-store';
 import { store as budgetStore } from '../Budget/budget-store';
 
-// import firebase from 'firebase/compat/app';
-// import 'firebase/compat/firestore';
-
 const Analysis = () => {
-  // const db = firebase.firestore();
-  // const user = firebase.auth().currentUser;
-  // const analysisCollectionDoc = db.collection('users').doc(user.uid);
+  const stocksContext = useContext(stockStore);
+  const budgetContext = useContext(budgetStore);
 
-  const sContext = useContext(stockStore);
-  const bContext = useContext(budgetStore);
-  const mContext = useContext(mainStore);
-
-  const { stocksList } = sContext.state;
-  const { expenseArray } = bContext.state;
-
-  // useEffect(() => {
-  //   mContext.dispatch({
-  //     type: 'isLoading',
-  //     payload: true,
-  //   });
-  //   getAnalysisData(analysisCollectionDoc);
-  //   mContext.dispatch({
-  //     type: 'isLoading',
-  //     payload: false,
-  //   });
-  //   // eslint-disable-next-line
-  // }, [stocksList, expenseArray]);
-
-  // const getAnalysisData = async (analysisCollectionDoc) => {
-  //   await analysisCollectionDoc.get().catch(() => {
-  //     console.log('No such document!');
-  //   });
-  // };
+  const { stocksList } = stocksContext.state;
+  const { expenseArray } = budgetContext.state;
 
   const sortedCost = expenseArray.sort((a, b) => {
     var nameA = a.category.toUpperCase();
