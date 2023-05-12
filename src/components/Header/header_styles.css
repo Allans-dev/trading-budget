@@ -64,9 +64,10 @@
 }
 
 @media only screen and (max-width: 523px) {
-  .header .sign-out {
-    position: relative;
-    margin-right: 3%;
-    right: 0;
+  .header-right-group {
+    padding-right: 0.5rem;
+  }
+  .header-home span {
+    margin: 0 0.5rem;
   }
 }

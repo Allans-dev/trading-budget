@@ -10,11 +10,6 @@ const Header = ({ signOutAuth }) => {
     <section className='header'>
       <nav>
         <ul className='list-container'>
-          {/* {window.matchMedia("(max-width: 1200px)").matches ? null : (
-            <Link className="list-item" to="/">
-              <li>Home</li>
-            </Link>
-          )} */}
           <Link className='list-item' to='/stocks'>
             <li>Stocks</li>
           </Link>
