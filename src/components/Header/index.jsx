@@ -26,15 +26,19 @@ const Header = ({ signOutAuth }) => {
             <li>Analysis</li>
           </Link>
         </ul>
-
-        <button
-          className='sign-out action button'
-          onClick={(e) => {
-            firebaseSignOut(signOutAuth);
-          }}
-        >
-          Signout
-        </button>
+        <div className='header-right-group'>
+          <Link className='header-home' to='/'>
+            <span>Home</span>
+          </Link>
+          <button
+            className='sign-out action button'
+            onClick={(e) => {
+              firebaseSignOut(signOutAuth);
+            }}
+          >
+            Signout
+          </button>
+        </div>
       </nav>
     </section>
   );
