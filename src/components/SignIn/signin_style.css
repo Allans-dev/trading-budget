@@ -1,5 +1,4 @@
 .anon-sign-btn {
-  margin: 45em auto 3em;
   width: 200px;
   height: 50px;
   display: block;
@@ -8,11 +7,16 @@
   background-color: rgba(26, 26, 26, 0.5);
   color: #d6d6d6;
   cursor: pointer;
-  z-index: 101;
 }
 
 .anon-sign-btn:hover {
   background-color: #d6d6d6;
   color: #4e4e4e;
   transition: 1s;
+}
+
+.signInComponent {
+  display: grid;
+  grid-area: Content;
+  justify-self: center;
 }
