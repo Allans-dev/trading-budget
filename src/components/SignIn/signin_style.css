@@ -1,6 +1,17 @@
-.anon-sign-btn {
-  width: 200px;
-  height: 50px;
+.signin-btn {
+  width: 12rem;
+  height: 4rem;
+  background-color: transparent;
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+.signin-btn:hover {
+  cursor: pointer;
+}
+
+.anon-signin-btn {
   display: block;
   border-radius: 5px;
   border: none;
@@ -9,7 +20,7 @@
   cursor: pointer;
 }
 
-.anon-sign-btn:hover {
+.anon-signin-btn:hover {
   background-color: #d6d6d6;
   color: #4e4e4e;
   transition: 1s;

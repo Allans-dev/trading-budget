@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, matchPath } from 'react-router-dom';
 
 import Landing from '../components/Landing';
@@ -20,7 +20,7 @@ import { store as mainStore } from '../main-store';
 import { store as stocksStore } from '../components/Stocks/stocks-store';
 import { store as budgetStore } from '../components/Budget/budget-store';
 
-import { readFromDb } from './firebase-model';
+import { readFromDb, googleRedirectResults } from './firebase-model';
 
 import './App.css';
 
@@ -34,6 +34,11 @@ const App = () => {
   const budgetContext = useContext(budgetStore);
 
   const { isLoading } = mainContext.state;
+
+  useEffect(() => {
+    googleRedirectResults(signInAuth, accessReadFromDb);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const policyMatch = matchPath('/logged-out-privacy-policy', {
     path: window.location.pathname,
@@ -93,7 +98,7 @@ const App = () => {
         });
       }
     } catch {
-      console.log('error db read');
+      console.log('error db read on load');
     }
 
     mainContext.dispatch({

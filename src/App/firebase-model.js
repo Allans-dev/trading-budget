@@ -21,45 +21,29 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-export const googleAuthSignIn = (signInAuth) => {
+export const googleAuthSignIn = async () => {
   auth.useDeviceLanguage();
-  const googleProvider = new GoogleAuthProvider();
+  signInWithRedirect(auth, new GoogleAuthProvider());
+};
 
-  signInWithRedirect(auth, googleProvider)
+export const googleRedirectResults = (signInAuth, accessReadFromDb) => {
+  getRedirectResult(auth)
     .then((result) => {
-      signInAuth();
+      return result.user.uid;
+    })
+    .then((uid) => {
+      if (uid) {
+        signInAuth();
+        accessReadFromDb();
+      } else {
+        console.log(`failed to retrieve uid`);
+      }
     })
     .catch((error) => {
-      const errorCode = error.code;
       const errorMessage = error.message;
-      const email = error.customData.email;
-      const credential = GoogleAuthProvider.credentialFromError(error);
       console.log(errorMessage);
     });
 };
-
-// export const googleRedirectResults = () => {
-//   getRedirectResult(auth)
-//     .then((result) => {
-//       const credential = GoogleAuthProvider.credentialFromResult(result);
-//       const token = credential.accessToken;
-//       const user = result.user;
-//       console.log(result.user.uid);
-//       return user.uid;
-//     })
-//     .catch((error) => {
-//       // Handle Errors here.
-//       // const errorCode = error.code;
-//       const errorMessage = error.message;
-//       // The email of the user's account used.
-//       // const email = error.customData.email;
-//       // The AuthCredential type that was used.
-//       // const credential = GoogleAuthProvider.credentialFromError(error);
-//       // ...
-
-//       console.log(errorMessage);
-//     });
-// };
 
 export const anonAuth = (signInAuth, accessReadFromDb) => {
   signInAnonymously(auth)
@@ -69,7 +53,6 @@ export const anonAuth = (signInAuth, accessReadFromDb) => {
       accessReadFromDb();
     })
     .catch((error) => {
-      const errorCode = error.code;
       const errorMessage = error.message;
       console.log(errorMessage);
       // ...
@@ -79,13 +62,10 @@ export const anonAuth = (signInAuth, accessReadFromDb) => {
 export const firebaseSignOut = (signOutAuth) => {
   signOut(auth)
     .then((result) => {
-      // Sign-out successful.
       signOutAuth();
       console.log('signed out');
     })
-    .catch((error) => {
-      // An error happened.
-    });
+    .catch((error) => {});
 };
 
 export const readFromDb = async () => {
@@ -95,7 +75,6 @@ export const readFromDb = async () => {
 
     if (docSnap.exists()) {
       const databaseState = docSnap.data();
-      console.log('Document data:', databaseState);
       return databaseState;
     } else {
       console.log('No such document!');
@@ -109,7 +88,6 @@ export const writeToDb = async (state) => {
   try {
     const usersRef = collection(db, 'users');
     await setDoc(doc(usersRef, auth.currentUser.uid), state, { merge: true });
-    console.log(`saved state`);
   } catch (e) {
     console.error('Error adding document: ', e);
   }

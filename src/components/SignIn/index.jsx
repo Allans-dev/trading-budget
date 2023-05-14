@@ -1,5 +1,6 @@
 import { googleAuthSignIn, anonAuth } from '../../App/firebase-model';
 
+import googleBtn from './google_signin_btn.png';
 import './signin_style.css';
 
 const SignIn = ({ policyMatch, signInAuth, accessReadFromDb }) => {
@@ -13,16 +14,16 @@ const SignIn = ({ policyMatch, signInAuth, accessReadFromDb }) => {
             : 'block',
       }}
     >
-      {/* <button
-        className='anon-sign-btn'
+      <button
+        className='signin-btn'
         onClick={() => {
-          googleAuthSignIn(signInAuth);
+          googleAuthSignIn(signInAuth, accessReadFromDb);
         }}
       >
-        Google Sign In
-      </button> */}
+        <img alt='google sign in icon' src={googleBtn} />
+      </button>
       <button
-        className='anon-sign-btn'
+        className='anon-signin-btn signin-btn'
         onClick={() => {
           anonAuth(signInAuth, accessReadFromDb);
         }}
