@@ -5,7 +5,7 @@ import { firebaseSignOut } from '../../App/firebase-model';
 
 import './header_styles.css';
 
-const Header = ({ signOutAuth }) => {
+const Header = ({ toggleAuthStatus }) => {
   return (
     <section className='header'>
       <nav>
@@ -28,7 +28,7 @@ const Header = ({ signOutAuth }) => {
           <button
             className='sign-out action button'
             onClick={(e) => {
-              firebaseSignOut(signOutAuth);
+              firebaseSignOut(toggleAuthStatus);
             }}
           >
             Signout

@@ -13,59 +13,41 @@ import {
   GoogleAuthProvider,
   signInAnonymously,
   signInWithRedirect,
-  getRedirectResult,
   signOut,
+  onAuthStateChanged,
 } from 'firebase/auth';
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-export const googleAuthSignIn = async () => {
+export const googleAuthSignIn = () => {
   auth.useDeviceLanguage();
   signInWithRedirect(auth, new GoogleAuthProvider());
 };
 
-export const googleRedirectResults = (signInAuth, accessReadFromDb) => {
-  getRedirectResult(auth)
-    .then((result) => {
-      return result.user.uid;
-    })
-    .then((uid) => {
-      if (uid) {
-        signInAuth();
-        accessReadFromDb();
-      } else {
-        console.log(`failed to retrieve uid`);
-      }
-    })
-    .catch((error) => {
-      const errorMessage = error.message;
-      console.log(errorMessage);
-    });
-};
-
-export const anonAuth = (signInAuth, accessReadFromDb) => {
+export const anonAuth = (accessReadFromDb) => {
   signInAnonymously(auth)
     .then((result) => {
-      console.log(result.user.uid);
-      signInAuth();
-      accessReadFromDb();
+      if (result.user) {
+        accessReadFromDb();
+      } else return;
     })
     .catch((error) => {
-      const errorMessage = error.message;
-      console.log(errorMessage);
+      throw new Error(error.message);
       // ...
     });
 };
 
-export const firebaseSignOut = (signOutAuth) => {
+export const firebaseSignOut = (toggleAuthStatus) => {
   signOut(auth)
-    .then((result) => {
-      signOutAuth();
+    .then(() => {
+      toggleAuthStatus(false);
       console.log('signed out');
     })
-    .catch((error) => {});
+    .catch(() => {
+      throw new Error(`unable to sign out`);
+    });
 };
 
 export const readFromDb = async () => {
@@ -77,10 +59,10 @@ export const readFromDb = async () => {
       const databaseState = docSnap.data();
       return databaseState;
     } else {
-      console.log('No such document!');
+      throw new Error('No such document!');
     }
   } catch (e) {
-    console.error('Error reading document: ', e);
+    throw new Error('Error reading document: ', e);
   }
 };
 
@@ -89,6 +71,15 @@ export const writeToDb = async (state) => {
     const usersRef = collection(db, 'users');
     await setDoc(doc(usersRef, auth.currentUser.uid), state, { merge: true });
   } catch (e) {
-    console.error('Error adding document: ', e);
+    throw new Error('Error adding document: ', e);
   }
+};
+
+export const googleAuthStateChange = (accessReadFromDb, toggleLoading) => {
+  toggleLoading(true);
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      accessReadFromDb();
+    }
+  });
 };

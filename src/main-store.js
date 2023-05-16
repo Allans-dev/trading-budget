@@ -2,6 +2,7 @@ import { createContext, useReducer } from 'react';
 
 const initialState = {
   isLoading: false,
+  authStatus: false,
 };
 
 const store = createContext(initialState);
@@ -13,7 +14,8 @@ const StateProvider = ({ children }) => {
     switch (type) {
       case 'isLoading':
         return { ...state, isLoading: payload };
-
+      case 'setAuthStatus':
+        return { ...state, authStatus: payload };
       default:
         throw new Error();
     }

@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { BrowserRouter as Router, Route, matchPath } from 'react-router-dom';
 
 import Landing from '../components/Landing';
@@ -20,23 +20,33 @@ import { store as mainStore } from '../main-store';
 import { store as stocksStore } from '../components/Stocks/stocks-store';
 import { store as budgetStore } from '../components/Budget/budget-store';
 
-import { readFromDb, googleRedirectResults } from './firebase-model';
+import { readFromDb, googleAuthStateChange } from './firebase-model';
 
 import './App.css';
 
 const App = () => {
-  const [authStatus, setAuthStatus] = useState(false);
-  const signOutAuth = () => setAuthStatus(() => false);
-  const signInAuth = () => setAuthStatus(() => true);
-
   const mainContext = useContext(mainStore);
   const stocksContext = useContext(stocksStore);
   const budgetContext = useContext(budgetStore);
 
-  const { isLoading } = mainContext.state;
+  const { isLoading, authStatus } = mainContext.state;
+
+  const toggleLoading = (bool) => {
+    mainContext.dispatch({
+      type: 'isLoading',
+      payload: bool,
+    });
+  };
+
+  const toggleAuthStatus = (bool) => {
+    mainContext.dispatch({
+      type: 'setAuthStatus',
+      payload: bool,
+    });
+  };
 
   useEffect(() => {
-    googleRedirectResults(signInAuth, accessReadFromDb);
+    googleAuthStateChange(accessReadFromDb, toggleLoading);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -45,10 +55,6 @@ const App = () => {
   });
 
   const accessReadFromDb = async () => {
-    mainContext.dispatch({
-      type: 'isLoading',
-      payload: true,
-    });
     try {
       const dbState = await readFromDb();
 
@@ -99,12 +105,10 @@ const App = () => {
       }
     } catch {
       console.log('error db read on load');
+    } finally {
+      toggleAuthStatus(true);
+      toggleLoading(false);
     }
-
-    mainContext.dispatch({
-      type: 'isLoading',
-      payload: false,
-    });
   };
 
   if (isLoading) {
@@ -118,7 +122,7 @@ const App = () => {
   return authStatus ? (
     <article className='root'>
       <Router>
-        <Header signOutAuth={signOutAuth} />
+        <Header toggleAuthStatus={toggleAuthStatus} />
 
         <Route exact path='/privacy-policy'>
           <PrivacyPolicy />
@@ -150,8 +154,9 @@ const App = () => {
         <Route path='/'>
           <SignIn
             policyMatch={policyMatch}
-            signInAuth={signInAuth}
+            toggleAuthStatus={toggleAuthStatus}
             accessReadFromDb={accessReadFromDb}
+            toggleLoading={toggleLoading}
           />
         </Route>
 
