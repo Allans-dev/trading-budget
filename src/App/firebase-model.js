@@ -26,16 +26,13 @@ export const googleAuthSignIn = () => {
   signInWithRedirect(auth, new GoogleAuthProvider());
 };
 
-export const anonAuth = (accessReadFromDb) => {
+export const anonAuth = () => {
   signInAnonymously(auth)
-    .then((result) => {
-      if (result.user) {
-        accessReadFromDb();
-      } else return;
+    .then(() => {
+      window.location.reload();
     })
     .catch((error) => {
       throw new Error(error.message);
-      // ...
     });
 };
 
@@ -43,7 +40,6 @@ export const firebaseSignOut = (toggleAuthStatus) => {
   signOut(auth)
     .then(() => {
       toggleAuthStatus(false);
-      console.log('signed out');
     })
     .catch(() => {
       throw new Error(`unable to sign out`);
@@ -51,18 +47,14 @@ export const firebaseSignOut = (toggleAuthStatus) => {
 };
 
 export const readFromDb = async () => {
-  try {
-    const docRef = doc(db, 'users', auth.currentUser.uid);
-    const docSnap = await getDoc(docRef);
+  const docRef = doc(db, 'users', auth.currentUser.uid);
+  const docSnap = await getDoc(docRef);
 
-    if (docSnap.exists()) {
-      const databaseState = docSnap.data();
+  if (docSnap.exists()) {
+    const databaseState = docSnap.data();
+    if (databaseState.stocksList || databaseState.expenseList) {
       return databaseState;
-    } else {
-      throw new Error('No such document!');
     }
-  } catch (e) {
-    throw new Error('Error reading document: ', e);
   }
 };
 
@@ -75,11 +67,20 @@ export const writeToDb = async (state) => {
   }
 };
 
-export const googleAuthStateChange = (accessReadFromDb, toggleLoading) => {
+export const googleAuthStateChange = (
+  accessReadFromDb,
+  toggleLoading,
+  toggleAuthStatus
+) => {
   toggleLoading(true);
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      accessReadFromDb();
-    }
+  onAuthStateChanged(auth, async () => {
+    if (auth.currentUser) {
+      const dbState = await readFromDb();
+      if (!auth.currentUser.isAnonymous) {
+        accessReadFromDb(dbState);
+      }
+      toggleAuthStatus(true);
+      toggleLoading(false);
+    } else toggleLoading(false);
   });
 };

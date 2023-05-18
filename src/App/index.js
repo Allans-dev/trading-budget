@@ -20,7 +20,7 @@ import { store as mainStore } from '../main-store';
 import { store as stocksStore } from '../components/Stocks/stocks-store';
 import { store as budgetStore } from '../components/Budget/budget-store';
 
-import { readFromDb, googleAuthStateChange } from './firebase-model';
+import { googleAuthStateChange } from './firebase-model';
 
 import './App.css';
 
@@ -46,7 +46,8 @@ const App = () => {
   };
 
   useEffect(() => {
-    googleAuthStateChange(accessReadFromDb, toggleLoading);
+    googleAuthStateChange(accessReadFromDb, toggleLoading, toggleAuthStatus);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -54,10 +55,8 @@ const App = () => {
     path: window.location.pathname,
   });
 
-  const accessReadFromDb = async () => {
+  const accessReadFromDb = (dbState) => {
     try {
-      const dbState = await readFromDb();
-
       if (dbState.stocksList) {
         stocksContext.dispatch({
           type: 'updateStocksList',
@@ -104,9 +103,7 @@ const App = () => {
         });
       }
     } catch {
-      console.log('error db read on load');
     } finally {
-      toggleAuthStatus(true);
       toggleLoading(false);
     }
   };
@@ -122,7 +119,11 @@ const App = () => {
   return authStatus ? (
     <article className='root'>
       <Router>
-        <Header toggleAuthStatus={toggleAuthStatus} />
+        <Header
+          toggleAuthStatus={toggleAuthStatus}
+          budgetContext={budgetContext}
+          stocksContext={stocksContext}
+        />
 
         <Route exact path='/privacy-policy'>
           <PrivacyPolicy />
@@ -157,6 +158,8 @@ const App = () => {
             toggleAuthStatus={toggleAuthStatus}
             accessReadFromDb={accessReadFromDb}
             toggleLoading={toggleLoading}
+            stocksState={stocksContext.state}
+            budgetState={budgetContext.state}
           />
         </Route>
 

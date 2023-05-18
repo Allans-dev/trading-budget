@@ -80,6 +80,7 @@ const BudgetStateProvider = ({ children }) => {
         return { ...state, description: payload };
       case 'updateCost':
         return { ...state, cost: payload };
+
       default:
         throw new Error();
     }

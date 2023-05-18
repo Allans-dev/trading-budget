@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 
 import StocksListItem from './StocksListItem';
 
-import { store } from './stocks-store';
+import { store as stocksStore } from './stocks-store';
 
 import './stocks_styles.css';
 
@@ -12,7 +12,7 @@ const StocksView = ({
   oneYearCheck,
   deleteListItem,
 }) => {
-  const context = useContext(store);
+  const stocksContext = useContext(stocksStore);
 
   const {
     stockName,
@@ -26,7 +26,7 @@ const StocksView = ({
     profitBE,
     iProfit,
     stocksList,
-  } = context.state;
+  } = stocksContext.state;
 
   return (
     <article className='stocks-article'>
@@ -38,7 +38,7 @@ const StocksView = ({
               type='text'
               value={stockName}
               onChange={(e) =>
-                context.dispatch({
+                stocksContext.dispatch({
                   type: 'updateStockName',
                   payload: e.target.value,
                 })
@@ -53,7 +53,7 @@ const StocksView = ({
               type='number'
               value={buyPrice}
               onChange={(e) =>
-                context.dispatch({
+                stocksContext.dispatch({
                   type: 'updateBuyPrice',
                   payload: e.target.value,
                 })
@@ -68,7 +68,7 @@ const StocksView = ({
               type='number'
               value={sellPrice}
               onChange={(e) =>
-                context.dispatch({
+                stocksContext.dispatch({
                   type: 'updateSellPrice',
                   payload: e.target.value,
                 })
@@ -83,7 +83,7 @@ const StocksView = ({
               type='number'
               value={volume}
               onChange={(e) =>
-                context.dispatch({
+                stocksContext.dispatch({
                   type: 'updateVolume',
                   payload: e.target.value,
                 })
@@ -107,7 +107,7 @@ const StocksView = ({
               type='number'
               value={salary}
               onChange={(e) =>
-                context.dispatch({
+                stocksContext.dispatch({
                   type: 'updateSalary',
                   payload: e.target.value,
                 })

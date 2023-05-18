@@ -9,7 +9,6 @@ import StocksView from './StocksView';
 
 const Stocks = () => {
   const mainContext = useContext(mainStore);
-
   const stocksContext = useContext(stocksStore);
 
   const {

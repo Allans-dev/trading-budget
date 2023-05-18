@@ -3,7 +3,7 @@ import { googleAuthSignIn, anonAuth } from '../../App/firebase-model';
 import googleBtn from './google_signin_btn.png';
 import './signin_style.css';
 
-const SignIn = ({ policyMatch, accessReadFromDb, toggleLoading }) => {
+const SignIn = ({ policyMatch, toggleLoading }) => {
   return (
     <article
       className='signInComponent'
@@ -27,7 +27,7 @@ const SignIn = ({ policyMatch, accessReadFromDb, toggleLoading }) => {
         className='anon-signin-btn signin-btn'
         onClick={() => {
           toggleLoading(true);
-          anonAuth(accessReadFromDb);
+          anonAuth();
         }}
       >
         Guest Sign In
